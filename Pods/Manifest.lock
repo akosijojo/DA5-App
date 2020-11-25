@@ -1,0 +1,39 @@
+PODS:
+  - FBSDKCoreKit (7.1.1):
+    - FBSDKCoreKit/Basics (= 7.1.1)
+    - FBSDKCoreKit/Core (= 7.1.1)
+  - FBSDKCoreKit/Basics (7.1.1)
+  - FBSDKCoreKit/Core (7.1.1):
+    - FBSDKCoreKit/Basics
+  - FBSDKLoginKit (7.1.1):
+    - FBSDKLoginKit/Login (= 7.1.1)
+  - FBSDKLoginKit/Login (7.1.1):
+    - FBSDKCoreKit (~> 7.1.1)
+  - FBSDKShareKit (7.1.1):
+    - FBSDKShareKit/Share (= 7.1.1)
+  - FBSDKShareKit/Share (7.1.1):
+    - FBSDKCoreKit (~> 7.1.1)
+  - SnapKit (4.2.0)
+
+DEPENDENCIES:
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
+  - SnapKit (<= 4.2.0)
+
+SPEC REPOS:
+  trunk:
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - FBSDKShareKit
+    - SnapKit
+
+SPEC CHECKSUMS:
+  FBSDKCoreKit: b46507dc8b8cefed31d644e74d7cc30e2a715ef8
+  FBSDKLoginKit: 1a61d79e2b25e2fc0d03dccab1e34b38bbdf2546
+  FBSDKShareKit: 00a055c1999b099596e00212dd1c0600c6697019
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+
+PODFILE CHECKSUM: 7f1d376888430845f1bb65210341de7ebbffc9ae
+
+COCOAPODS: 1.9.3
