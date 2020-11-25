@@ -63,6 +63,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         collectionView.register(HeaderCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:headerId)
        
         // bakit 2x natatawag
+        setUpView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +73,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-         setUpView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
