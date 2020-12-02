@@ -14,7 +14,19 @@ class AppConfig {
 
 class ApiConfig {
     
+    var env : String = "dev" //live or dev
+    
+    
     var url = "https";
+    
+    func getUrl() -> String {
+        if env == "live" {
+           url = "https"
+        }else {
+           url = "https://da5app.orangeapps.ph/api"
+        }
+        return url
+    }
 
 }
 

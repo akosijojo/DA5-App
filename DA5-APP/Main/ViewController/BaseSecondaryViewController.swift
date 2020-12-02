@@ -13,7 +13,7 @@ class BaseSecondaryViewController: BaseHomeViewControler {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         setUpNavigationBar()
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         
     }
     override func viewDidDisappear(_ animated: Bool) {

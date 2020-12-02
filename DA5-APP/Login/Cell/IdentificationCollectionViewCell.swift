@@ -8,13 +8,15 @@
 
 import UIKit
 protocol IdentificationCollectionViewCellDelegate {
-    func submitAction(cell: IdentificationCollectionViewCell,index: Int)
+    func submitAction(cell: IdentificationCollectionViewCell,index: Int, fields: [UITextField])
     func selectValidId(cell: IdentificationCollectionViewCell,index: Int)
     func selectSelfieId(cell: IdentificationCollectionViewCell,index: Int)
 }
 class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDelegate {
     
     var delegate : IdentificationCollectionViewCellDelegate?
+    
+    var textFields : [UITextField] = []
     
     lazy var scrollView : UIScrollView = {
         let v = UIScrollView()
@@ -227,10 +229,17 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         let tapSelfiePrev = UITapGestureRecognizer(target: self, action: #selector(onClickValidId))
         selfieIdPreview.isUserInteractionEnabled = true
         selfieIdPreview.addGestureRecognizer(tapSelfiePrev)
+        
+        textFields = [
+                         phoneNumber.TextField,
+                         emailAddress.TextField,
+                         password.TextField,
+                         confirmPassword
+                     ]
     }
     
     @objc func submitAction() {
-        self.delegate?.submitAction(cell: self, index: 2)
+        self.delegate?.submitAction(cell: self, index: 2, fields: textFields)
     }
     
     @objc func onClickValidId(){

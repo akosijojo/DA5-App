@@ -11,6 +11,14 @@ import FBSDKLoginKit
 
 class LoginViewController: BaseViewControler {
 
+    var customerData : Customer? {
+        didSet{
+            print("Customer ", customerData?.firstName ?? "")
+        }
+    }
+    
+    var viewModel : LoginViewModel?
+    
     lazy var logoImg : UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "app_logo")
@@ -103,7 +111,24 @@ class LoginViewController: BaseViewControler {
         //keyboard handling
         unameTextfield.delegate = self
         passTextfield.delegate = self
+        getData()
         
+    }
+    
+    override func getData() {
+        self.viewModel?.onSuccessGettingList = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.customerData = data
+                // saving of users in local to check if logged in or not then goto pincode
+                self?.coordinator?.pinCodeCoordinator()
+            }
+        }
+       
+        self.viewModel?.onErrorHandling = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showAlert(buttonOK: "Ok", message: error?.message ?? "", actionOk: nil, completionHandler: nil)
+            }
+        }
     }
 
     override func setUpView() {
@@ -168,8 +193,18 @@ class LoginViewController: BaseViewControler {
     deinit {
         print("deinit : \(self)")
     }
+    
+    
     @objc func loginAction() {
-      coordinator?.homeCoordinator()
+        DispatchQueue.main.async {
+            self.view.endEditing(true)
+            if let username = self.unameTextfield.text , let password = self.passTextfield.text{
+                self.viewModel?.login(param: ["unique": username, "password" : password ])
+            }
+        }
+       
+        
+//        coordinator?.homeCoordinator(setAsRoot: true)
     }
     @objc func signupAction() {
         coordinator?.signUpCoordinator()

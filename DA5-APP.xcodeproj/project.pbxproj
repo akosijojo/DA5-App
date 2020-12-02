@@ -38,6 +38,13 @@
 		EB78E4E5256E08CC00754B2E /* PendingTransactionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4E4256E08CC00754B2E /* PendingTransactionsData.swift */; };
 		EB78E4E7256E08DC00754B2E /* TransactionHistoryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4E6256E08DC00754B2E /* TransactionHistoryData.swift */; };
 		EB78E4E9256E0F8600754B2E /* AccountData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4E8256E0F8600754B2E /* AccountData.swift */; };
+		EB78E4ED256F827B00754B2E /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4EC256F827B00754B2E /* NetworkService.swift */; };
+		EB78E4EF256FDAD500754B2E /* NationalityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4EE256FDAD500754B2E /* NationalityViewController.swift */; };
+		EB78E4F1256FFC6D00754B2E /* NationalityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F0256FFC6D00754B2E /* NationalityCell.swift */; };
+		EB78E4F42570102500754B2E /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F32570102500754B2E /* LoginViewModel.swift */; };
+		EB78E4F62570CEE800754B2E /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F52570CEE800754B2E /* LoginModel.swift */; };
+		EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F725768DC300754B2E /* SampleUploading .swift */; };
+		EB78E4FA257729D100754B2E /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F9257729D100754B2E /* Media.swift */; };
 		EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */; };
 		EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */; };
 		EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DE256BDD8300B0B4CC /* NewsCell.swift */; };
@@ -116,6 +123,13 @@
 		EB78E4E4256E08CC00754B2E /* PendingTransactionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTransactionsData.swift; sourceTree = "<group>"; };
 		EB78E4E6256E08DC00754B2E /* TransactionHistoryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryData.swift; sourceTree = "<group>"; };
 		EB78E4E8256E0F8600754B2E /* AccountData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountData.swift; sourceTree = "<group>"; };
+		EB78E4EC256F827B00754B2E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		EB78E4EE256FDAD500754B2E /* NationalityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationalityViewController.swift; sourceTree = "<group>"; };
+		EB78E4F0256FFC6D00754B2E /* NationalityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NationalityCell.swift; sourceTree = "<group>"; };
+		EB78E4F32570102500754B2E /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		EB78E4F52570CEE800754B2E /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		EB78E4F725768DC300754B2E /* SampleUploading .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleUploading .swift"; sourceTree = "<group>"; };
+		EB78E4F9257729D100754B2E /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewBorderedCell.swift; sourceTree = "<group>"; };
 		EB8850DE256BDD8300B0B4CC /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
@@ -216,6 +230,8 @@
 				EBA973E224EBC36E001C09DB /* LoginViewController.swift */,
 				EB3DD6A324F653D800BDBE0C /* SignUpViewController.swift */,
 				EBFB98432509199D0057FA79 /* TermsViewController.swift */,
+				EB78E4EE256FDAD500754B2E /* NationalityViewController.swift */,
+				EB78E4F725768DC300754B2E /* SampleUploading .swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -243,6 +259,7 @@
 				EB3DD6B424F774E500BDBE0C /* BasicInfoCell.swift */,
 				EB55D53224F7B83A0094DB60 /* IdentificationCollectionViewCell.swift */,
 				EBFB98412507E7800057FA79 /* VerifyCollectionViewCell.swift */,
+				EB78E4F0256FFC6D00754B2E /* NationalityCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -251,6 +268,8 @@
 			isa = PBXGroup;
 			children = (
 				EB55D52C24F778E70094DB60 /* UsersData.swift */,
+				EB78E4F52570CEE800754B2E /* LoginModel.swift */,
+				EB78E4F9257729D100754B2E /* Media.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -312,6 +331,14 @@
 				EB78E4DE256E077000754B2E /* PrivacyViewController.swift */,
 			);
 			path = Privacy;
+			sourceTree = "<group>";
+		};
+		EB78E4F22570100B00754B2E /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EB78E4F32570102500754B2E /* LoginViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		EB8850E9256CDF8F00B0B4CC /* Side Menu */ = {
@@ -422,6 +449,7 @@
 		EBA973D824EBB423001C09DB /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				EB78E4F22570100B00754B2E /* ViewModel */,
 				EB55D52B24F778B60094DB60 /* Model */,
 				EB3DD6B324F774D200BDBE0C /* Cell */,
 				EB3DD6B224F774C200BDBE0C /* Extensions */,
@@ -433,6 +461,7 @@
 		EBA973D924EBB428001C09DB /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				EB78E4EC256F827B00754B2E /* NetworkService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -708,6 +737,7 @@
 				EB8850EB256CDFA300B0B4CC /* SideMenuViewController.swift in Sources */,
 				EB78E4DB256E05FD00754B2E /* ProfileViewController.swift in Sources */,
 				EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */,
+				EB78E4F42570102500754B2E /* LoginViewModel.swift in Sources */,
 				EB78E4E3256E08BA00754B2E /* NewsData.swift in Sources */,
 				EBFB98402507E7590057FA79 /* PagerCollectionView.swift in Sources */,
 				EB55D53124F78A660094DB60 /* CustomBasicFormInput.swift in Sources */,
@@ -722,7 +752,9 @@
 				EBA973DD24EBB44D001C09DB /* BaseViewController.swift in Sources */,
 				EB8850E5256C135E00B0B4CC /* BaseSecondaryViewController.swift in Sources */,
 				EB77E63F25679D7F000479CF /* SampleLayoutViewController.swift in Sources */,
+				EB78E4ED256F827B00754B2E /* NetworkService.swift in Sources */,
 				EB77E63D25669757000479CF /* CustomNumPad.swift in Sources */,
+				EB78E4F62570CEE800754B2E /* LoginModel.swift in Sources */,
 				EBA973E824EC10F2001C09DB /* ColorExtension.swift in Sources */,
 				EB8850E1256BE06100B0B4CC /* PendingTransactionCell.swift in Sources */,
 				EB77E63B2566464E000479CF /* CustomPinTextField.swift in Sources */,
@@ -735,15 +767,19 @@
 				EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */,
 				EBA973A824EBB342001C09DB /* ViewController.swift in Sources */,
 				EB78E4E5256E08CC00754B2E /* PendingTransactionsData.swift in Sources */,
+				EB78E4FA257729D100754B2E /* Media.swift in Sources */,
 				EBFB98442509199D0057FA79 /* TermsViewController.swift in Sources */,
 				EB78E4DF256E077000754B2E /* PrivacyViewController.swift in Sources */,
 				EB3DD6B524F774E500BDBE0C /* BasicInfoCell.swift in Sources */,
 				EB3DD6B724F7752400BDBE0C /* BaseCollectionViewCell.swift in Sources */,
 				EBA973F024EC15CF001C09DB /* Fonts.swift in Sources */,
 				EBA973DF24EBB47B001C09DB /* Coordinator.swift in Sources */,
+				EB78E4F1256FFC6D00754B2E /* NationalityCell.swift in Sources */,
 				EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */,
+				EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */,
 				EB78E4E1256E077D00754B2E /* TermsAndConditionsViewController.swift in Sources */,
 				EB77E643256B552C000479CF /* ServicesCell.swift in Sources */,
+				EB78E4EF256FDAD500754B2E /* NationalityViewController.swift in Sources */,
 				EBA973A424EBB342001C09DB /* AppDelegate.swift in Sources */,
 				EB3DD6A624F6543D00BDBE0C /* HomeViewController.swift in Sources */,
 				EB3DD6B124F774A100BDBE0C /* AppConfigurations.swift in Sources */,
@@ -926,6 +962,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9X2593SH8B;
 				INFOPLIST_FILE = "DA5-APP/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -945,6 +982,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9X2593SH8B;
 				INFOPLIST_FILE = "DA5-APP/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

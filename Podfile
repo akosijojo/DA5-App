@@ -10,6 +10,7 @@ target 'DA5-APP' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
+#  pod 'Alamofire', '~> 5.2'
   
   #target 'DA5-APPTests' do
    # inherit! :search_paths

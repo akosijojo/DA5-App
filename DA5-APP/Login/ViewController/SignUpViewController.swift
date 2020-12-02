@@ -14,6 +14,13 @@ class SignUpViewController: BaseViewControler {
     let datePicker : UIDatePicker? = nil
     var pagerIndex : Int = 0
     
+    var viewModel : LoginViewModel?
+    
+    var samUpload = SampleUploadViewController()
+    
+    var bdayCheck : Bool = true
+    let errorMessage = "Only provide information that is true and correct. If you're below 18 years old, you may be required to present a parental consent. Users below 10 years old are not allowed to register."
+    
     lazy var pager : PagerView = {
         let v = PagerView()
         v.itemCount = 3
@@ -37,6 +44,14 @@ class SignUpViewController: BaseViewControler {
     let form1 = "form1"
     let form2 = "form2"
     let form3 = "form3"
+    
+    var nationalitySelected : String = "" {
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
+    
+    var nationalityList : Nationality?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +70,13 @@ class SignUpViewController: BaseViewControler {
         notification.addObserver(self, selector: #selector(self.whenShowKeyboard(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         notification.addObserver(self, selector: #selector(self.whenHideKeyboard(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         self.hidesKeyboardOnTapArround()
+    }
+    
+    override func getData() {
+        self.viewModel?.returnNationalityList = { [weak self] data in
+            self?.nationalityList = data
+        }
+        self.viewModel?.getNationality()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,6 +103,7 @@ class SignUpViewController: BaseViewControler {
         super.viewWillLayoutSubviews()
         collectionView.collectionViewLayout.invalidateLayout()
     }
+    
     @objc func whenShowKeyboard(_ notification : NSNotification) {
           if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 guard let cell = collectionView.cellForItem(at: IndexPath(item: pagerIndex, section: 0))  else {
@@ -115,7 +138,9 @@ class SignUpViewController: BaseViewControler {
           }
     }
     
-    func setUpNavigationBar() {
+    override func setUpNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "arrow_left")?.withRenderingMode(.alwaysTemplate), for: .normal)
         backButton.tintColor = ColorConfig().darkBlue
@@ -123,6 +148,19 @@ class SignUpViewController: BaseViewControler {
         let leftButton = UIBarButtonItem(customView: backButton)
         self.navigationItem.leftBarButtonItem = leftButton
     }
+    
+    override func navBackAction() {
+        if pagerIndex >= 1 {
+            self.collectionView.scrollToItem(at: IndexPath(item: pagerIndex - 1, section: 0), at: .right, animated: true)
+            self.pager.itemIndex -= 1
+            self.pagerIndex -= 1
+            self.pager.collectionView.reloadData()
+            self.view.endEditing(true)
+        }else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
     
     override func setUpView() {
         view.addSubview(pager)
@@ -180,6 +218,39 @@ class SignUpViewController: BaseViewControler {
         self.view.endEditing(true)
       }
     
+    func showNationalities() {
+        let vc = NationalityViewController()
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.parentView = self
+        vc.data = self.nationalityList
+        self.present(vc, animated: false) {
+             vc.showModal()
+        }
+    }
+    
+    func birthDateChecker(bDay: Date) {
+        // 0 ok // 1 under 18 but > 10 // 2 under Age
+        let userAge = Calendar.current.dateComponents([.year], from: bDay, to: Date())
+        var haveError : Bool = false
+        print("DATE : \(userAge.year)")
+        if let age = userAge.year {
+            if age >= 18 {
+              haveError = false
+              bdayCheck = true
+            }else if age > 10 {
+               haveError = true
+               bdayCheck = true
+            }else {
+               haveError = true
+               bdayCheck = false
+            }
+        }
+        if haveError {
+            self.showAlert(buttonOK: "Ok", message: errorMessage, actionOk: { (act) in
+                
+            }, completionHandler: nil)
+        }
+    }
 }
 
 extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -194,6 +265,7 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
             }
             cell.vc = self
             cell.delegate = self
+            cell.nationality.TextField.text = self.nationalitySelected
             return cell
         }else if  indexPath.item == 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: form2, for: indexPath) as? IdentificationCollectionViewCell else {
@@ -216,25 +288,65 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: self.collectionView.frame.width, height: self.collectionView.frame.height)
     }
+    
+    func showFormError(fields: [UITextField]) -> Bool{
+        if formChecker(fields: fields){
+            let alert = self.alert("Ok", "", "Please fill out the following required fields to proceed.") { (act) in
+                
+            }
+            self.present(alert, animated: true, completion: nil)
+
+            return false
+        }
+        
+        if !bdayCheck {
+            self.showAlert(buttonOK: "Ok", message: errorMessage, actionOk: { (act) in
+                
+            }, completionHandler: nil)
+             return false
+        }
+        return true
+    }
+    
+    func formChecker(fields: [UITextField]) -> Bool {
+        for x in 0...fields.count - 1 {
+            if (fields[x].text ?? "") == "" {
+                return true
+            }
+        }
+        
+        return false
+    }
 }
 
 extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollectionViewCellDelegate, VerifyCollectionViewCellDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     //form 1
-    func submitAction(cell: BasicInfoCell, index: Int) {
+    func submitAction(cell: BasicInfoCell, index: Int,fields: [UITextField]) {
         self.view.endEditing(true)
-        self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
-        self.pager.itemIndex = 1
-        self.pager.collectionView.reloadData()
-        self.pagerIndex = 1
-        self.view.endEditing(true)
+//        if showFormError(fields: fields){
+//            self.view.endEditing(true)
+//            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
+//            self.pager.itemIndex = 1
+//            self.pager.collectionView.reloadData()
+//            self.pagerIndex = 1
+//        }
+        
+        samUpload.postRequest()
+        
+        
+        
     }
     //form 2
-    func submitAction(cell: IdentificationCollectionViewCell, index: Int) {
+    func submitAction(cell: IdentificationCollectionViewCell, index: Int, fields: [UITextField]) {
         self.view.endEditing(true)
-        self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
-        self.pager.itemIndex = 2
-        self.pager.collectionView.reloadData()
-        self.pagerIndex = 2
+//        password checking
+//        images checking 
+        if showFormError(fields: fields){
+            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
+            self.pager.itemIndex = 2
+            self.pager.collectionView.reloadData()
+            self.pagerIndex = 2
+        }
     }
     
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
@@ -290,3 +402,7 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
         print(image.size)
     }
 }
+
+
+
+

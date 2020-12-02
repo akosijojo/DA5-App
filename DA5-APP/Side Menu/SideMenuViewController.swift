@@ -131,9 +131,9 @@ class SideMenuView : UIView {
         case 0:
             print("0")
         case 1:
-            vc?.homeCoordinator?.showPrivacyViewController()
+            vc?.coordinator?.showPrivacyViewController()
         case 2:
-            vc?.homeCoordinator?.showTermsViewController()
+            vc?.coordinator?.showTermsViewController()
         case 3:
             vc?.coordinator?.logInCoordinator()
         default:
@@ -207,7 +207,7 @@ class SideMenuView : UIView {
     }
     
     @objc func showProfileView() {
-        vc?.homeCoordinator?.showProfileViewController(data: vc?.accountData)
+        vc?.coordinator?.showProfileViewController(data: vc?.accountData)
     }
 }
 

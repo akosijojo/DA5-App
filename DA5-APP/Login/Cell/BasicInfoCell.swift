@@ -8,12 +8,16 @@
 
 import UIKit
 protocol BasicInfoCellDelegate {
-    func submitAction(cell: BasicInfoCell,index: Int)
+    func submitAction(cell: BasicInfoCell,index: Int, fields: [UITextField])
 }
 class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     weak var vc : SignUpViewController?
     var delegate : BasicInfoCellDelegate?
     var nationalities : [String] = []
+    var textFields : [UITextField] = []
+    var isBdateSelected: Bool = false
+    let dateFormat = DateFormatter()
+    
     lazy var scrollView : UIScrollView = {
         let v = UIScrollView()
         return v
@@ -22,7 +26,8 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
         v.title.text = "Welcome!"
-        v.desc.text  = "Please fill up the following fields to proceed"
+        v.desc.text  = "Please fill up the following fields to proceed. \nOnly provide information that is true and correct as this will be validated for KYC."
+        v.desc.numberOfLines = 0
         return v
     }()
     
@@ -65,6 +70,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         let v = CustomBasicFormInput()
         v.TextField.delegate = self
         v.TextField.tag = 6
+        v.TextField.isUserInteractionEnabled = true
         return v
     }()
     
@@ -72,6 +78,28 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         let v = CustomBasicFormInput()
         v.TextField.delegate = self
         v.TextField.tag = 7
+        return v
+    }()
+    
+    lazy var city: CustomBasicFormInput = {
+        let v = CustomBasicFormInput()
+        v.TextField.delegate = self
+        v.TextField.tag = 8
+        return v
+    }()
+    
+    lazy var province: CustomBasicFormInput = {
+        let v = CustomBasicFormInput()
+        v.TextField.delegate = self
+        v.TextField.tag = 9
+        return v
+    }()
+    
+    lazy var zipCode: CustomBasicFormInput = {
+        let v = CustomBasicFormInput()
+        v.TextField.delegate = self
+        v.TextField.tag = 0
+        v.TextField.keyboardType = .numberPad
         return v
     }()
     
@@ -105,7 +133,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
             make.top.equalTo(scrollView).offset(25)
             make.leading.equalTo(self).offset(20)
             make.trailing.equalTo(self).offset(-20)
-            make.height.equalTo(60)
+            make.height.equalTo(100)
         }
         scrollView.addSubview(fname)
         fname.snp.makeConstraints { (make) in
@@ -156,9 +184,30 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
             make.trailing.equalTo(self).offset(-20)
             make.height.equalTo(70)
         }
+        scrollView.addSubview(city)
+        city.snp.makeConstraints { (make) in
+            make.top.equalTo(address.snp.bottom).offset(5)
+            make.leading.equalTo(self).offset(20)
+            make.trailing.equalTo(self).offset(-20)
+            make.height.equalTo(70)
+        }
+        scrollView.addSubview(province)
+        province.snp.makeConstraints { (make) in
+            make.top.equalTo(city.snp.bottom).offset(5)
+            make.leading.equalTo(self).offset(20)
+            make.trailing.equalTo(self).offset(-20)
+            make.height.equalTo(70)
+        }
+        scrollView.addSubview(zipCode)
+        zipCode.snp.makeConstraints { (make) in
+            make.top.equalTo(province.snp.bottom).offset(5)
+            make.leading.equalTo(self).offset(20)
+            make.trailing.equalTo(self).offset(-20)
+            make.height.equalTo(70)
+        }
         scrollView.addSubview(submitBtn)
         submitBtn.snp.makeConstraints { (make) in
-            make.top.equalTo(address.snp.bottom).offset(20)
+            make.top.equalTo(zipCode.snp.bottom).offset(20)
             make.leading.equalTo(self).offset(20)
             make.trailing.equalTo(self).offset(-20)
             make.height.equalTo(40)
@@ -183,12 +232,21 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         
         let addressAttributes = NSMutableAttributedString(string: "Address ", attributes: [NSAttributedString.Key.font : UIFont(name: Fonts.bold, size: 12)!])
         
+        let cityAttributes = NSMutableAttributedString(string: "City/Municipality ", attributes: [NSAttributedString.Key.font : UIFont(name: Fonts.bold, size: 12)!])
+        
+        let provinceAttributes = NSMutableAttributedString(string: "Province ", attributes: [NSAttributedString.Key.font : UIFont(name: Fonts.bold, size: 12)!])
+        
+        let zipCodeAttributes = NSMutableAttributedString(string: "Zip Code ", attributes: [NSAttributedString.Key.font : UIFont(name: Fonts.bold, size: 12)!])
+        
         fnameAttributes.append(asteriskAttributes)
         lnameAttributes.append(asteriskAttributes)
         bdateAttributes.append(asteriskAttributes)
         genderAttributes.append(asteriskAttributes)
         nationalityAttributes.append(asteriskAttributes)
         addressAttributes.append(asteriskAttributes)
+        cityAttributes.append(asteriskAttributes)
+        provinceAttributes.append(asteriskAttributes)
+        zipCodeAttributes.append(asteriskAttributes)
         
         fname.Label.attributedText = fnameAttributes
         fname.TextField.placeholder = "First Name"
@@ -204,8 +262,15 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         nationality.TextField.placeholder = "Nationality"
         address.Label.attributedText = addressAttributes
         address.TextField.placeholder = "Address"
+        city.Label.attributedText = cityAttributes
+        city.TextField.placeholder = "City/Municipality"
+        province.Label.attributedText = provinceAttributes
+        province.TextField.placeholder = "Province"
+        zipCode.Label.attributedText = zipCodeAttributes
+        zipCode.TextField.placeholder = "Zip Code"
         
         setUpDatePicker()
+        dateFormat.dateFormat = "MMM dd, yyyy"
         
         
         self.submitBtn.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
@@ -214,6 +279,21 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         self.gender.isUserInteractionEnabled = true
         self.gender.addGestureRecognizer(gTap)
         
+        let tapNationality = UITapGestureRecognizer(target: self, action: #selector(showNationality))
+        self.nationality.TextField.addGestureRecognizer(tapNationality)
+        
+    // for checking empty value
+        textFields = [
+                  fname.TextField,
+                  lname.TextField,
+                  bdate.TextField,
+                  gender.TextField,
+                  nationality.TextField,
+                  address.TextField,
+                  city.TextField,
+                  province.TextField,
+                  zipCode.TextField
+              ]
     }
     
     func setUpDatePicker() {
@@ -221,7 +301,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         datePicker?.datePickerMode = .date
         datePicker?.maximumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
         datePicker?.addTarget(self, action: #selector(dateSelected(_:)), for: .valueChanged)
-          
+        
         bdate.TextField.inputView = datePicker
         
 
@@ -232,7 +312,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         
         toolBar.sizeToFit()
 
-        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.plain, target: self, action: #selector(dismissPicker))
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.plain, target: self, action: #selector(selectBDate))
         let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
         let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.plain, target: self, action:  #selector(dismissPicker))
         toolBar.setItems([cancelButton,spaceButton,doneButton], animated: false)
@@ -243,17 +323,26 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
      @objc func dismissPicker() {
         self.endEditing(true)
      }
+     @objc func selectBDate() {
+        self.endEditing(true)
+        //"Only provide information that is true and correct. If you're below 18 years old, you may be required to present a parental consent. Users below 10 years old are not allowed to register."
+        
+        // checking below 10 cannot click next
+        // under 18 yrs old show alert and cant click next
+     }
 
        
      @objc func dateSelected(_ datePicker: UIDatePicker ) {
-        let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "MMM dd, yyyy"
         bdate.TextField.text = dateFormat.string(from: datePicker.date)
     //        view.endEditing(true)
      }
+    
+    @objc func showNationality() {
+        vc?.showNationalities()
+    }
 
     @objc func submitAction() {
-        self.delegate?.submitAction(cell: self, index: 1)
+        self.delegate?.submitAction(cell: self, index: 1, fields: textFields)
     }
 
     @objc func showGenderPicker() {
@@ -273,7 +362,19 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
            make.bottom.equalTo(self).offset(offset)
         }
         self.layoutIfNeeded()
+        
+        if offset == 0 {
+             if isBdateSelected {
+                guard let bDay = dateFormat.date(from: bdate.TextField.text ?? "") else {
+                    return
+                }
+                let bDayStat = vc?.birthDateChecker(bDay: bDay)
+                isBdateSelected = false
+             }
+        }
+       
     }
+
     func textFieldDidBeginEditing(_ textField: UITextField)
     {
      var point = CGPoint()
@@ -285,13 +386,25 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         case 3:
             point = lname.frame.origin
         case 4:
+            isBdateSelected = true
             point = bdate.frame.origin
+            if bdate.TextField.text == "" {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "MMM dd, YYYY"
+                bdate.TextField.text = formatter.string(from: Calendar.current.date(byAdding: .year, value: -1, to: Date()) ?? Date())
+            }
         case 5:
             point = gender.frame.origin
         case 6:
             point = nationality.frame.origin
         case 7:
             point = address.frame.origin
+        case 8:
+            point = city.frame.origin
+        case 9:
+            point = province.frame.origin
+        case 0:
+            point = zipCode.frame.origin
         default:
             break
         }

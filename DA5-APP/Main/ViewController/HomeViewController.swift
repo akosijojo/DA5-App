@@ -53,7 +53,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = true
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         collectionView.backgroundColor = .white
         hidesKeyboardOnTapArround()
         // Do any additional setup after loading the view.
@@ -61,8 +60,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         collectionView.register(CollectionViewBorderedCell.self, forCellWithReuseIdentifier: cellId2)
         collectionView.register(HomeHeaderCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:mainHeaderId)
         collectionView.register(HeaderCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:headerId)
-       
-        // bakit 2x natatawag
         setUpView()
     }
     
@@ -90,7 +87,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     func onClickShowView(type: Int) {
         switch type {
         case 1:
-            homeCoordinator?.showBase2ndViewController()
+            coordinator?.showBase2ndViewController()
         default: break
             
         }
@@ -119,7 +116,8 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width:view.frame.width, height: section == 0 ? 240 : 40)
+        let height = section == 3 ? (self.pTransactionsData.count > 0 ? 40 : 0) : 40
+        return CGSize(width:view.frame.width, height: section == 0 ? 240 : CGFloat(height))
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -162,14 +160,14 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
        
         let servicesHeight = ((self.servicesData.count / 3) * 95) // cell 80 for 40 + 10 , 20 + 10 , collection top 10 space , left and right 10 , bottom have space 10 
-        let newsHeight = 190
+        let newsHeight = indexPath.section == 3 ? (pTransactionsData.count > 0 ? 190 : 0) : 190
         let tHistoryHeight = 80 * (self.tHistoryData.count)
         let vheight = indexPath.section == 1 ? servicesHeight : (indexPath.section == 4 ? tHistoryHeight : newsHeight)
         return CGSize(width: view.frame.width, height: CGFloat(vheight))
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: section == 0 ? 0 : 10, right: 0)
+        return UIEdgeInsets(top: 0, left: 0, bottom: section == 0 ? 0 : (section == 3 ? (self.pTransactionsData.count > 0 ? 10 : 0 ): 10), right: 0)
     }
 }
 //MENU
@@ -182,6 +180,6 @@ extension HomeViewController : HomeHeaderCollectionViewCellDelegate {
 
 extension HomeViewController : CollectionViewCellDelegate {
     func onClickShowView(cell: CollectionViewCell, type: Int, data: [String : AnyObject]?) {
-        self.homeCoordinator?.showBase2ndViewController()
+        self.coordinator?.showBase2ndViewController()
     }
 }

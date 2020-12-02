@@ -80,7 +80,9 @@ class TermsViewController: BaseViewControler {
         coordinator?.dismissViewController()
     }
     
-    func setUpNavigationBar() {
+    override func setUpNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "arrow_left")?.withRenderingMode(.alwaysTemplate), for: .normal)
         backButton.tintColor = ColorConfig().black

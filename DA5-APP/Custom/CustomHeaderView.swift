@@ -40,7 +40,7 @@ class CustomHeaderView : UIView {
         desc.snp.makeConstraints { (make) in
             make.top.equalTo(title.snp.bottom)
             make.leading.trailing.equalTo(self)
-            make.height.equalTo(20)
+            make.bottom.equalTo(self)
         }
     }
 }

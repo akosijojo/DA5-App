@@ -26,14 +26,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
        // send that into our coordinator so that it can display view controllers
         coordinator = MainCoordinator(navigationController: navController)
-
+        
        // tell the coordinator to take over control
         coordinator?.start()
-
-       // create a basic UIWindow and activate it
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        window?.rootViewController = navController
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.makeKeyAndVisible()
+        self.window?.rootViewController = navController
         return true
     }
     

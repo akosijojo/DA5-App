@@ -19,66 +19,100 @@ class MainCoordinator :  NSObject, Coordinator {
     }
     
     func start() {
+        
         navigationController.delegate = self
         navigationController.navigationBar.barTintColor = ColorConfig().white
         navigationController.navigationBar.isTranslucent = false
         navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController.navigationBar.shadowImage = UIImage()
         
-        //show login
-        logInCoordinator()
-        //show pin code
-//        pinCodeCoordinator()
-//        homeCoordinator()
+//        if user {
+//            homeCoordinator()
+//        }else {
+            logInCoordinator() // no account
+//            pinCodeCoordinator() // have account not logged in
+//        }
     }
-       
+    
     func logInCoordinator() {
+        if self.navigationController.viewControllers.count > 0 {
+           self.navigationController.viewControllers.removeAll()
+        }
         let vc = LoginViewController()
         vc.coordinator = self
-        navigationController.navigationBar.isHidden = false
+        vc.viewModel = LoginViewModel()
+        vc.viewModel?.model = LoginModel()
+        navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
       
     func signUpCoordinator() {
        let vc = SignUpViewController()
+       vc.viewModel = LoginViewModel()
+       vc.viewModel?.model = LoginModel()
        vc.coordinator = self
-       navigationController.navigationBar.isHidden = false
+       navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
+    }
+
+    func pinCodeCoordinator() {
+        let vc = PinViewController()
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.pushViewController(vc, animated: false)
     }
     
     func termsCoordinator() {
        let vc = TermsViewController()
        vc.coordinator = self
-       navigationController.navigationBar.isHidden = false
+       navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showProfileViewController(data: AccountData?) {
+         let vc = ProfileViewController()
+         vc.accountData = data
+         vc.coordinator = self
+         navigationController.setNavigationBarHidden(false, animated: false)
+         navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showPrivacyViewController() {
+         let vc = PrivacyViewController()
+         vc.coordinator = self
+         navigationController.setNavigationBarHidden(false, animated: false)
+         navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showTermsViewController() {
+         let vc = TermsAndConditionsViewController()
+         vc.coordinator = self
+         navigationController.setNavigationBarHidden(false, animated: false)
+         navigationController.pushViewController(vc, animated: false)
     }
     
     func dismissViewController() {
 //        navigationController.navigationBar.isHidden = true
     }
     
-    func homeCoordinator() {
-       let vc = HomeViewController(collectionViewLayout: UICollectionViewFlowLayout())
-        self.navigationController.navigationBar.isHidden = true
-        vc.homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
-       vc.homeCoordinator?.start()
-       vc.coordinator = self
-       navigationController.pushViewController(vc, animated: false)
-    }
-    func sampleCoordinator() {
-       let vc = FoodController()
-//       vc.coordinator = self
-       vc.navigationController?.navigationBar.isHidden = true
-       navigationController.pushViewController(vc, animated: false)
+    func homeCoordinator(setAsRoot: Bool = false) {
+        if self.navigationController.viewControllers.count > 0 {
+            self.navigationController.viewControllers.removeAll()
+        }
+        let vc = HomeViewController(collectionViewLayout: UICollectionViewFlowLayout())
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.pushViewController(vc, animated: false)
     }
 
-    func pinCodeCoordinator() {
-       let vc = PinViewController()
+    func showBase2ndViewController() {
+       let vc = BaseSecondaryViewController()
        vc.coordinator = self
-       vc.navigationController?.navigationBar.isHidden = true
+       navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
-   }
+    }
     
+    // used when 2 or more coordinators
     func childDidFinish(_ child: Coordinator?) {
         for (index, coordinator) in childCoordinators.enumerated() {
             if coordinator === child {
@@ -102,9 +136,10 @@ extension MainCoordinator : UINavigationControllerDelegate{
         }
 
         // We’re still here – it means we’re popping the view controller, so we can check whether it’s a buy view controller
-        if let signupViewController = fromViewController as? SignUpViewController {
+        if let homeViewController = fromViewController as? HomeViewController {
             // We're popping a buy view controller; end its coordinator
-            childDidFinish(signupViewController.coordinator)
+            print("HEY POPPING HOME")
+            childDidFinish(homeViewController.coordinator)
         }
     }
 }

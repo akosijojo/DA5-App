@@ -67,6 +67,19 @@ class PinViewController: BaseViewControler {
        v.maxInput = 4
        return v
     }()
+
+    override func getData() {
+       pinTextField.defaultText = "•"
+       pinTextField.configure(with: 4)
+       pinTextField.didEnterLastDigit = { [weak self] code in
+           self?.MPIN = code
+           //  checking of pin then goto home
+           self?.coordinator?.homeCoordinator()
+       }
+       numPadView.numPadReturnOutput = { [weak self] output in
+           self?.pinTextField.textUpdate(text: output)
+       }
+    }
     
     override func setUpView() {
         view.addSubview(topView)
@@ -78,20 +91,12 @@ class PinViewController: BaseViewControler {
         view.addSubview(bottomView)
         bottomView.addSubview(numPadView)
         bottomView.addSubview(forgotMpin)
-        
-        pinTextField.defaultText = "•"
-        pinTextField.configure(with: 4)
-        pinTextField.didEnterLastDigit = { [weak self] code in
-            self?.MPIN = code
-        }
-        numPadView.numPadReturnOutput = { [weak self] output in
-            self?.pinTextField.textUpdate(text: output)
-        }
+    
         topView.snp.makeConstraints { (make) in
-            make.top.equalTo(view)
+            make.top.equalTo(self.view.layoutMarginsGuide.snp.top)
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
-            make.height.equalTo(view).multipliedBy(0.50)
+            make.height.equalTo(view.layoutMarginsGuide).multipliedBy(0.50)
         }
         imgLogo.snp.makeConstraints { (make) in
             make.top.equalTo(topView.snp.top).offset(20)
@@ -128,7 +133,7 @@ class PinViewController: BaseViewControler {
             make.top.equalTo(topView.snp.bottom)
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
-            make.height.equalTo(view).multipliedBy(0.50)
+            make.height.equalTo(view.layoutMarginsGuide).multipliedBy(0.50)
         }
         
         numPadView.snp.makeConstraints { (make) in

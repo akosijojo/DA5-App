@@ -15,6 +15,18 @@ class BaseViewControler : UIViewController {
         super.viewDidLoad()
         view.backgroundColor = ColorConfig().bgColor
         setUpView()
+        getData()
+    }
+    
+    func getData() {
+//         self.viewModel?.onErrorHandling = { [weak self] error in
+//            print("ERROR : \(error?.message)")
+//
+//            if let stat = error {
+//                self?.showErrorAlert(status: stat)
+//            }
+////            self?.stopLoading()
+//        }
     }
     
     func setUpView() {
@@ -36,13 +48,34 @@ class BaseViewControler : UIViewController {
     deinit {
         
     }
+    
+    func setUpNavigationBar() {
+       self.navigationController?.navigationBar.isHidden = false
+       self.navigationController?.setNavigationBarHidden(false, animated: false)
+       let backButton = UIButton(type: .system)
+       backButton.setImage(UIImage(named: "arrow_left")?.withRenderingMode(.alwaysTemplate), for: .normal)
+       backButton.tintColor = ColorConfig().darkBlue
+       backButton.addTarget(self, action: #selector(navBackAction), for: .touchUpInside)
+       let leftButton = UIBarButtonItem(customView: backButton)
+       self.navigationItem.leftBarButtonItem = leftButton
+   }
+    
+   func showAlert(buttonOK: String, buttonCancel: String? = nil, title: String = "", message: String,actionOk: ((UIAlertAction) -> Void)? ,actionCancel:  ((UIAlertAction) -> Void)? = nil, completionHandler: (() -> Void)?) {
+        if buttonCancel == nil {
+            let alert = self.alert(buttonOK, title, message, action: actionOk)
+            self.present(alert, animated: true, completion: completionHandler)
+        }else {
+            let alert = self.alertAction(buttonOK, buttonCancel ?? "Cancel", title, message, actionOk: actionOk, actionCancel: actionCancel)
+            self.present(alert, animated: true, completion: completionHandler)
+        }
+   }
+
 
 }
 
 
 class BaseHomeViewControler : UIViewController {
     weak var coordinator : MainCoordinator?
-    var homeCoordinator : HomeCoordinator?
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = ColorConfig().bgColor
@@ -73,6 +106,8 @@ class BaseHomeViewControler : UIViewController {
     }
     
     func setUpNavigationBar() {
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         let backButton = UIButton(type: .system)
         backButton.setImage(UIImage(named: "arrow_left")?.withRenderingMode(.alwaysTemplate), for: .normal)
         backButton.tintColor = ColorConfig().darkBlue
@@ -86,7 +121,6 @@ class BaseHomeViewControler : UIViewController {
 
 class BaseCollectionViewControler : UICollectionViewController {
     weak var coordinator : MainCoordinator?
-    var homeCoordinator : HomeCoordinator?
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = ColorConfig().bgColor
