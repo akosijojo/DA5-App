@@ -17,10 +17,25 @@ struct Media {
     init?(withImage image: UIImage, forKey key: String) {
         self.key = key
         self.mimeType = "image/jpeg"
-        self.filename = "kyleleeheadiconimage234567.jpg"
+        self.filename = ""
         
         guard let data = image.jpegData(compressionQuality: 0.7) else { return nil }
         self.data = data
     }
     
+}
+
+// MARK: - Welcome
+struct ImageUploadData: Codable {
+    var image: String?
+    var imagePath: String?
+    var thumbnail: String?
+    var thumbnailPath: String?
+
+    enum CodingKeys: String, CodingKey {
+        case image
+        case imagePath = "image_path"
+        case thumbnail
+        case thumbnailPath = "thumbnail_path"
+    }
 }

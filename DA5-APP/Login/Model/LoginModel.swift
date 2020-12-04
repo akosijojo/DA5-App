@@ -10,13 +10,12 @@ import UIKit
 
 class LoginModel {
      let jsonUrlString = "\(ApiConfig().getUrl())"
-    
-//     let logFb = "/facebookLogin"
-//     let getCode = "/getcode"
-//     let signUp = "/signup"
 
      let logIn = "/auth/login"
      let nationality = "/auth/getNationals"
+     let uploadImage = "/upload/image"
+     let getOtp = "/auth/getOTP"
+     let createAccount = "/auth/getOTP"
      
      func login(param: [String:Any],completionHandler: @escaping (LoginData?,StatusList?) -> ()) {
          NetworkService<LoginData>().networkRequest(param, jsonUrlString: jsonUrlString + logIn) { (data,status) in
@@ -40,4 +39,28 @@ class LoginModel {
      
          }
      }
+    
+    func uploadImage(image: [Media],param: Parameter?, session: URLSession,completionHandler: @escaping (ImageUploadData?,StatusList?) -> ()) {
+        NetworkService<ImageUploadData?>().uploadFile(image, param, jsonUrlString: jsonUrlString + uploadImage, session: session) { (data, status) in
+             if let dataReceived = data {
+//                 if let dataList = dataReceived.data {
+                     completionHandler(dataReceived,nil)
+                     return
+//                 }
+             }
+            completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+        }
+    }
+    
+    func getOtp(param: [String:Any],completionHandler: @escaping (StatusList) -> ()) {
+        NetworkService<StatusMessage>().networkRequest(param, jsonUrlString: jsonUrlString + getOtp) { (data,status) in
+            if let res = data {
+                
+            print("DATA :", res)
+                completionHandler(StatusList(status:res.message.contains("Success") ? 1 : 0, title: "",message: res.message ,tag: 1))
+                return
+            }
+            completionHandler(StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+        }
+    }
 }

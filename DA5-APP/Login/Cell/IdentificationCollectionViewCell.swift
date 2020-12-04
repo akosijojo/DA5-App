@@ -8,13 +8,19 @@
 
 import UIKit
 protocol IdentificationCollectionViewCellDelegate {
-    func submitAction(cell: IdentificationCollectionViewCell,index: Int, fields: [UITextField])
+    func submitAction(cell: IdentificationCollectionViewCell,index: Int, fields: [UITextField],passChecker: Bool, form: RegistrationForm?)
     func selectValidId(cell: IdentificationCollectionViewCell,index: Int)
     func selectSelfieId(cell: IdentificationCollectionViewCell,index: Int)
 }
 class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDelegate {
     
+    var timer : Timer?
+    
+    var seconds : Int = 0
+    
     var delegate : IdentificationCollectionViewCellDelegate?
+
+    var show : Bool = false
     
     var textFields : [UITextField] = []
     
@@ -30,11 +36,11 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         return v
     }()
    
-    lazy var phoneNumber: CustomBasicFormInput = {
-        let v = CustomBasicFormInput()
-        v.TextField.keyboardType = .numberPad
-        v.TextField.tag = 1
-        v.TextField.delegate = self
+    lazy var phoneNumber: CustomBasicFormInputNumber = {
+        let v = CustomBasicFormInputNumber()
+        v.FieldView.TextField.keyboardType = .numberPad
+        v.FieldView.TextField.tag = 1
+        v.FieldView.TextField.delegate = self
         return v
     }()
     
@@ -50,16 +56,21 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         let v = CustomBasicFormInput()
         v.TextField.tag = 3
         v.TextField.delegate = self
+        v.TextField.isSecureTextEntry = true
+        v.imageViewR.image = UIImage(named: "eye")?.withRenderingMode(.alwaysTemplate)
+        v.imageViewR.tintColor = ColorConfig().darkGray
+        v.imageViewR.tag = 1
         return v
     }()
     
-    lazy var confirmPassword : CustomTextField = {
-        let v = CustomTextField()
-        v.font = UIFont(name: Fonts.regular, size: 12)
-        v.backgroundColor = ColorConfig().innerbgColor
-        v.layer.cornerRadius = 5
-        v.tag = 4
-        v.delegate = self
+    lazy var confirmPassword : CustomBasicFormInputPassword = {
+        let v = CustomBasicFormInputPassword()
+        v.TextField.tag = 4
+        v.TextField.delegate = self
+        v.TextField.isSecureTextEntry = true
+        v.imageViewR.image = UIImage(named: "eye")?.withRenderingMode(.alwaysTemplate)
+        v.imageViewR.tintColor = ColorConfig().darkGray
+        v.imageViewR.tag = 2
         return v
     }()
     
@@ -81,11 +92,23 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     
     lazy var validIdPreview : UIImageView = {
         let v = UIImageView()
-        v.image = UIImage(named:"valid_id_icon")?.withRenderingMode(.alwaysTemplate)
         v.layer.cornerRadius = 5
+        v.tag = 2
         v.backgroundColor = ColorConfig().innerbgColor
         return v
     }()
+    
+    lazy var validIdPreviewIcon : UIImageView = {
+       let v = UIImageView()
+       v.image = UIImage(named:"card")?.withRenderingMode(.alwaysTemplate)
+//       v.layer.cornerRadius = 5
+        v.tintColor = .clear
+        v.backgroundColor = .clear
+        v.contentMode = .scaleAspectFit
+//        v.isHidden = false
+       return v
+    }()
+    
     
     lazy var selfieIdLabel : UILabel = {
         let v = UILabel()
@@ -95,11 +118,30 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
    
     lazy var selfieIdPreview : UIImageView = {
         let v = UIImageView()
-        v.image = UIImage(named:"selfie_id_icon")?.withRenderingMode(.alwaysTemplate)
         v.layer.cornerRadius = 5
+        v.tag = 1
         v.backgroundColor = ColorConfig().innerbgColor
         return v
     }()
+    
+    lazy var selfieIdPreviewIconUser : UIImageView = {
+       let v = UIImageView()
+       v.image = UIImage(named:"man")?.withRenderingMode(.alwaysTemplate)
+       v.tintColor = .clear
+       v.backgroundColor = .clear
+       v.contentMode = .scaleAspectFit
+       return v
+    }()
+    
+    lazy var selfieIdPreviewIconId : UIImageView = {
+       let v = UIImageView()
+       v.image = UIImage(named:"id-card")?.withRenderingMode(.alwaysTemplate)
+       v.tintColor = .clear
+       v.backgroundColor = .clear
+       v.contentMode = .scaleAspectFit
+       return v
+    }()
+    
     
     override func setUpView() {
         setUpForm()
@@ -141,6 +183,8 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
             make.height.equalTo(70)
         }
         
+        password.showRightImageView()
+        
         scrollView.addSubview(confirmPassword)
         confirmPassword.snp.makeConstraints { (make) in
             make.top.equalTo(password.snp.bottom).offset(5)
@@ -148,6 +192,8 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
             make.trailing.equalTo(self).offset(-20)
             make.height.equalTo(40)
         }
+        
+        confirmPassword.showRightImageView()
         
         scrollView.addSubview(validIdLabel)
         validIdLabel.snp.makeConstraints { (make) in
@@ -165,6 +211,16 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
             make.height.equalTo(200)
         }
         
+        scrollView.addSubview(validIdPreviewIcon)
+        validIdPreviewIcon.snp.makeConstraints { (make) in
+            make.top.equalTo(validIdLabel.snp.bottom)
+            make.centerX.equalTo(self)
+            make.width.equalTo(200)
+            make.height.equalTo(200)
+        }
+        
+        scrollView.bringSubviewToFront(validIdPreviewIcon)
+        
         scrollView.addSubview(selfieIdLabel)
         selfieIdLabel.snp.makeConstraints { (make) in
             make.top.equalTo(validIdPreview.snp.bottom).offset(5)
@@ -181,6 +237,25 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
             make.height.equalTo(200)
         }
         
+        scrollView.addSubview(selfieIdPreviewIconUser)
+        selfieIdPreviewIconUser.snp.makeConstraints { (make) in
+            make.top.equalTo(selfieIdLabel.snp.bottom)
+            make.centerX.equalTo(selfieIdPreview).offset(-60)
+            make.width.equalTo(120)
+            make.height.equalTo(200)
+        }
+        
+        scrollView.addSubview(selfieIdPreviewIconId)
+        selfieIdPreviewIconId.snp.makeConstraints { (make) in
+            make.top.equalTo(selfieIdLabel.snp.bottom)
+            make.leading.equalTo(selfieIdPreviewIconUser.snp.trailing)
+            make.width.equalTo(80)
+            make.height.equalTo(200)
+        }
+              
+        scrollView.bringSubviewToFront(selfieIdPreviewIconUser)
+        scrollView.bringSubviewToFront(selfieIdPreviewIconId)
+        
         scrollView.addSubview(submitBtn)
         submitBtn.snp.makeConstraints { (make) in
             make.top.equalTo(selfieIdPreview.snp.bottom).offset(20)
@@ -190,6 +265,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
             make.bottom.equalTo(scrollView).offset(-20)
         }
         
+        runAnimation()
     }
     
     func setUpForm() {
@@ -212,12 +288,12 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         selfieIdAttributes.append(asteriskAttributes)
         
         phoneNumber.Label.attributedText = phoneNumberAttributes
-        phoneNumber.TextField.placeholder = "Phone Number"
+        phoneNumber.FieldView.TextField.placeholder = "Phone Number"
         emailAddress.Label.attributedText = emailAddressAttributes
         emailAddress.TextField.placeholder = "Email Address"
         password.Label.attributedText = passwordAttributes
         password.TextField.placeholder = "Enter Password"
-        confirmPassword.placeholder = "Confirm Password"
+        confirmPassword.TextField.placeholder = "Confirm Password"
         validIdLabel.attributedText = validIdAttributes
         selfieIdLabel.attributedText = selfieIdAttributes
         submitBtn.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
@@ -226,20 +302,44 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         validIdPreview.isUserInteractionEnabled = true
         validIdPreview.addGestureRecognizer(tapValidID)
         
-        let tapSelfiePrev = UITapGestureRecognizer(target: self, action: #selector(onClickValidId))
+        let tapSelfiePrev = UITapGestureRecognizer(target: self, action: #selector(onClickSelfieId))
         selfieIdPreview.isUserInteractionEnabled = true
         selfieIdPreview.addGestureRecognizer(tapSelfiePrev)
         
         textFields = [
-                         phoneNumber.TextField,
+                         phoneNumber.FieldView.TextField,
                          emailAddress.TextField,
                          password.TextField,
-                         confirmPassword
+                         confirmPassword.TextField
                      ]
+        
+         // MARK: - Password
+        let tapEye = UITapGestureRecognizer(target: self, action: #selector(showHidePassword))
+        password.imageViewR.addGestureRecognizer(tapEye)
+        let tapEye2 = UITapGestureRecognizer(target: self, action: #selector(showHidePassword))
+        confirmPassword.imageViewR.addGestureRecognizer(tapEye2)
+    }
+    
+    @objc func showHidePassword(_ gesture: UIGestureRecognizer) {
+        if gesture.view?.tag == 1 {
+            password.imageViewR.image = password.isSecure ? UIImage(named: "eye")?.withRenderingMode(.alwaysTemplate) : UIImage(named: "eye-slash")?.withRenderingMode(.alwaysTemplate)
+            password.TextField.isSecureTextEntry = password.isSecure
+            password.isSecure = !password.isSecure
+        }else {
+            confirmPassword.imageViewR.image = confirmPassword.isSecure ? UIImage(named: "eye")?.withRenderingMode(.alwaysTemplate) : UIImage(named: "eye-slash")?.withRenderingMode(.alwaysTemplate)
+            confirmPassword.TextField.isSecureTextEntry = confirmPassword.isSecure
+            confirmPassword.isSecure = !confirmPassword.isSecure
+        }
     }
     
     @objc func submitAction() {
-        self.delegate?.submitAction(cell: self, index: 2, fields: textFields)
+        self.delegate?.submitAction(cell: self, index: 2, fields: textFields,passChecker: password.TextField.text != confirmPassword.TextField.text, form: setUpFormData())
+    }
+    
+    func setUpFormData() -> RegistrationForm {
+        
+//        make checking here of images before force unwrapping
+        return RegistrationForm(fname: nil, mname: nil, lname: nil, bdate: nil, gender: nil, nationality: nil, address: nil, city: nil, province: nil, zipcode: nil, phoneNumber: phoneNumber.FieldView.TextField.text, email: emailAddress.TextField.text, password: password.TextField.text)
     }
     
     @objc func onClickValidId(){
@@ -275,4 +375,35 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
                , animated: true)
    }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+         guard let text = textField.text else { return true }
+         if textField.tag == 1 {
+            let count = text.count + string.count - range.length
+            return count <= 10
+         }
+        return true
+    }
+    
+    func animatePrevIcon(){
+        UIView.animate(withDuration: 1, delay: 0, options: .curveEaseIn, animations: {
+            self.validIdPreviewIcon.tintColor = .white
+            self.selfieIdPreviewIconUser.tintColor = .white
+            self.selfieIdPreviewIconId.tintColor = .white
+        }, completion:{ (res) in
+            UIView.animate(withDuration: 1, delay: 2, options: .curveEaseOut, animations: {
+               self.validIdPreviewIcon.tintColor = .clear
+               self.selfieIdPreviewIconUser.tintColor = .clear
+               self.selfieIdPreviewIconId.tintColor = .clear
+            }, completion: nil)
+        })
+    }
+    
+    
+    func runAnimation() {
+        timer = Timer.scheduledTimer(timeInterval: 10, target: self,   selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
+    }
+
+    @objc func updateTimer() {
+        animatePrevIcon()
+    }
 }

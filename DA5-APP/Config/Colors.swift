@@ -24,4 +24,6 @@ struct ColorConfig {
     let darkGray : UIColor? = UIColor(hex: "707070")
     let red : UIColor? = UIColor(hex: "ff6666")
     let darkRed : UIColor? = UIColor(hex: "cc0000")
+    
+    let screenWidth: CGFloat = UIScreen.main.bounds.width
 }

@@ -13,12 +13,14 @@ PODS:
     - FBSDKShareKit/Share (= 7.1.1)
   - FBSDKShareKit/Share (7.1.1):
     - FBSDKCoreKit (~> 7.1.1)
+  - PKHUD (5.3.0)
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
+  - PKHUD (~> 5.0)
   - SnapKit (<= 4.2.0)
 
 SPEC REPOS:
@@ -26,14 +28,16 @@ SPEC REPOS:
     - FBSDKCoreKit
     - FBSDKLoginKit
     - FBSDKShareKit
+    - PKHUD
     - SnapKit
 
 SPEC CHECKSUMS:
   FBSDKCoreKit: b46507dc8b8cefed31d644e74d7cc30e2a715ef8
   FBSDKLoginKit: 1a61d79e2b25e2fc0d03dccab1e34b38bbdf2546
   FBSDKShareKit: 00a055c1999b099596e00212dd1c0600c6697019
+  PKHUD: 98f3e4bc904b9c916f1c5bb6d765365b5357291b
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: c6d0059fd1cdb6bbcc70f4f7257e06b8e29ca6a1
+PODFILE CHECKSUM: 27b53059ed1b932a121f36821e0febf964b955dd
 
 COCOAPODS: 1.9.3

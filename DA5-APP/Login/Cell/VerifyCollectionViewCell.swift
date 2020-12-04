@@ -22,7 +22,6 @@ class VerifyCollectionViewCell: BaseCollectionViewCell, UITextFieldDelegate {
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
         v.title.text = "Please enter the 6 digit code sent to"
-        v.desc.text  = "+639123456789"
         v.title.font = UIFont(name: Fonts.regular, size: 12)
         v.desc.font = UIFont(name: Fonts.bold, size: 20)
         return v

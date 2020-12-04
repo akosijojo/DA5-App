@@ -8,12 +8,7 @@
 
 import UIKit
 
-typealias Parameter = [String: String]
-
 class SampleUploadViewController: UIViewController {
-    
-
-
     func getRequest(_ sender: Any) {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/users") else { return }
         var request = URLRequest(url: url)
@@ -46,11 +41,11 @@ class SampleUploadViewController: UIViewController {
     
     func postRequest() {
         
-//        let parameters = ["name": "TestFile123",
-//                          "description": "Sample Test Image Upload"]
+        let parameters = ["name": "TestFile123",
+                          "description": "Sample Test Image Upload"]
         
-        guard let mediaImage = Media(withImage: UIImage(named: "user")!, forKey: "file") else { return }
-         let jsonUrlString = "\(ApiConfig().getUrl())/upload/image"
+        guard let mediaImage = Media(withImage: UIImage(named: "user")!, forKey: "image") else { return }
+         let jsonUrlString = "https://api.imgur.com/3/image"
 //        "https://api.imgur.com/3/image"
         guard let url = URL(string: jsonUrlString) else { return }
         var request = URLRequest(url: url)
@@ -60,9 +55,9 @@ class SampleUploadViewController: UIViewController {
         
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
-//        request.addValue("Client-ID e4ad6408dd7371f", forHTTPHeaderField: "Authorization")
+        request.addValue("Client-ID e4ad6408dd7371f", forHTTPHeaderField: "Authorization")
         
-        let dataBody = createDataBody(withParameters: nil, media: [mediaImage], boundary: boundary)
+        let dataBody = createDataBody(withParameters: parameters, media: [mediaImage], boundary: boundary)
         request.httpBody = dataBody
         
         let session = URLSession.shared
@@ -117,14 +112,14 @@ class SampleUploadViewController: UIViewController {
 }
 
 
-extension Data {
-    mutating func append(_ string: String) {
-        if let data = string.data(using: .utf8) {
-            append(data)
-        }
-    }
-}
-
+//extension Data {
+//    mutating func append(_ string: String) {
+//        if let data = string.data(using: .utf8) {
+//            append(data)
+//        }
+//    }
+//}
+//
 
 
 

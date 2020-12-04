@@ -8,7 +8,7 @@
 
 import UIKit
 protocol BasicInfoCellDelegate {
-    func submitAction(cell: BasicInfoCell,index: Int, fields: [UITextField])
+    func submitAction(cell: BasicInfoCell,index: Int, fields: [UITextField],form: RegistrationForm?)
 }
 class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     weak var vc : SignUpViewController?
@@ -342,7 +342,11 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     }
 
     @objc func submitAction() {
-        self.delegate?.submitAction(cell: self, index: 1, fields: textFields)
+        self.delegate?.submitAction(cell: self, index: 1, fields: textFields, form: setUpFormData())
+    }
+    
+    func setUpFormData() -> RegistrationForm {
+        return RegistrationForm(fname: fname.TextField.text, mname: mname.TextField.text, lname: lname.TextField.text, bdate: bdate.TextField.text, gender: gender.TextField.text, nationality: nationality.TextField.text, address: address.TextField.text, city: city.TextField.text, province: province.TextField.text, zipcode: zipCode.TextField.text, phoneNumber: nil, email: nil, password: nil, validId: nil, selfieId: nil)
     }
 
     @objc func showGenderPicker() {

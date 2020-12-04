@@ -45,6 +45,10 @@
 		EB78E4F62570CEE800754B2E /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F52570CEE800754B2E /* LoginModel.swift */; };
 		EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F725768DC300754B2E /* SampleUploading .swift */; };
 		EB78E4FA257729D100754B2E /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4F9257729D100754B2E /* Media.swift */; };
+		EB78E4FD25790B0000754B2E /* UIImageViewExtension .swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4FC25790AFF00754B2E /* UIImageViewExtension .swift */; };
+		EB78E4FF257920CA00754B2E /* ModalProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4FE257920CA00754B2E /* ModalProgressViewController.swift */; };
+		EB78E5022579346900754B2E /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E5012579346900754B2E /* Helper.swift */; };
+		EB78E50425793A3B00754B2E /* CapturedIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E50325793A3B00754B2E /* CapturedIdViewController.swift */; };
 		EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */; };
 		EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */; };
 		EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DE256BDD8300B0B4CC /* NewsCell.swift */; };
@@ -130,6 +134,10 @@
 		EB78E4F52570CEE800754B2E /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		EB78E4F725768DC300754B2E /* SampleUploading .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SampleUploading .swift"; sourceTree = "<group>"; };
 		EB78E4F9257729D100754B2E /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
+		EB78E4FC25790AFF00754B2E /* UIImageViewExtension .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageViewExtension .swift"; sourceTree = "<group>"; };
+		EB78E4FE257920CA00754B2E /* ModalProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalProgressViewController.swift; sourceTree = "<group>"; };
+		EB78E5012579346900754B2E /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		EB78E50325793A3B00754B2E /* CapturedIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedIdViewController.swift; sourceTree = "<group>"; };
 		EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewBorderedCell.swift; sourceTree = "<group>"; };
 		EB8850DE256BDD8300B0B4CC /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
@@ -232,6 +240,8 @@
 				EBFB98432509199D0057FA79 /* TermsViewController.swift */,
 				EB78E4EE256FDAD500754B2E /* NationalityViewController.swift */,
 				EB78E4F725768DC300754B2E /* SampleUploading .swift */,
+				EB78E4FE257920CA00754B2E /* ModalProgressViewController.swift */,
+				EB78E50325793A3B00754B2E /* CapturedIdViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -339,6 +349,22 @@
 				EB78E4F32570102500754B2E /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EB78E4FB25790AE800754B2E /* ImageView */ = {
+			isa = PBXGroup;
+			children = (
+				EB78E4FC25790AFF00754B2E /* UIImageViewExtension .swift */,
+			);
+			path = ImageView;
+			sourceTree = "<group>";
+		};
+		EB78E5002579345A00754B2E /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				EB78E5012579346900754B2E /* Helper.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		EB8850E9256CDF8F00B0B4CC /* Side Menu */ = {
@@ -488,6 +514,8 @@
 		EBA973E624EC10C5001C09DB /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EB78E5002579345A00754B2E /* Helper */,
+				EB78E4FB25790AE800754B2E /* ImageView */,
 				EBC7E4602509204B00B70B35 /* String */,
 				EBFB9845250919E40057FA79 /* Textfield */,
 				EBFB983B250793C60057FA79 /* Alert */,
@@ -746,6 +774,7 @@
 				EB607FF324ECF008008ECF4F /* CustomTextField.swift in Sources */,
 				EB77E63925663F1F000479CF /* PinViewController.swift in Sources */,
 				EB78E4E9256E0F8600754B2E /* AccountData.swift in Sources */,
+				EB78E50425793A3B00754B2E /* CapturedIdViewController.swift in Sources */,
 				EBFB983D250793DA0057FA79 /* Alert Extension.swift in Sources */,
 				EB3DD6AA24F76B5800BDBE0C /* HomeCoordinator.swift in Sources */,
 				EBA973E524EC0FCB001C09DB /* Colors.swift in Sources */,
@@ -760,8 +789,10 @@
 				EB77E63B2566464E000479CF /* CustomPinTextField.swift in Sources */,
 				EBFB98422507E7800057FA79 /* VerifyCollectionViewCell.swift in Sources */,
 				EBA973E124EBB4A6001C09DB /* MainCoordinator.swift in Sources */,
+				EB78E4FD25790B0000754B2E /* UIImageViewExtension .swift in Sources */,
 				EB78E4E7256E08DC00754B2E /* TransactionHistoryData.swift in Sources */,
 				EB77E6412567AB07000479CF /* HeaderCollectionViewCell.swift in Sources */,
+				EB78E4FF257920CA00754B2E /* ModalProgressViewController.swift in Sources */,
 				EB8850E3256BEBCF00B0B4CC /* TransactionHistoryCell.swift in Sources */,
 				EB55D53324F7B83A0094DB60 /* IdentificationCollectionViewCell.swift in Sources */,
 				EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */,
@@ -774,6 +805,7 @@
 				EB3DD6B724F7752400BDBE0C /* BaseCollectionViewCell.swift in Sources */,
 				EBA973F024EC15CF001C09DB /* Fonts.swift in Sources */,
 				EBA973DF24EBB47B001C09DB /* Coordinator.swift in Sources */,
+				EB78E5022579346900754B2E /* Helper.swift in Sources */,
 				EB78E4F1256FFC6D00754B2E /* NationalityCell.swift in Sources */,
 				EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */,
 				EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */,

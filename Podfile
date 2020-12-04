@@ -10,6 +10,7 @@ target 'DA5-APP' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
+  pod 'PKHUD', '~> 5.0'
 #  pod 'Alamofire', '~> 5.2'
   
   #target 'DA5-APPTests' do

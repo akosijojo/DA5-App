@@ -11,15 +11,29 @@ import AVFoundation
 
 class SignUpViewController: BaseViewControler {
     var bdate : UITextField? = nil
-    let datePicker : UIDatePicker? = nil
+    var datePicker : UIDatePicker? = nil
     var pagerIndex : Int = 0
     
     var viewModel : LoginViewModel?
-    
-    var samUpload = SampleUploadViewController()
-    
+    let sampleUpload = SampleUploadViewController()
+
     var bdayCheck : Bool = true
     let errorMessage = "Only provide information that is true and correct. If you're below 18 years old, you may be required to present a parental consent. Users below 10 years old are not allowed to register."
+    
+    var imageViewSelected: Int = 1
+    
+    var validId : UIImage? {
+        didSet {
+            print("SEETTTING ")
+            self.collectionView.reloadData()
+        }
+    }
+    var selfieId : UIImage? {
+        didSet {
+            print("SEETTTING ")
+          self.collectionView.reloadData()
+        }
+    }
     
     lazy var pager : PagerView = {
         let v = PagerView()
@@ -41,6 +55,14 @@ class SignUpViewController: BaseViewControler {
         return view
     }()
     
+//    lazy var modalView : modalLoadingView = {
+//        let v = modalLoadingView()
+//        v.backgroundColor = UIColor(white: 0, alpha: 0.2)
+//        v.container.backgroundColor = .white
+//
+//        return v
+//    }()
+
     let form1 = "form1"
     let form2 = "form2"
     let form3 = "form3"
@@ -74,7 +96,33 @@ class SignUpViewController: BaseViewControler {
     
     override func getData() {
         self.viewModel?.returnNationalityList = { [weak self] data in
-            self?.nationalityList = data
+            DispatchQueue.main.async {
+                self?.nationalityList = data
+            }
+        }
+        self.viewModel?.onSuccessRequest = { [weak self] res in
+            DispatchQueue.main.async {
+                if let tag = res?.tag {
+                    //MARK: -Check if OTP SUCCEED
+                    if tag == 1 {
+                        self?.gotoPage3(index: 2)//show Form 3 verification
+                    }
+                }
+            }
+        }
+        
+        self.viewModel?.uploadProgress = { [weak self] progress in
+            DispatchQueue.main.async {
+              print("PROGRESS ",progress)
+                Helper().onProgress(title: "Uploading", message: String(format: "%.0f",progress * 100)+"%")
+                // checking kung tapus na
+            }
+        }
+//
+        self.viewModel?.onErrorHandling = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showAlert(buttonOK: "Ok", message: error?.message ?? "", actionOk: nil, completionHandler: nil)
+            }
         }
         self.viewModel?.getNationality()
     }
@@ -157,6 +205,11 @@ class SignUpViewController: BaseViewControler {
             self.pager.collectionView.reloadData()
             self.view.endEditing(true)
         }else {
+            //remove data in memory
+            self.validId = nil
+            self.selfieId = nil
+            self.bdate = nil
+            self.viewModel = nil
             self.navigationController?.popViewController(animated: true)
         }
     }
@@ -272,12 +325,21 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
                 return UICollectionViewCell()
             }
             cell.delegate = self
+            if let vImg = validId {
+                cell.validIdPreview.image = vImg
+            }
+            if let sImg = selfieId {
+                cell.selfieIdPreview.image = sImg
+            }
             return cell
         }else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: form3, for: indexPath) as? VerifyCollectionViewCell else {
                 return UICollectionViewCell()
             }
             cell.delegate = self
+            if let mobileNum = self.viewModel?.registrationForm?.phoneNumber {
+                cell.headerView.desc.text = "+63"+mobileNum
+            }
             return cell
         }
     }
@@ -289,8 +351,9 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
         return CGSize(width: self.collectionView.frame.width, height: self.collectionView.frame.height)
     }
     
-    func showFormError(fields: [UITextField]) -> Bool{
-        if formChecker(fields: fields){
+    func showFormError(fields: [UITextField],image: [UIImage?]? = nil) -> Bool{
+        print("CHECK : \(formChecker(fields: fields)) --",formImageChecker(image: image))
+        if formChecker(fields: fields) || formImageChecker(image: image){
             let alert = self.alert("Ok", "", "Please fill out the following required fields to proceed.") { (act) in
                 
             }
@@ -310,6 +373,7 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
     
     func formChecker(fields: [UITextField]) -> Bool {
         for x in 0...fields.count - 1 {
+            print("CHECK : ",fields[x].text)
             if (fields[x].text ?? "") == "" {
                 return true
             }
@@ -317,92 +381,176 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
         
         return false
     }
+    
+    func formImageChecker(image: [UIImage?]?) -> Bool {
+        if let imgArray = image {
+            for x in 0...imgArray.count - 1 {
+               if image?[x] == nil {
+                 return true
+               }
+            }
+        }
+        return false
+    }
+    
+    
+//    func showCustomModal(show: Bool = false) {
+//        if show{
+//            view.addSubview(modalView)
+//            self.modalView.frame = self.view.bounds
+//            UIView.animate(withDuration: 0.2, delay: 0, options: .autoreverse, animations: {
+//
+//                self.modalView.layoutIfNeeded()
+//            }, completion: nil)
+//
+//        }else {
+//            modalView.removeFromSuperview()
+//        }
+//    }
 }
 
 extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollectionViewCellDelegate, VerifyCollectionViewCellDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
-    //form 1
-    func submitAction(cell: BasicInfoCell, index: Int,fields: [UITextField]) {
+    //MARK: - form 1
+    func submitAction(cell: BasicInfoCell, index: Int,fields: [UITextField],form: RegistrationForm?) {
         self.view.endEditing(true)
 //        if showFormError(fields: fields){
-//            self.view.endEditing(true)
-//            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
-//            self.pager.itemIndex = 1
-//            self.pager.collectionView.reloadData()
-//            self.pagerIndex = 1
+            self.view.endEditing(true)
+            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
+            self.pager.itemIndex = 1
+            self.pager.collectionView.reloadData()
+            self.pagerIndex = 1
+            self.viewModel?.registrationForm = form
 //        }
         
-        samUpload.postRequest()
-        
-        
-        
+        //MARK: -TESTING
+//        self.viewModel?.uploadFile()
+//        Helper().onProgress(title: "Downloading",message: "0%")
     }
-    //form 2
-    func submitAction(cell: IdentificationCollectionViewCell, index: Int, fields: [UITextField]) {
+    //MARK: -form 2
+    func submitAction(cell: IdentificationCollectionViewCell, index: Int, fields: [UITextField], passChecker: Bool, form: RegistrationForm?) {
         self.view.endEditing(true)
-//        password checking
-//        images checking 
-        if showFormError(fields: fields){
-            self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
-            self.pager.itemIndex = 2
-            self.pager.collectionView.reloadData()
-            self.pagerIndex = 2
-        }
+//        if passChecker {
+//            self.showAlert(buttonOK: "Ok", message: "Password does not match.", actionOk: { (act) in
+//
+//            }, completionHandler: nil)
+//        }else {
+//            if showFormError(fields: fields, image: [validId,selfieId]){
+//                 self.viewModel?.registrationForm?.setUpIdentification(form: form)
+//                 self.viewModel?.getOtp(number: form?.phoneNumber ?? "", email: form?.email ?? "", isResend: 0)
+//            }
+//        }
+        //MARK: -TESTING
+        gotoPage3(index: 2)
     }
     
+    func gotoPage3(index: Int) {
+        self.viewModel?.registrationForm?.showValues()
+        self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
+        self.pager.itemIndex = 2
+        self.pager.collectionView.reloadData()
+        self.pagerIndex = 2
+    }
+    
+    //MARK: -form 3
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
      // show terms and condition
         coordinator?.termsCoordinator()
     }
     
-    // image
+    //MARK: - SELECT IMAGE
     func selectValidId(cell: IdentificationCollectionViewCell, index: Int) {
-        print("SELECT IMAGE")
-         if UIImagePickerController.isSourceTypeAvailable(.camera){
-            let vc = UIImagePickerController()
-            vc.sourceType = .camera
-            vc.allowsEditing = true
-            vc.delegate = self
-            present(vc, animated: true)
-        }else{
-            let alert = self.alert("Ok", "Camera is not Available", "", action: { (action) in
-            })
-            self.present(alert, animated: true, completion: nil)
-        }
-   
+        let vc = CapturedIdViewController()
+        vc.coordinator = self.coordinator
+        vc.vc = self
+        vc.imageView.image = self.validId
+        vc.type = 1
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func selectSelfieId(cell: IdentificationCollectionViewCell, index: Int) {
-        if UIImagePickerController.isSourceTypeAvailable(.camera){
-            let vc = UIImagePickerController()
-            vc.sourceType = .camera
-            vc.allowsEditing = true
-            vc.delegate = self
-            vc.showsCameraControls = true
-            self.present(vc, animated: true)
-        }else{
-            let alert = self.alert("Ok", "Camera is not Available", "", action: { (action) in
-            })
-            self.present(alert, animated: true, completion: nil)
-        }
+        let vc = CapturedIdViewController()
+        vc.coordinator = self.coordinator
+        vc.vc = self
+        vc.type = 2
+        vc.imageView.image = self.selfieId
+        navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true)
-        
-        // save image
-        // reload collectionview cell
-        //
 
-        guard let image = info[.editedImage] as? UIImage else {
-            print("No image found")
-            return
-        }
-
-        // print out the image size as a test
-        print(image.size)
-    }
 }
 
 
 
 
+
+//MARK: - MODAL SAMPLE
+class modalLoadingView: UIView {
+    
+    lazy var container : UIView = {
+        let v = UIView()
+        v.backgroundColor = .white
+        return v
+    }()
+    
+    lazy var mainLabel : UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: Fonts.regular, size: 12)
+        v.text = "Please wait"
+        v.textAlignment = .center
+        return v
+    }()
+    
+    lazy var activity : UIActivityIndicatorView = {
+        let v = UIActivityIndicatorView(style: .gray)
+        return v
+    }()
+    
+    lazy var loadingPercentage : UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: Fonts.regular, size: 12)
+        v.text = "0%"
+        v.textAlignment = .center
+        return v
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        setUpView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setUpView() {
+        addSubview(container)
+        container.snp.makeConstraints { (make) in
+            make.centerY.equalTo(self)
+            make.leading.equalTo(self).offset(20)
+            make.trailing.equalTo(self).offset(-20)
+            make.height.equalTo(180)
+        }
+        container.addSubview(mainLabel)
+        mainLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(container).offset(20)
+            make.leading.equalTo(container).offset(20)
+            make.trailing.equalTo(container).offset(-20)
+            make.height.equalTo(40)
+        }
+        container.addSubview(activity)
+        activity.snp.makeConstraints { (make) in
+            make.top.equalTo(mainLabel.snp.bottom).offset(20)
+            make.width.equalTo(40).offset(20)
+            make.centerX.equalTo(container)
+            make.height.equalTo(40)
+        }
+        container.addSubview(loadingPercentage)
+        loadingPercentage.snp.makeConstraints { (make) in
+            make.top.equalTo(activity.snp.bottom).offset(10)
+            make.leading.equalTo(container).offset(20)
+            make.trailing.equalTo(container).offset(-20)
+            make.bottom.equalTo(container).offset(-20)
+        }
+    }
+    
+}
