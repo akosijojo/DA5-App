@@ -189,7 +189,7 @@ struct CustomerLocal: Codable {
            let decoder = JSONDecoder()
            if let customerData = try? decoder.decode(CustomerLocal.self, from: savedCustomer) {
               print("Get Customer from local")
-              print(customerData)
+//              print(customerData)
               return customerData
            }
        }

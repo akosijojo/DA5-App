@@ -11,20 +11,29 @@ import UIKit
 class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegateFlowLayout{
 
     var refreshControl : UIRefreshControl?
+    var isRefreshing  : Bool = false
     var viewModel : HomeViewModel?
     fileprivate let cellId = "cellId"
+    fileprivate let cellId1 = "cellId1"
     fileprivate let cellId2 = "cellId2"
+    fileprivate let cellId3 = "cellId3"
+    fileprivate let cellId4 = "cellId4"
     fileprivate let mainHeaderId = "mainHeaderId"
     fileprivate let headerId = "headerId"
+    fileprivate let cell = "cell"
+    
+    var loaded : Bool = false
     
     var customerData : Customer?
     
     var homeData : HomeData? {
         didSet {
             DispatchQueue.main.async {
-//                self.refreshControl?.endRefreshing()
+                self.refreshControl?.endRefreshing()
+                self.newsData = self.homeData?.news
+                self.pTransactionData = self.homeData?.pendingTransaction
+                self.tHistoryData = self.homeData?.transactionHistory
                 self.collectionView.reloadData()
-                print("DATA : \(self.homeData?.news?.count)")
             }
         }
     }
@@ -32,6 +41,9 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     var accountData : AccountData? = AccountData(id: 1, name: "User", image: "user", balance: "1,000,000.00 PHP")
     
     var servicesData : [ServicesData] = []
+    var newsData : [NewsData]? = []
+    var pTransactionData : [PendingTransactionsData]? = []
+    var tHistoryData : [TransactionHistoryData]? = []
 
     var sideMenuView = SideMenuView()
     
@@ -42,8 +54,11 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         collectionView.backgroundColor = .white
         hidesKeyboardOnTapArround()
         // Do any additional setup after loading the view.
-        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView.register(CollectionViewBorderedCell.self, forCellWithReuseIdentifier: cellId2)
+        collectionView.register(ServicesCollectionViewCell.self, forCellWithReuseIdentifier: cellId1)
+        collectionView.register(NewsCollectionViewCell.self, forCellWithReuseIdentifier: cellId2)
+        collectionView.register(PendingTransactionCollectionViewCell.self, forCellWithReuseIdentifier: cellId3)
+        collectionView.register(TransactionHistoryCollectionViewCell.self, forCellWithReuseIdentifier: cellId4)
+        
         collectionView.register(HomeHeaderCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:mainHeaderId)
         collectionView.register(HeaderCollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier:headerId)
         setUpView()
@@ -68,8 +83,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     func setUpRefreshView() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-//        refreshControl?.attributedTitle = NSAttributedString(string: "Refresh Collection View", attributes: nil)
-        
+        refreshControl?.attributedTitle = NSAttributedString(string: "Refresh Collection View", attributes: nil)
         if #available(iOS 10.0, *) {
             collectionView.refreshControl = refreshControl
         } else {
@@ -78,12 +92,19 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     @objc func refreshData() {
-         self.viewModel?.getHomeData(id: self.customerData?.id ?? 0)
+        print("REFRESHING ? ")
+        isRefreshing = true
+        self.viewModel?.getHomeData(id: self.customerData?.id ?? 0)
+       
     }
     
     override func getData() {
         self.viewModel?.onSuccessGettingList = { [weak self] data in
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            self?.isRefreshing = false
+            self?.refreshControl?.endRefreshing()
+                
             self?.homeData = data
             self?.homeData?.news = [
                  NewsData(id: 1, name: "Western", image: "western"),
@@ -91,13 +112,14 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                  NewsData(id: 3, name: "Western", image: "western"),
                  NewsData(id: 4, name: "Western", image: "western"),
             ]
-            
-//            self?.homeData?.pendingTransaction =  [
-//               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
-//               PendingTransactionsData(id: 1, title: "Western", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
-//               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
-//           ]
-            
+//
+//                self?.homeData?.pendingTransaction = []
+            self?.homeData?.pendingTransaction =  [
+               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
+               PendingTransactionsData(id: 1, title: "Western", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
+               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
+           ]
+
             self?.homeData?.transactionHistory = [
                 TransactionHistoryData(id: 1, title: "CASH IN", info: "Paymaya", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
                 TransactionHistoryData(id: 1, title: "BANK TRANSFER", info: "GCASH", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
@@ -120,13 +142,13 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
               // saving of users in local to check if logged in or not then goto pincode
 //              self?.coordinator?.pinCodeCoordinator(customerData: data)
 //              self?.stopAnimating()
-            
+                
            })
+
         }
         
         self.viewModel?.onSuccessGenerateToken = { [weak self] data in
             DispatchQueue.main.async {
-                print(" WHYYYYYYY YYYYY")
                 self?.viewModel?.getHomeData(id: self?.customerData?.id ?? 0)
             }
         }
@@ -184,7 +206,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return self.homeData == nil ? 1 : 5
+        return  self.homeData == nil ? 1 : 5
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -193,31 +215,33 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.section {
+        print(" INDEX : \(indexPath.section)")
+//        let refresh = isRefreshing ? 1 : 0
+        switch indexPath.section{
         case 1 :
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId2, for: indexPath) as? CollectionViewBorderedCell else {return UICollectionViewCell()}
-            cell.setUpCollectionView(type: indexPath.section)
-            cell.section = indexPath.section
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId1, for: indexPath) as? ServicesCollectionViewCell else {return UICollectionViewCell()}
+            cell.setUpCollectionView()
             cell.servicesData = servicesData
             cell.delegate = self
             return cell
-        case 4 :
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId2, for: indexPath) as? CollectionViewBorderedCell else {return UICollectionViewCell()}
-            cell.setUpCollectionView(type: indexPath.section)
-            cell.section = indexPath.section
-            cell.tHistoryData = self.homeData?.transactionHistory
+        case 2 :
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId2, for: indexPath) as? NewsCollectionViewCell else {return UICollectionViewCell()}
             cell.delegate = self
+            cell.setUpCollectionView()
+            cell.newsData = newsData
+            return cell
+        case 3 :
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId3, for: indexPath) as? PendingTransactionCollectionViewCell else {return UICollectionViewCell()}
+            cell.delegate = self
+            cell.setUpCollectionView()
+            cell.pTransactionsData = pTransactionData
             return cell
         default:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? CollectionViewCell else {return UICollectionViewCell()}
-            cell.setUpCollectionView(type: indexPath.section)
-            cell.section = indexPath.section
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId4, for: indexPath) as? TransactionHistoryCollectionViewCell else {return UICollectionViewCell()}
+            cell.setUpCollectionView()
+            cell.section = 4
+            cell.tHistoryData = tHistoryData
             cell.delegate = self
-            if indexPath.section == 2 {
-                cell.newsData = self.homeData?.news
-            }else {
-                cell.pTransactionsData = self.homeData?.pendingTransaction
-            }
             return cell
         }
     }
@@ -229,27 +253,22 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         let tHistoryHeight = 80 * (self.homeData?.transactionHistory?.count ?? 0)
         let vheight = indexPath.section == 1 ? servicesHeight : (indexPath.section == 4 ? tHistoryHeight : newsHeight)
         
-        return CGSize(width: view.frame.width, height: CGFloat(vheight))
+        print(" HYEYEYE : \(indexPath.section)")
+        
+        return CGSize(width: collectionView.frame.width, height: CGFloat(vheight))
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: section == 0 ? 0 : (section == 3 ? (self.homeData?.pendingTransaction?.count ?? 0 > 0 ? 10 : 0 ): 10), right: 0)
     }
     
-    override func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-        print("AT THE TOP")
-    }
-    
-    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print("SCROLLING : \(scrollView.contentOffset.y)")
-        
-        
-    }
 }
 //MENU
 extension HomeViewController : HomeHeaderCollectionViewCellDelegate {
     func onClickMenu(cell: HomeHeaderCollectionViewCell) {
+        sideMenuView.userData = self.homeData?.customer
         sideMenuView.updateSideMenu(width: sideMenuView.isShowMenu ? 0 : 250)
+        self.viewModel?.getHomeData(id: self.customerData?.id ?? 0)
     }
 }
 

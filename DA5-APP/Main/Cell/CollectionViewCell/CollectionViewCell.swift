@@ -111,6 +111,7 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
     }
     var tHistoryData : [TransactionHistoryData]?{
         didSet {
+            print("RELOAD")
             self.collectionView.reloadData()
         }
     }
@@ -152,16 +153,16 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
         collectionView.dataSource = self
        
         
-        switch type {
-        case 1:
+//        switch type {
+//        case 1:
             collectionView.register(ServicesCell.self, forCellWithReuseIdentifier: servicesCellId)
-        case 2:
+//        case 2:
             collectionView.register(NewsCell.self, forCellWithReuseIdentifier: newsCellId)
-        case 3:
+//        case 3:
             collectionView.register(PendingTransactionCell.self, forCellWithReuseIdentifier: pTransactionCellId)
-        default:
+//        default:
              collectionView.register(TransactionHistoryCell.self, forCellWithReuseIdentifier: tHistoryCellId)
-        }
+//        }
         
     }
     

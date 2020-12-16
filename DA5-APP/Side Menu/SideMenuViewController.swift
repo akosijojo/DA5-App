@@ -16,6 +16,7 @@ class SideMenuView : UIView {
     weak var vc : HomeViewController?
     var isShowMenu : Bool = false
     var widthMultiplier : CGFloat = 0.6 // percentage
+    var userData : Customer?
     
     let containerView : UIView = {
         let v = UIView()
@@ -162,7 +163,6 @@ class SideMenuView : UIView {
         })
         
         vc?.collectionView.isScrollEnabled = isShowMenu ? false : true
-        
     }
     
     @objc func dismissSelfAnimate(_ gesture: UIPanGestureRecognizer ) {

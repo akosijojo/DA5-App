@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		4A97F5B89C7F1F0591B6F277 /* Pods_DA5_APP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 521F3617168060CF15A0942B /* Pods_DA5_APP.framework */; };
 		EB0F439A2589AEF0008858B1 /* CollectionViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F43992589AEF0008858B1 /* CollectionViewExtension.swift */; };
+		EB0F439C258A5719008858B1 /* ServicesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F439B258A5719008858B1 /* ServicesCollectionViewCell.swift */; };
+		EB0F439E258A583B008858B1 /* NewsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F439D258A583B008858B1 /* NewsCollectionViewCell.swift */; };
+		EB0F43A2258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F43A1258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift */; };
+		EB0F43A4258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F43A3258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift */; };
 		EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6A324F653D800BDBE0C /* SignUpViewController.swift */; };
 		EB3DD6A624F6543D00BDBE0C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6A524F6543D00BDBE0C /* HomeViewController.swift */; };
 		EB3DD6AA24F76B5800BDBE0C /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6A924F76B5800BDBE0C /* HomeCoordinator.swift */; };
@@ -112,6 +116,10 @@
 		521F3617168060CF15A0942B /* Pods_DA5_APP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DA5_APP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5EC25FAE5766187ADEBF50 /* Pods-DA5-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DA5-APP.debug.xcconfig"; path = "Target Support Files/Pods-DA5-APP/Pods-DA5-APP.debug.xcconfig"; sourceTree = "<group>"; };
 		EB0F43992589AEF0008858B1 /* CollectionViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewExtension.swift; sourceTree = "<group>"; };
+		EB0F439B258A5719008858B1 /* ServicesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesCollectionViewCell.swift; sourceTree = "<group>"; };
+		EB0F439D258A583B008858B1 /* NewsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCollectionViewCell.swift; sourceTree = "<group>"; };
+		EB0F43A1258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTransactionCollectionViewCell.swift; sourceTree = "<group>"; };
+		EB0F43A3258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		EB3DD6A324F653D800BDBE0C /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		EB3DD6A524F6543D00BDBE0C /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		EB3DD6A924F76B5800BDBE0C /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
@@ -250,6 +258,32 @@
 			path = CollectionView;
 			sourceTree = "<group>";
 		};
+		EB0F439F258A5993008858B1 /* CollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */,
+				EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */,
+				EB0F439B258A5719008858B1 /* ServicesCollectionViewCell.swift */,
+				EB0F439D258A583B008858B1 /* NewsCollectionViewCell.swift */,
+				EB0F43A1258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift */,
+				EB0F43A3258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift */,
+			);
+			path = CollectionViewCell;
+			sourceTree = "<group>";
+		};
+		EB0F43A0258A59A5008858B1 /* CellViewa */ = {
+			isa = PBXGroup;
+			children = (
+				EB77E6352565776B000479CF /* HomeHeaderCollectionViewCell.swift */,
+				EB77E6402567AB07000479CF /* HeaderCollectionViewCell.swift */,
+				EB77E642256B552C000479CF /* ServicesCell.swift */,
+				EB8850DE256BDD8300B0B4CC /* NewsCell.swift */,
+				EB8850E0256BE06100B0B4CC /* PendingTransactionCell.swift */,
+				EB8850E2256BEBCF00B0B4CC /* TransactionHistoryCell.swift */,
+			);
+			path = CellViewa;
+			sourceTree = "<group>";
+		};
 		EB3DD6AB24F76EDD00BDBE0C /* Keyboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,14 +363,8 @@
 		EB77E63425657736000479CF /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				EB77E6352565776B000479CF /* HomeHeaderCollectionViewCell.swift */,
-				EB77E6402567AB07000479CF /* HeaderCollectionViewCell.swift */,
-				EB77E642256B552C000479CF /* ServicesCell.swift */,
-				EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */,
-				EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */,
-				EB8850DE256BDD8300B0B4CC /* NewsCell.swift */,
-				EB8850E0256BE06100B0B4CC /* PendingTransactionCell.swift */,
-				EB8850E2256BEBCF00B0B4CC /* TransactionHistoryCell.swift */,
+				EB0F43A0258A59A5008858B1 /* CellViewa */,
+				EB0F439F258A5993008858B1 /* CollectionViewCell */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -837,6 +865,7 @@
 			files = (
 				EB55D52F24F78A3E0094DB60 /* CustomHeaderView.swift in Sources */,
 				EB3DD6AD24F76EF800BDBE0C /* KeyboardExtension.swift in Sources */,
+				EB0F439C258A5719008858B1 /* ServicesCollectionViewCell.swift in Sources */,
 				EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */,
 				EB77ED0F25872A7800D99528 /* ForgotPinViewController.swift in Sources */,
 				EB8850EE256D5CA500B0B4CC /* ServicesData.swift in Sources */,
@@ -880,6 +909,7 @@
 				EB55D53324F7B83A0094DB60 /* IdentificationCollectionViewCell.swift in Sources */,
 				EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */,
 				EB7A2943257E1BF800482CDC /* ButtonExtension.swift in Sources */,
+				EB0F439E258A583B008858B1 /* NewsCollectionViewCell.swift in Sources */,
 				EBA973A824EBB342001C09DB /* ViewController.swift in Sources */,
 				EB78E4E5256E08CC00754B2E /* PendingTransactionsData.swift in Sources */,
 				EB78E4FA257729D100754B2E /* Media.swift in Sources */,
@@ -896,8 +926,10 @@
 				EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */,
 				EB77ED1125886E9500D99528 /* HomeData.swift in Sources */,
 				EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */,
+				EB0F43A2258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift in Sources */,
 				EB78E4E1256E077D00754B2E /* TermsAndConditionsViewController.swift in Sources */,
 				EB77ED0A257FCF6B00D99528 /* UserDefaults.swift in Sources */,
+				EB0F43A4258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift in Sources */,
 				EB77E643256B552C000479CF /* ServicesCell.swift in Sources */,
 				EB78E4EF256FDAD500754B2E /* NationalityViewController.swift in Sources */,
 				EBA973A424EBB342001C09DB /* AppDelegate.swift in Sources */,
