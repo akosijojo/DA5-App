@@ -81,5 +81,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs permission to access camera. Camera will be use to capture ID&apos;s needed to register in this app.</string>
 </dict>
 </plist>

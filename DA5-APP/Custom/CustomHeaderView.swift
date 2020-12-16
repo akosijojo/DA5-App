@@ -9,6 +9,12 @@
 import UIKit
 
 class CustomHeaderView : UIView {
+    lazy var mainTitle : UILabel = {
+       let v = UILabel()
+       v.font = UIFont(name: Fonts.bold, size: 20)
+       return v
+    }()
+    
     lazy var title : UILabel = {
         let v = UILabel()
         v.font = UIFont(name: Fonts.bold, size: 20)
@@ -44,3 +50,56 @@ class CustomHeaderView : UIView {
         }
     }
 }
+
+
+
+class CustomHeaderView2 : UIView {
+    lazy var mainTitle : UILabel = {
+       let v = UILabel()
+       v.font = UIFont(name: Fonts.bold, size: 20)
+       return v
+    }()
+    
+    lazy var title : UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: Fonts.bold, size: 20)
+        return v
+    }()
+    lazy var desc : UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: Fonts.regular, size: 12)
+        return v
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpView()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setUpView() {
+        addSubview(mainTitle)
+        mainTitle.snp.makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.leading.trailing.equalTo(self)
+            make.height.equalTo(40)
+        }
+        
+        addSubview(title)
+        title.snp.makeConstraints { (make) in
+            make.top.equalTo(mainTitle.snp.bottom)
+            make.leading.trailing.equalTo(self)
+            make.height.equalTo(20)
+        }
+        addSubview(desc)
+        desc.snp.makeConstraints { (make) in
+            make.top.equalTo(title.snp.bottom)
+            make.leading.trailing.equalTo(self)
+            make.bottom.equalTo(self)
+        }
+    }
+}
+

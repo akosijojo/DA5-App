@@ -13,6 +13,8 @@ class MainCoordinator :  NSObject, Coordinator {
     weak var parentCoordinator: MainCoordinator?
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
+    var usersDataLocal = CustomerLocal().getCustomerFromLocal()
+    var showPinOnChangeAppState : Bool = false
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -29,12 +31,26 @@ class MainCoordinator :  NSObject, Coordinator {
 //        if user {
 //            homeCoordinator()
 //        }else {
-            logInCoordinator() // no account
-//            pinCodeCoordinator() // have account not logged in
+//            logInCoordinator() // no account
+//            pinCodeCoordinator(isChecking: true) // have account not logged in
 //        }
+        if let customerLocalData = usersDataLocal{
+            pinCodeCoordinator(customerData: customerLocalData.convertData()) // have account not logged in
+        }else {
+             logInCoordinator()
+        }
+        
     }
     
-    func logInCoordinator() {
+    func removeCustomerLocalData() {
+        UserDefaults.standard.removeObject(forKey: AppConfig().customerLocalKey)
+    }
+    
+    func logInCoordinator(didLogout: Bool? = nil) {
+        if let _ = didLogout {
+            self.removeCustomerLocalData()
+        }
+        
         if self.navigationController.viewControllers.count > 0 {
            self.navigationController.viewControllers.removeAll()
         }
@@ -55,16 +71,32 @@ class MainCoordinator :  NSObject, Coordinator {
        navigationController.pushViewController(vc, animated: false)
     }
 
-    func pinCodeCoordinator() {
+    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil) {
         let vc = PinViewController()
         vc.coordinator = self
+        vc.viewModel = LoginViewModel()
+        vc.viewModel?.model = LoginModel()
+        vc.customerData = customerData
+        vc.isChecking = usersDataLocal?.mpin == nil ? (customerData?.mpin == nil ? true : false) : false
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
     
-    func termsCoordinator() {
+    func forgotMPINCoordinator() {
+       let vc = ForgotPinViewController()
+       vc.viewModel = LoginViewModel()
+       vc.viewModel?.model = LoginModel()
+       vc.mobileNumber = usersDataLocal?.phone
+       vc.emailAddress = usersDataLocal?.email
+       vc.coordinator = self
+       navigationController.setNavigationBarHidden(false, animated: false)
+       navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func termsCoordinator(parentView: UIViewController?) {
        let vc = TermsViewController()
        vc.coordinator = self
+       vc.parentView = parentView
        navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
     }
@@ -101,6 +133,9 @@ class MainCoordinator :  NSObject, Coordinator {
         }
         let vc = HomeViewController(collectionViewLayout: UICollectionViewFlowLayout())
         vc.coordinator = self
+        vc.viewModel = HomeViewModel()
+        vc.viewModel?.model = HomeModel()
+        vc.customerData = self.usersDataLocal?.convertData()
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
@@ -120,6 +155,32 @@ class MainCoordinator :  NSObject, Coordinator {
                 break
             }
         }
+    }
+    
+    func becomeInActiveState() {
+        print("VIEW CONTROLLERS : \(self.navigationController.viewControllers)")
+        if let _ =  self.navigationController.viewControllers.last as? PinViewController {
+            self.showPinOnChangeAppState = false
+        }else {
+             self.showPinOnChangeAppState = true
+        }
+    }
+    func becomeActiveState() {
+        if let usersData = usersDataLocal {
+            if self.showPinOnChangeAppState {
+               self.removeAllViewController()
+               self.pinCodeCoordinator(customerData: usersData.convertData())
+            }
+        }
+    }
+    
+    func removeAllViewController() {
+        if let _ = usersDataLocal {
+            if self.navigationController.viewControllers.count > 0 {
+                 print("REMOVING ACTIVE VIEWS : \(self.navigationController.viewControllers.count)")
+                self.navigationController.viewControllers.removeAll()
+            }
+       }
     }
 }
 

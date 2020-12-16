@@ -16,7 +16,7 @@ class CustomNumPad : UIView {
     }
     var maxInput : Int = 0
     lazy var btn1 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("1", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -26,7 +26,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn2 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("2", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -36,7 +36,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn3 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("3", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -46,7 +46,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn4 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("4", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -56,7 +56,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn5 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("5", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -66,7 +66,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn6 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("6", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -76,7 +76,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn7 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("7", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -86,7 +86,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn8 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("8", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -96,7 +96,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btn9 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("9", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -105,8 +105,18 @@ class CustomNumPad : UIView {
         return btn
     }()
     
+     lazy var btnBack : UIButton = {
+         let btn = UIButton(type: .system)
+        btn.setTitleColor(ColorConfig().black, for: .normal)
+        btn.setTitle("Back", for: .normal)
+        btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 16)
+        btn.tag = 14
+        btn.isHidden = true
+        return btn
+    }()
+    
     lazy var btn0 : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setTitle("0", for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.medium, size: 20)
@@ -116,7 +126,7 @@ class CustomNumPad : UIView {
     }()
     
     lazy var btnDel : UIButton = {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitleColor(ColorConfig().black, for: .normal)
         btn.setImage(UIImage(named: "backspace"), for: .normal)
         btn.titleLabel?.font = UIFont(name: Fonts.regular, size: 16)
@@ -202,18 +212,24 @@ class CustomNumPad : UIView {
                 make.height.equalTo(self).multipliedBy(0.25)
             }
                 // 4th layer
-
-                 addSubview(btnDel)
-                 btnDel.snp.makeConstraints { (make) in
-                    make.top.equalTo(btn9.snp.bottom)
-                    make.trailing.equalTo(self)
-                    make.width.equalTo(self).multipliedBy(0.33)
-                    make.height.equalTo(self).multipliedBy(0.25)
-                }
-                 addSubview(btn0)
-                 btn0.snp.makeConstraints { (make) in
-                     make.top.equalTo(btn8.snp.bottom)
-                     make.centerX.equalTo(self)
+                addSubview(btnBack)
+                  btnBack.snp.makeConstraints { (make) in
+                      make.top.equalTo(btn7.snp.bottom)
+                      make.leading.equalTo(self)
+                      make.width.equalTo(self).multipliedBy(0.33)
+                      make.height.equalTo(self).multipliedBy(0.25)
+                  }
+                  addSubview(btn0)
+                  btn0.snp.makeConstraints { (make) in
+                      make.top.equalTo(btn8.snp.bottom)
+                      make.centerX.equalTo(self)
+                      make.width.equalTo(self).multipliedBy(0.33)
+                      make.height.equalTo(self).multipliedBy(0.25)
+                  }
+                  addSubview(btnDel)
+                  btnDel.snp.makeConstraints { (make) in
+                     make.top.equalTo(btn9.snp.bottom)
+                     make.trailing.equalTo(self)
                      make.width.equalTo(self).multipliedBy(0.33)
                      make.height.equalTo(self).multipliedBy(0.25)
                  }
@@ -230,6 +246,11 @@ class CustomNumPad : UIView {
             numPadOutput.removeLast()
         }
     }
+    
+    func clearText() {
+        numPadOutput = ""
+    }
+    
     
 }
 

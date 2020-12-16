@@ -120,13 +120,15 @@ class LoginViewController: BaseViewControler {
             DispatchQueue.main.async {
                 self?.customerData = data
                 // saving of users in local to check if logged in or not then goto pincode
-                self?.coordinator?.pinCodeCoordinator()
+                self?.coordinator?.pinCodeCoordinator(customerData: data)
+                self?.stopAnimating()
             }
         }
        
         self.viewModel?.onErrorHandling = { [weak self] error in
             DispatchQueue.main.async {
                 self?.showAlert(buttonOK: "Ok", message: error?.message ?? "", actionOk: nil, completionHandler: nil)
+                self?.stopAnimating()
             }
         }
     }
@@ -199,11 +201,10 @@ class LoginViewController: BaseViewControler {
         DispatchQueue.main.async {
             self.view.endEditing(true)
             if let username = self.unameTextfield.text , let password = self.passTextfield.text{
+                self.setAnimate(msg: "Please wait")
                 self.viewModel?.login(param: ["unique": username, "password" : password ])
             }
         }
-       
-        
 //        coordinator?.homeCoordinator(setAsRoot: true)
     }
     @objc func signupAction() {

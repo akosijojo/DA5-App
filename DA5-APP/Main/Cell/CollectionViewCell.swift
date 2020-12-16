@@ -8,7 +8,7 @@
 
 import UIKit
 protocol CollectionViewCellDelegate: class {
-    func onClickShowView(cell: CollectionViewCell, type: Int, data: [String:AnyObject]?)
+    func onClickShowView(cell: UICollectionViewCell, type: Int, index: Int)
 }
 
 class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
@@ -30,6 +30,8 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
                return UICollectionViewCell()
            }
             cell.data = servicesData?[indexPath.item]
+            cell.delegate = self
+            cell.index = indexPath.item
            return cell
         case 2:
            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: newsCellId, for: indexPath) as? NewsCell else {
@@ -37,18 +39,23 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
           }
            cell.data = newsData?[indexPath.item]
            cell.delegate = self
+           cell.index = indexPath.item
           return cell
         case 3:
           guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: pTransactionCellId, for: indexPath) as? PendingTransactionCell else {
              return UICollectionViewCell()
          }
           cell.data = pTransactionsData?[indexPath.item]
+          cell.delegate = self
+          cell.index = indexPath.item
          return cell
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: tHistoryCellId, for: indexPath) as? TransactionHistoryCell else {
                 return UICollectionViewCell()
             }
             cell.data = tHistoryData?[indexPath.item]
+            cell.delegate = self
+            cell.index = indexPath.item
             return cell
         }
     }
@@ -87,10 +94,26 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
     var pTransactionCellId = "cellId"
     var tHistoryCellId = "cellId"
     
-    var servicesData : [ServicesData]?
-    var newsData : [NewsData]?
-    var pTransactionsData : [PendingTransactionsData]?
-    var tHistoryData : [TransactionHistoryData]?
+    var servicesData : [ServicesData]? {
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
+    var newsData : [NewsData]?{
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
+    var pTransactionsData : [PendingTransactionsData]?{
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
+    var tHistoryData : [TransactionHistoryData]?{
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
     
     lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -144,11 +167,31 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
     
 }
 
-extension CollectionViewCell: NewsCellDelegate {
-    func onClickItem(cell: NewsCell, data: [String : AnyObject]?, type: Int) {
-        self.delegate?.onClickShowView(cell: self, type: type, data: data)
+extension CollectionViewCell: NewsCellDelegate ,ServicesDelegate, PendingTransactionDelegate, TransactionHistoryDelegate{
+    
+    func onClickItem(cell: ServicesCell, index: Int?) {
+        if let item = index{
+            self.delegate?.onClickShowView(cell: cell, type: 1, index: item)
+        }
     }
     
+    func onClickItem(cell: NewsCell, index: Int?, type: Int) {
+        if let item = index{
+            self.delegate?.onClickShowView(cell: cell, type: type, index: item)
+        }
+    }
+
+    func onClickItem(cell: PendingTransactionCell, index: Int?) {
+         if let item = index{
+            self.delegate?.onClickShowView(cell: cell, type: 3, index: item)
+         }
+    }
+    
+    func onClickItem(cell: TransactionHistoryCell, index: Int?) {
+         if let item = index{
+            self.delegate?.onClickShowView(cell: cell, type: 4, index: item)
+        }
+    }
     
 }
 

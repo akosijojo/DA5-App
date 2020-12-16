@@ -95,6 +95,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        coordinator?.becomeActiveState()
+    }
 
+    func applicationWillResignActive(_ application: UIApplication) {
+        coordinator?.becomeInActiveState()
+    }
+    
 }
 

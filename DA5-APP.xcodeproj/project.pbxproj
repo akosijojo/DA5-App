@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4A97F5B89C7F1F0591B6F277 /* Pods_DA5_APP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 521F3617168060CF15A0942B /* Pods_DA5_APP.framework */; };
+		EB0F439A2589AEF0008858B1 /* CollectionViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F43992589AEF0008858B1 /* CollectionViewExtension.swift */; };
 		EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6A324F653D800BDBE0C /* SignUpViewController.swift */; };
 		EB3DD6A624F6543D00BDBE0C /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6A524F6543D00BDBE0C /* HomeViewController.swift */; };
 		EB3DD6AA24F76B5800BDBE0C /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6A924F76B5800BDBE0C /* HomeCoordinator.swift */; };
@@ -31,6 +32,12 @@
 		EB77E63F25679D7F000479CF /* SampleLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77E63E25679D7F000479CF /* SampleLayoutViewController.swift */; };
 		EB77E6412567AB07000479CF /* HeaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77E6402567AB07000479CF /* HeaderCollectionViewCell.swift */; };
 		EB77E643256B552C000479CF /* ServicesCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77E642256B552C000479CF /* ServicesCell.swift */; };
+		EB77ED0A257FCF6B00D99528 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77ED09257FCF6B00D99528 /* UserDefaults.swift */; };
+		EB77ED0C25831B8200D99528 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77ED0B25831B8200D99528 /* Token.swift */; };
+		EB77ED0F25872A7800D99528 /* ForgotPinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77ED0E25872A7800D99528 /* ForgotPinViewController.swift */; };
+		EB77ED1125886E9500D99528 /* HomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77ED1025886E9500D99528 /* HomeData.swift */; };
+		EB77ED1525886F6E00D99528 /* HomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77ED1425886F6E00D99528 /* HomeModel.swift */; };
+		EB77ED1725886F7E00D99528 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB77ED1625886F7E00D99528 /* HomeViewModel.swift */; };
 		EB78E4DB256E05FD00754B2E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4DA256E05FD00754B2E /* ProfileViewController.swift */; };
 		EB78E4DF256E077000754B2E /* PrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4DE256E077000754B2E /* PrivacyViewController.swift */; };
 		EB78E4E1256E077D00754B2E /* TermsAndConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4E0256E077D00754B2E /* TermsAndConditionsViewController.swift */; };
@@ -49,6 +56,9 @@
 		EB78E4FF257920CA00754B2E /* ModalProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E4FE257920CA00754B2E /* ModalProgressViewController.swift */; };
 		EB78E5022579346900754B2E /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E5012579346900754B2E /* Helper.swift */; };
 		EB78E50425793A3B00754B2E /* CapturedIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB78E50325793A3B00754B2E /* CapturedIdViewController.swift */; };
+		EB7A293E257A4CED00482CDC /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7A293D257A4CED00482CDC /* ViewControllerExtension.swift */; };
+		EB7A2940257DD6A500482CDC /* CustomProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7A293F257DD6A500482CDC /* CustomProgressView.swift */; };
+		EB7A2943257E1BF800482CDC /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7A2942257E1BF800482CDC /* ButtonExtension.swift */; };
 		EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */; };
 		EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */; };
 		EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DE256BDD8300B0B4CC /* NewsCell.swift */; };
@@ -101,6 +111,7 @@
 		3C275E078581678EB57718C9 /* Pods-DA5-APP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DA5-APP.release.xcconfig"; path = "Target Support Files/Pods-DA5-APP/Pods-DA5-APP.release.xcconfig"; sourceTree = "<group>"; };
 		521F3617168060CF15A0942B /* Pods_DA5_APP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DA5_APP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5EC25FAE5766187ADEBF50 /* Pods-DA5-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DA5-APP.debug.xcconfig"; path = "Target Support Files/Pods-DA5-APP/Pods-DA5-APP.debug.xcconfig"; sourceTree = "<group>"; };
+		EB0F43992589AEF0008858B1 /* CollectionViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewExtension.swift; sourceTree = "<group>"; };
 		EB3DD6A324F653D800BDBE0C /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		EB3DD6A524F6543D00BDBE0C /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		EB3DD6A924F76B5800BDBE0C /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
@@ -120,6 +131,12 @@
 		EB77E63E25679D7F000479CF /* SampleLayoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleLayoutViewController.swift; sourceTree = "<group>"; };
 		EB77E6402567AB07000479CF /* HeaderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCollectionViewCell.swift; sourceTree = "<group>"; };
 		EB77E642256B552C000479CF /* ServicesCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesCell.swift; sourceTree = "<group>"; };
+		EB77ED09257FCF6B00D99528 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		EB77ED0B25831B8200D99528 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		EB77ED0E25872A7800D99528 /* ForgotPinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPinViewController.swift; sourceTree = "<group>"; };
+		EB77ED1025886E9500D99528 /* HomeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeData.swift; sourceTree = "<group>"; };
+		EB77ED1425886F6E00D99528 /* HomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModel.swift; sourceTree = "<group>"; };
+		EB77ED1625886F7E00D99528 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		EB78E4DA256E05FD00754B2E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EB78E4DE256E077000754B2E /* PrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewController.swift; sourceTree = "<group>"; };
 		EB78E4E0256E077D00754B2E /* TermsAndConditionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsViewController.swift; sourceTree = "<group>"; };
@@ -138,6 +155,9 @@
 		EB78E4FE257920CA00754B2E /* ModalProgressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalProgressViewController.swift; sourceTree = "<group>"; };
 		EB78E5012579346900754B2E /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		EB78E50325793A3B00754B2E /* CapturedIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedIdViewController.swift; sourceTree = "<group>"; };
+		EB7A293D257A4CED00482CDC /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
+		EB7A293F257DD6A500482CDC /* CustomProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProgressView.swift; sourceTree = "<group>"; };
+		EB7A2942257E1BF800482CDC /* ButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtension.swift; sourceTree = "<group>"; };
 		EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewBorderedCell.swift; sourceTree = "<group>"; };
 		EB8850DE256BDD8300B0B4CC /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
@@ -222,6 +242,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		EB0F43982589AEDA008858B1 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				EB0F43992589AEF0008858B1 /* CollectionViewExtension.swift */,
+			);
+			path = CollectionView;
+			sourceTree = "<group>";
+		};
 		EB3DD6AB24F76EDD00BDBE0C /* Keyboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -242,6 +270,7 @@
 				EB78E4F725768DC300754B2E /* SampleUploading .swift */,
 				EB78E4FE257920CA00754B2E /* ModalProgressViewController.swift */,
 				EB78E50325793A3B00754B2E /* CapturedIdViewController.swift */,
+				EB7A293F257DD6A500482CDC /* CustomProgressView.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -280,6 +309,7 @@
 				EB55D52C24F778E70094DB60 /* UsersData.swift */,
 				EB78E4F52570CEE800754B2E /* LoginModel.swift */,
 				EB78E4F9257729D100754B2E /* Media.swift */,
+				EB77ED0B25831B8200D99528 /* Token.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -315,8 +345,33 @@
 			isa = PBXGroup;
 			children = (
 				EB77E63825663F1F000479CF /* PinViewController.swift */,
+				EB77ED0E25872A7800D99528 /* ForgotPinViewController.swift */,
 			);
 			path = Pin;
+			sourceTree = "<group>";
+		};
+		EB77ED08257FCF5100D99528 /* UserDefaults */ = {
+			isa = PBXGroup;
+			children = (
+				EB77ED09257FCF6B00D99528 /* UserDefaults.swift */,
+			);
+			path = UserDefaults;
+			sourceTree = "<group>";
+		};
+		EB77ED1225886F5600D99528 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EB77ED1625886F7E00D99528 /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EB77ED1325886F5F00D99528 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EB77ED1425886F6E00D99528 /* HomeModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		EB78E4D9256E05E500754B2E /* Profile */ = {
@@ -367,6 +422,22 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		EB7A293C257A4CD200482CDC /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				EB7A293D257A4CED00482CDC /* ViewControllerExtension.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		EB7A2941257E1BED00482CDC /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				EB7A2942257E1BF800482CDC /* ButtonExtension.swift */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
 		EB8850E9256CDF8F00B0B4CC /* Side Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -386,6 +457,7 @@
 				EB78E4E4256E08CC00754B2E /* PendingTransactionsData.swift */,
 				EB78E4E6256E08DC00754B2E /* TransactionHistoryData.swift */,
 				EB78E4E8256E0F8600754B2E /* AccountData.swift */,
+				EB77ED1025886E9500D99528 /* HomeData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -415,6 +487,7 @@
 		EBA973A224EBB342001C09DB /* DA5-APP */ = {
 			isa = PBXGroup;
 			children = (
+				EB77ED08257FCF5100D99528 /* UserDefaults */,
 				EB607FF024ECEFEB008ECF4F /* Custom */,
 				EBA973E624EC10C5001C09DB /* Extension */,
 				EBA973DB24EBB435001C09DB /* Coordinator */,
@@ -465,6 +538,8 @@
 		EBA973D724EBB41F001C09DB /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				EB77ED1325886F5F00D99528 /* Model */,
+				EB77ED1225886F5600D99528 /* ViewModel */,
 				EB8850EC256D5C9100B0B4CC /* Data */,
 				EB77E63425657736000479CF /* Cell */,
 				EB3DD6AF24F7747600BDBE0C /* ViewController */,
@@ -514,6 +589,9 @@
 		EBA973E624EC10C5001C09DB /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				EB0F43982589AEDA008858B1 /* CollectionView */,
+				EB7A2941257E1BED00482CDC /* Button */,
+				EB7A293C257A4CD200482CDC /* ViewController */,
 				EB78E5002579345A00754B2E /* Helper */,
 				EB78E4FB25790AE800754B2E /* ImageView */,
 				EBC7E4602509204B00B70B35 /* String */,
@@ -760,6 +838,7 @@
 				EB55D52F24F78A3E0094DB60 /* CustomHeaderView.swift in Sources */,
 				EB3DD6AD24F76EF800BDBE0C /* KeyboardExtension.swift in Sources */,
 				EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */,
+				EB77ED0F25872A7800D99528 /* ForgotPinViewController.swift in Sources */,
 				EB8850EE256D5CA500B0B4CC /* ServicesData.swift in Sources */,
 				EB77E6362565776B000479CF /* HomeHeaderCollectionViewCell.swift in Sources */,
 				EB8850EB256CDFA300B0B4CC /* SideMenuViewController.swift in Sources */,
@@ -773,15 +852,19 @@
 				EBFB9847250919F90057FA79 /* Texfield Extension.swift in Sources */,
 				EB607FF324ECF008008ECF4F /* CustomTextField.swift in Sources */,
 				EB77E63925663F1F000479CF /* PinViewController.swift in Sources */,
+				EB7A2940257DD6A500482CDC /* CustomProgressView.swift in Sources */,
 				EB78E4E9256E0F8600754B2E /* AccountData.swift in Sources */,
 				EB78E50425793A3B00754B2E /* CapturedIdViewController.swift in Sources */,
+				EB7A293E257A4CED00482CDC /* ViewControllerExtension.swift in Sources */,
 				EBFB983D250793DA0057FA79 /* Alert Extension.swift in Sources */,
 				EB3DD6AA24F76B5800BDBE0C /* HomeCoordinator.swift in Sources */,
+				EB77ED1725886F7E00D99528 /* HomeViewModel.swift in Sources */,
 				EBA973E524EC0FCB001C09DB /* Colors.swift in Sources */,
 				EBA973DD24EBB44D001C09DB /* BaseViewController.swift in Sources */,
 				EB8850E5256C135E00B0B4CC /* BaseSecondaryViewController.swift in Sources */,
 				EB77E63F25679D7F000479CF /* SampleLayoutViewController.swift in Sources */,
 				EB78E4ED256F827B00754B2E /* NetworkService.swift in Sources */,
+				EB77ED1525886F6E00D99528 /* HomeModel.swift in Sources */,
 				EB77E63D25669757000479CF /* CustomNumPad.swift in Sources */,
 				EB78E4F62570CEE800754B2E /* LoginModel.swift in Sources */,
 				EBA973E824EC10F2001C09DB /* ColorExtension.swift in Sources */,
@@ -796,6 +879,7 @@
 				EB8850E3256BEBCF00B0B4CC /* TransactionHistoryCell.swift in Sources */,
 				EB55D53324F7B83A0094DB60 /* IdentificationCollectionViewCell.swift in Sources */,
 				EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */,
+				EB7A2943257E1BF800482CDC /* ButtonExtension.swift in Sources */,
 				EBA973A824EBB342001C09DB /* ViewController.swift in Sources */,
 				EB78E4E5256E08CC00754B2E /* PendingTransactionsData.swift in Sources */,
 				EB78E4FA257729D100754B2E /* Media.swift in Sources */,
@@ -805,11 +889,15 @@
 				EB3DD6B724F7752400BDBE0C /* BaseCollectionViewCell.swift in Sources */,
 				EBA973F024EC15CF001C09DB /* Fonts.swift in Sources */,
 				EBA973DF24EBB47B001C09DB /* Coordinator.swift in Sources */,
+				EB77ED0C25831B8200D99528 /* Token.swift in Sources */,
 				EB78E5022579346900754B2E /* Helper.swift in Sources */,
 				EB78E4F1256FFC6D00754B2E /* NationalityCell.swift in Sources */,
+				EB0F439A2589AEF0008858B1 /* CollectionViewExtension.swift in Sources */,
 				EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */,
+				EB77ED1125886E9500D99528 /* HomeData.swift in Sources */,
 				EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */,
 				EB78E4E1256E077D00754B2E /* TermsAndConditionsViewController.swift in Sources */,
+				EB77ED0A257FCF6B00D99528 /* UserDefaults.swift in Sources */,
 				EB77E643256B552C000479CF /* ServicesCell.swift in Sources */,
 				EB78E4EF256FDAD500754B2E /* NationalityViewController.swift in Sources */,
 				EBA973A424EBB342001C09DB /* AppDelegate.swift in Sources */,

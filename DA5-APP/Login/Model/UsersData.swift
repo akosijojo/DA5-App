@@ -8,7 +8,71 @@
 // MARK: - Users
 import UIKit
 
-struct UsersData: Codable {
+//MARK: -REGISTRATION FORM
+struct RegistrationForm {
+    var fname : String?
+    var mname : String?
+    var lname : String?
+    var bdate : String?
+    var gender : String?
+    var nationality : String?
+    var address : String?
+    var city : String?
+    var province : String?
+    var zipcode : String?
+    var phoneNumber : String?
+    var email : String?
+    var password : String?
+    var validId : String?
+    var selfieId : String?
+    var code : String?
+//     'first_name'        => $request->first_name,
+//     'middle_name'       => $request->middle_name,
+//     'last_name'         => $request->last_name,
+//     'birth_date'        => $request->birth_date,
+//     'password'          => Hash::make($request->password),
+//     'gender'            => $request->gender,
+//     'address'           => $request->address,
+//     'city'              => $request->city,
+//     'province'          => $request->province,
+//     'zip_code'          => $request->zip_code,
+//     'nationality'       => $request->nationality,
+//     'facebook_id'       => $request->facebook_id,
+//     'apple_id'          => $request->apple_id,
+//     'phone'             => $request->phone,
+//     'email'             => $request->email,
+//     'id_picture'        => $request->id_picture,
+//     'id_picture2'       => $request->id_picture2,
+//     'platform'          => $request->platform
+
+    mutating func setUpIdentification(form: RegistrationForm?) {
+        self.phoneNumber = form?.phoneNumber
+        self.email = form?.email
+        self.password = form?.password
+        print("SET IDENTIFICATION")
+    }
+    
+    func showValues() {
+        print("First Name: ",fname ?? "")
+        print("MIDDLE NAME: ",mname ?? "")
+        print("LAST NAME: ",lname ?? "")
+        print("BDATE: ",bdate ?? "")
+        print("GENDER: ",gender ?? "")
+        print("NATION: ",nationality ?? "")
+        print("ADDRESS: ",address ?? "")
+        print("CITY: ",city ?? "")
+        print("PROVINCE: ",province ?? "")
+        print("ZIPCODE: ",zipcode ?? "")
+        print("PHONE: ",phoneNumber ?? "")
+        print("EMAIL: ",email ?? "")
+        print("PASSWORD ",password ?? "")
+        print("VALID ID URL ",validId ?? "")
+        print("SELFIE ID URL ",selfieId ?? "")
+        print("CODE ",code ?? "")
+    }
+}
+
+struct UsersData: Decodable {
     var fname : String = ""
     var mname : String = ""
     var lname : String = ""
@@ -21,13 +85,13 @@ struct UsersData: Codable {
 }
 
 // MARK: - Nationality
-struct Nationality: Codable {
+struct Nationality: Decodable {
     let nationals: [String]
 }
  
 
 // MARK: - Welcome
-struct LoginData: Codable {
+struct LoginData: Decodable {
     var accessToken, tokenType: String?
     var expiresIn: Int?
     var refreshToken: String?
@@ -43,7 +107,7 @@ struct LoginData: Codable {
 }
 
 // MARK: - Customer
-struct Customer: Codable {
+struct Customer: Decodable {
     var id: Int?
     var firstName: String?
     var middleName: String?
@@ -87,4 +151,61 @@ struct Customer: Codable {
         case idPictureThumbnail1 = "id_picture_thumbnail1"
         case idPictureThumbnail2 = "id_picture_thumbnail2"
     }
+    
+    func convertToLocalData() -> CustomerLocal {
+        return CustomerLocal(id: id, firstName: firstName, middleName: middleName, lastName: lastName, birthDate: birthDate, mpin: mpin, gender: gender, image: image, address: address, city: city, province: province, zipCode: zipCode, nationality: nationality, facebookID: facebookID, appleID: appleID, phone: phone, email: email, idPicture: idPicture, idPicture2: idPicture2, phoneVerifiedAt: phoneVerifiedAt, emailVerifiedAt: emailVerifiedAt, referenceNo: referenceNo, kycStatus: kycStatus, kycNotice: kycNotice, kycUpdatedAt: kycUpdatedAt, platform: platform, createdAt: createdAt, updatedAt: updatedAt, idPictureThumbnail1: idPictureThumbnail1, idPictureThumbnail2: idPictureThumbnail2)
+    }
 }
+struct CustomerLocal: Codable {
+    var id: Int?
+    var firstName: String?
+    var middleName: String?
+    var lastName, birthDate, mpin, gender: String?
+    var image, address, city, province: String?
+    var zipCode, nationality: String?
+    var facebookID, appleID: String?
+    var phone, email, idPicture, idPicture2: String?
+    var phoneVerifiedAt: String?
+    var emailVerifiedAt: String?
+    var referenceNo: String?
+    var kycStatus: Int?
+    var kycNotice, kycUpdatedAt: String?
+    var platform: Int?
+    var createdAt, updatedAt, idPictureThumbnail1: String?
+    var idPictureThumbnail2: String?
+    
+    func saveCustomerToLocal() {
+       let encoder = JSONEncoder()
+       if let encoded = try? encoder.encode(self) {
+            print("Saving Customer to local")
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: AppConfig().customerLocalKey)
+       }
+    }
+
+    func getCustomerFromLocal() -> CustomerLocal? {
+       let defaults = UserDefaults.standard
+       if let savedCustomer = defaults.object(forKey: AppConfig().customerLocalKey) as? Data {
+           let decoder = JSONDecoder()
+           if let customerData = try? decoder.decode(CustomerLocal.self, from: savedCustomer) {
+              print("Get Customer from local")
+              print(customerData)
+              return customerData
+           }
+       }
+       return nil
+    }
+    
+    func checkIfExistingData() -> Bool {
+        if UserDefaults.standard.object(forKey: AppConfig().customerLocalKey) != nil {
+            return true
+        }
+        return false
+    }
+    
+    func convertData() -> Customer {
+        return Customer(id: id, firstName: firstName, middleName: middleName, lastName: lastName, birthDate: birthDate, mpin: mpin, gender: gender, image: image, address: address, city: city, province: province, zipCode: zipCode, nationality: nationality, facebookID: facebookID, appleID: appleID, phone: phone, email: email, idPicture: idPicture, idPicture2: idPicture2, phoneVerifiedAt: phoneVerifiedAt, emailVerifiedAt: emailVerifiedAt, referenceNo: referenceNo, kycStatus: kycStatus, kycNotice: kycNotice, kycUpdatedAt: kycUpdatedAt, platform: platform, createdAt: createdAt, updatedAt: updatedAt, idPictureThumbnail1: idPictureThumbnail1, idPictureThumbnail2: idPictureThumbnail2)
+    }
+}
+
+

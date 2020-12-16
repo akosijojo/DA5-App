@@ -8,6 +8,7 @@
 
 import UIKit
 class CollectionViewBorderedCell: CollectionViewCell {
+    
     let containerView = UIView()
     override func layoutSubviews() {
         super.layoutSubviews()

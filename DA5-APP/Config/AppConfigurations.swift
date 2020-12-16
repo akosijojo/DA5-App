@@ -8,17 +8,21 @@
 
 import Foundation
 
+//MARK:- APP CONFIGURATIONS
 class AppConfig {
-    
+    var customerLocalKey : String = "CustomerLocalData"
+    var tokenLocalKey : String = "CustomerLocalData"
 }
-
+//MARK:- API CONFIGURATIONS
 class ApiConfig {
     
     var env : String = "dev" //live or dev
-    
-    
     var url = "https";
     
+    var apiUsername : String = "da5"
+    var apiPassword : String = "da5password"
+    
+
     func getUrl() -> String {
         if env == "live" {
            url = "https"
@@ -29,7 +33,7 @@ class ApiConfig {
     }
 
 }
-
+//MARK:- API SET ENCODER
 class Parameters {
 
     static let shared = Parameters()

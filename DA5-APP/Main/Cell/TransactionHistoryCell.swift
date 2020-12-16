@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol TransactionHistoryDelegate: class {
+    func onClickItem(cell: TransactionHistoryCell, index: Int?)
+}
+
 class TransactionHistoryCell: UICollectionViewCell {
     
     var data : TransactionHistoryData? {
@@ -20,6 +24,10 @@ class TransactionHistoryCell: UICollectionViewCell {
             }
         }
     }
+    
+    var delegate : TransactionHistoryDelegate?
+    
+    var index : Int?
     
     lazy var titleLbl : UILabel = {
         let v = UILabel()
@@ -108,6 +116,10 @@ class TransactionHistoryCell: UICollectionViewCell {
             make.trailing.equalTo(self).offset(-10)
             make.height.equalTo(1)
         }
-        
+    }
+    
+    @objc func onClick() {
+        print("CLICKING : \(index)")
+        self.delegate?.onClickItem(cell: self, index: index)
     }
 }

@@ -12,6 +12,8 @@ class TermsViewController: BaseViewControler {
     
     let terms = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus bibendum lacus in vehicula tempus. Curabitur ac hendrerit nunc, a dapibus odio. Nunc commodo neque tempus euismod semper. Vestibulum varius varius sem vitae pharetra. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam urna felis.\n\n Rutrum ornare nunc sit amet, viverra lobortis lectus. Phasellus fringilla ac libero ut consectetur. Integer ut lacinia elit, non laoreet sapien. Donec id luctus felis. Aliquam ultricies ultrices tincidunt. Aliquam erat volutpat. Suspendisse potenti. Donec commodo dui eros, vel laoreet mauris aliquet a. Nullam in auctor turpis. Morbi aliquet nec dui vitae gravida.\n\n Vivamus tempor accumsan vulputate. Curabitur auctor justo sit amet dui fermentum, eu maximus diam porta. Aliquam ultricies nec lorem eget auctor. Donec venenatis, tortor a interdum placerat, purus metus pulvinar massa, ac scelerisque tellus diam sed nisi. Quisque eu turpis urna. Curabitur laoreet sem pharetra arcu dapibus consequat. Mauris semper orci elit.\n\n Vivamus tempor accumsan vulputate. Curabitur auctor justo sit amet dui fermentum, eu maximus diam porta. Aliquam ultricies nec lorem eget auctor. Donec venenatis, tortor a interdum placerat, purus metus pulvinar massa, ac scelerisque tellus diam sed nisi. Quisque eu turpis urna. Curabitur laoreet sem pharetra arcu dapibus consequat."
     
+    weak var parentView : UIViewController?
+    
     lazy var scrollView : UIScrollView = {
         let v = UIScrollView()
         v.backgroundColor = ColorConfig().innerbgColor
@@ -36,23 +38,26 @@ class TermsViewController: BaseViewControler {
         return v
     }()
     
-    lazy var cancel : UILabel = {
-        let v = UILabel()
-        v.text = "Cancel"
-        v.font = UIFont(name: Fonts.bold, size: 14)
-        v.textAlignment = .center
+    lazy var cancel : UIButton = {
+        let v = UIButton()
+        v.titleLabel?.font = UIFont(name: Fonts.regular, size: 14)
+        v.titleLabel?.textAlignment = .center
+        v.setTitle("Cancel", for: .normal)
+        v.setTitleColor(ColorConfig().black, for: .normal)
+        v.addTarget(self, action: #selector(cancelButton), for: .touchUpInside)
         return v
     }()
     
-    lazy var agree : UILabel = {
-        let v = UILabel()
-        v.font = UIFont(name: Fonts.regular, size: 14)
+    lazy var agree : UIButton = {
+        let v = UIButton()
+        v.titleLabel?.font = UIFont(name: Fonts.regular, size: 14)
         v.layer.cornerRadius = 5
         v.layer.masksToBounds = true
-        v.textAlignment = .center
-        v.text = "Agree"
-        v.textColor = ColorConfig().white
+        v.titleLabel?.textAlignment = .center
+        v.setTitle("Agree", for: .normal)
+        v.setTitleColor(ColorConfig().white, for: .normal)
         v.backgroundColor = ColorConfig().black
+        v.addTarget(self, action: #selector(agreeButton), for: .touchUpInside)
         return v
     }()
 
@@ -91,6 +96,22 @@ class TermsViewController: BaseViewControler {
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 20)!]
         let leftButton = UIBarButtonItem(customView: backButton)
         self.navigationItem.leftBarButtonItem = leftButton
+    }
+    
+    @objc func cancelButton() {
+        self.navBackAction()
+    }
+    
+    @objc func agreeButton() {
+        // vc agree terms then action to save data collected
+        // after uploading and saving data show success then show mpin creation and saving
+        if let vc = parentView as? SignUpViewController {
+            self.navigationController?.popViewController(animated: true)
+            
+            vc.agreeOnTermsAndCondition()
+        }else {
+            self.navBackAction()
+        }
     }
     
     override func setUpView() {

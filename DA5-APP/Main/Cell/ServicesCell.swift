@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol ServicesDelegate: class {
+    func onClickItem(cell: ServicesCell, index: Int?)
+}
+
 class ServicesCell: UICollectionViewCell {
     
     var data : ServicesData? {
@@ -19,10 +23,15 @@ class ServicesCell: UICollectionViewCell {
             }
         }
     }
+     
+    var index: Int?
+    
+    var delegate : ServicesDelegate?
     
     let logo : UIImageView = {
        let v = UIImageView()
         v.contentMode = .scaleAspectFit
+        v.isUserInteractionEnabled = true
         return v
     }()
     
@@ -58,6 +67,13 @@ class ServicesCell: UICollectionViewCell {
             make.height.equalTo(20)
         }
        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClick))
+        logo.addGestureRecognizer(tap)
+    }
+    
+    @objc func onClick() {
+        print("CLICKING : \(index)")
+        self.delegate?.onClickItem(cell: self, index: index)
     }
     
 }

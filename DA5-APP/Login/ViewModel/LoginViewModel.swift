@@ -10,8 +10,10 @@ import UIKit
 
 class LoginViewModel : NSObject {
     var model : LoginModel?
+    var onSuccessRegistrationData: ((LoginData?) -> Void)?
     var onSuccessGettingList : ((Customer?) -> Void)?
     var returnNationalityList : ((Nationality?) -> Void)?
+    var onSuccessGenerateToken : ((APIToken?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
     var onErrorHandling : ((StatusList?) -> Void)?
     var uploadProgress : ((Float) -> Void)?
@@ -31,13 +33,13 @@ class LoginViewModel : NSObject {
                 
                 if status == nil {
                     print("DATA : \(data)")
-                    if let dataReceived = data, dataReceived.customer != nil {
-                        print("DATA GET LOGIN : \(dataReceived)")
-                        self.onSuccessGettingList?(dataReceived.customer)
+                    if let dataRecieved = data, dataRecieved.customer != nil {
+                        print("DATA GET LOGIN : \(dataRecieved)")
+                        self.onSuccessGettingList?(dataRecieved.customer)
                         return
                     }else {
-                         print("NO DAT")
-                         self.onErrorHandling?(StatusList(status: 0, title: "", message: "Incorrect email/phone or password", tag: 0))
+                         print("NO DATA")
+                        self.onErrorHandling?(StatusList(status: 0, title: "", message: status?.message ?? "", tag: 0))
                          return
                     }
                 }else {
@@ -76,7 +78,48 @@ class LoginViewModel : NSObject {
         dataModel.getNationality(param: [:], completionHandler: completionHandler)
     }
     
-    func uploadFile() {
+    func createAccount() {
+         guard let dataModel = model else { return }
+                
+         let completionHandler = { (data : LoginData?,status: StatusList?) in
+            
+            if let dataReceived = data {
+                print("REGISTRATION DATA : ", dataReceived)
+                if data?.customer != nil {
+                    self.onSuccessRegistrationData?(dataReceived)
+                }else {
+                    self.onErrorHandling?(status)
+                }
+                return
+            }
+            
+            self.onErrorHandling?(status)
+         }
+        
+        let param : [String:Any] = [
+         "first_name"        : registrationForm?.fname ?? "",
+         "middle_name"       : registrationForm?.mname ?? "",
+         "last_name"         : registrationForm?.lname ?? "",
+         "birth_date"        : registrationForm?.bdate ?? "",
+         "password"          : registrationForm?.password ?? "",
+         "gender"            : registrationForm?.gender ?? "",
+         "address"           : registrationForm?.address ?? "",
+         "city"              : registrationForm?.city ?? "",
+         "province"          : registrationForm?.province ?? "",
+         "zip_code"          : registrationForm?.zipcode ?? "",
+         "nationality"       : registrationForm?.nationality ?? "",
+         "phone"             : registrationForm?.phoneNumber ?? "",
+         "email"             : registrationForm?.email ?? "",
+         "id_picture"        : registrationForm?.validId ?? "",
+         "id_picture2"       : registrationForm?.selfieId ?? "",
+         "code"              : registrationForm?.code ?? "",
+         "platform"          : 1,
+        ]
+    
+        dataModel.createAccount(param: param, completionHandler: completionHandler)
+    }
+    
+    func uploadFile(image: UIImage?,type: Int) {
          guard let dataModel = model else { return }
                 
         let completionHandler = { (data : ImageUploadData?,status: StatusList?) in
@@ -84,6 +127,14 @@ class LoginViewModel : NSObject {
             if let dataReceived = data {
                 print("DATA UPLOADED ", dataReceived)
 //                self.returnNationalityList?(dataReceived)
+                if type == 0 {
+                    self.registrationForm?.validId = dataReceived.imagePath
+                    self.onSuccessRequest?(StatusList(status: 1, title: status?.title ?? "", message: status?.message ?? "", tag: 10))
+                }else if type == 1 {
+                    self.registrationForm?.selfieId = dataReceived.imagePath
+                    self.onSuccessRequest?(StatusList(status: 1, title: status?.title ?? "", message: status?.message ?? "", tag: 11))
+                }
+                
                 return
             }
             
@@ -92,12 +143,13 @@ class LoginViewModel : NSObject {
         
         var param : [String:String] = [:]
         
-        var media = [Media(withImage: UIImage(named: "user")!, forKey: "file")!]
+        let media = [Media(withImage: image!, forKey: "file")!]
+        
         let session = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main)
         dataModel.uploadImage(image: media, param: nil, session: session,completionHandler: completionHandler)
     }
     
-    func getOtp(number: String, email: String, isResend: Int) {
+    func getOtp(number: String, email: String, isResend: Int,type: Int? = nil) {
          guard let dataModel = model else { return }
                 
         let completionHandler = { (status : StatusList) in
@@ -108,63 +160,75 @@ class LoginViewModel : NSObject {
             }
          }
         
-        let param : [String:String] = [
+        var param : [String:String] = [
             "phone"     : number,
             "email"     : email,
             "is_resend" : String(describing: isResend)
         ]
+        if let otpType = type {
+            param["type"] =  String(describing: otpType)
+        }
     
         dataModel.getOtp(param: param, completionHandler: completionHandler)
     }
-}
-
-//MARK: -REGISTRATION FORM
-struct RegistrationForm {
-    var fname : String?
-    var mname : String?
-    var lname : String?
-    var bdate : String?
-    var gender : String?
-    var nationality : String?
-    var address : String?
-    var city : String?
-    var province : String?
-    var zipcode : String?
-    var phoneNumber : String?
-    var email : String?
-    var password : String?
-    var validId : Media?
-    var selfieId : Media?
     
-    mutating func setUpIdentification(form: RegistrationForm?) {
-        self.phoneNumber = form?.phoneNumber
-        self.email = form?.email
-        self.password = form?.password
-        self.validId = form?.validId
-        self.selfieId = form?.selfieId
-        print("SET IDENTIFICATION")
+    func generateAPIToken() {
+       guard let dataModel = model else { return }
+              
+        let completionHandler = { (data: APIToken?,status : StatusList?) in
+            if let result = data {
+                self.onSuccessGenerateToken?(result)
+            }else {
+                self.onErrorHandling?(status)
+            }
+       }
+      
+       let param : [String:String] = [
+        "username"     : ApiConfig().apiUsername,
+        "password"     : ApiConfig().apiPassword
+       ]
+   
+       dataModel.generateAPIToken(param: param, completionHandler: completionHandler)
     }
     
-    func showValues() {
-        print("First Name: ",fname)
-        print("MIDDLE NAME: ",mname)
-        print("LAST NAME: ",lname)
-        print("BDATE: ",bdate)
-        print("GENDER: ",gender)
-        print("NATION: ",nationality)
-        print("ADDRESS: ",address)
-        print("CITY: ",city)
-        print("PROVINCE: ",province)
-        print("ZIPCODE: ",zipcode)
-        print("PHONE: ",phoneNumber)
-        print("EMAIL: ",email)
-        print("PASSWORD ",password)
-//        print("DATA VALUES : \n",fname+" \n"+mname+" \n"+lname+" \n"+bdate+" \n"+gender)
-//        print("\n"+nationality+" \n"+address+" \n"+city+" \n"+province+" \n"+zipcode)
-//        print("\n"+phoneNumber+" \n"+email+" \n"+password+" \n"+validId+" \n"+selfieId+" \n")
+    func saveMpin(MPIN: String,customerId: String,token: String) {
+        guard let dataModel = model else { return }
+               
+        let completionHandler = { (data : LoginData?,status: StatusList?) in
+           if let dataRecieved = data, dataRecieved.customer != nil {
+                self.onSuccessGettingList?(dataRecieved.customer)
+           }else {
+               self.onErrorHandling?(status)
+           }
+        }
+       
+       let param : [String:String] = [
+           "mpin"     : MPIN,
+           "customer_id" : customerId
+       ]
+   
+        dataModel.saveMpin(param: param,token: token, completionHandler: completionHandler)
     }
+    
+    func checkMpinOtp(code: Int,phone: String?, email: String?,token: String?) {
+        print("CHECKING ")
+       guard let dataModel = model else { return }
+             
+       let completionHandler = { (status : StatusList) in
+          if status.status == 1{
+             self.onSuccessRequest?(status)
+          }else {
+             self.onErrorHandling?(status)
+          }
+       }
+        let param : [String:Any] = [
+          "code"     : code,
+          "phone"    : phone ?? "",
+          "email"    : email ?? "",
+       ]
+        dataModel.checkMpin(param: param, token: token,completionHandler: completionHandler)
+   }
 }
-
 
 extension LoginViewModel : URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64)

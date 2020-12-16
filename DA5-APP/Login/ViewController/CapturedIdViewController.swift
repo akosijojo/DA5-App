@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelegate , UINavigationControllerDelegate {
     weak var vc : SignUpViewController?
@@ -86,15 +87,23 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
     }
     
     @objc func selectImage() {
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){//.camera
-            let vc = UIImagePickerController()
+           if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){//.camera
+                let vc = UIImagePickerController()
+                vc.sourceType = .photoLibrary
+                vc.delegate = self
+                self.present(vc, animated: true)
+            }
+        //MARK:-SHOW THIS CODE
+//        if UIImagePickerController.isSourceTypeAvailable(.camera){//.camera
+//            let vc = UIImagePickerController()
 //            vc.sourceType = .camera
-            vc.sourceType = .photoLibrary
+////            vc.sourceType = .photoLibrary
 //            vc.allowsEditing = true
-            vc.delegate = self
+//            vc.delegate = self
 //            vc.showsCameraControls = true
-            self.present(vc, animated: true)
-        }else{
+//            self.present(vc, animated: true)
+//        }
+        else{
             let alert = self.alert("Ok", "Camera is not Available", "", action: { (action) in
           
             })

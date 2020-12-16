@@ -44,6 +44,7 @@ class HomeHeaderCollectionViewCell: UICollectionReusableView {
         let v = UILabel()
         v.font = UIFont(name: Fonts.medium, size: 28)
         v.textAlignment = .center
+        v.text = "0.00 PHP"
         return v
     }()
     
@@ -51,7 +52,7 @@ class HomeHeaderCollectionViewCell: UICollectionReusableView {
        let v = UILabel()
         v.font = UIFont(name: Fonts.regular, size: 16)
         v.textAlignment = .center
-        v.text = "Available Balance"
+        v.text = "Wallet Balance"
        return v
    }()
     

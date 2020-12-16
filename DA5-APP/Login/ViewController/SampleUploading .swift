@@ -39,12 +39,14 @@ class SampleUploadViewController: UIViewController {
     }
     
     
-    func postRequest() {
+    func postRequest(imgData: Media?) {
         
-        let parameters = ["name": "TestFile123",
+        let parameters = ["name": imgData?.filename ?? "",
                           "description": "Sample Test Image Upload"]
         
-        guard let mediaImage = Media(withImage: UIImage(named: "user")!, forKey: "image") else { return }
+//        guard let mediaImage = Media(withImage: UIImage(named: "user")!, forKey: "image") else { return }
+        guard let mediaImage = imgData else { return }
+        
          let jsonUrlString = "https://api.imgur.com/3/image"
 //        "https://api.imgur.com/3/image"
         guard let url = URL(string: jsonUrlString) else { return }
@@ -55,7 +57,7 @@ class SampleUploadViewController: UIViewController {
         
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         
-        request.addValue("Client-ID e4ad6408dd7371f", forHTTPHeaderField: "Authorization")
+        request.addValue("Client-ID 1c33f5240a48cc3", forHTTPHeaderField: "Authorization")
         
         let dataBody = createDataBody(withParameters: parameters, media: [mediaImage], boundary: boundary)
         request.httpBody = dataBody

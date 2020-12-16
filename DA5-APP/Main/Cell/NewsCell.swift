@@ -8,7 +8,7 @@
 
 import UIKit
 protocol NewsCellDelegate: class {
-    func onClickItem(cell: NewsCell, data: [String:AnyObject]? , type: Int)
+    func onClickItem(cell: NewsCell, index: Int? , type: Int)
 }
 
 class NewsCell: UICollectionViewCell {
@@ -20,6 +20,8 @@ class NewsCell: UICollectionViewCell {
             }
         }
     }
+    
+    var index : Int?
     
     lazy var imageView : UIImageView = {
        let v = UIImageView()
@@ -65,7 +67,7 @@ class NewsCell: UICollectionViewCell {
     }
     
     @objc func onClickItem() {
-        self.delegate?.onClickItem(cell: self, data: nil, type: 3)
+        self.delegate?.onClickItem(cell: self, index: index, type: 3)
     }
     
 }

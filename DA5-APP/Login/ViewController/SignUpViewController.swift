@@ -8,14 +8,17 @@
 
 import UIKit
 import AVFoundation
+import NVActivityIndicatorView
 
 class SignUpViewController: BaseViewControler {
+    var timer : Timer?
+    var seconds : Int = 0
     var bdate : UITextField? = nil
     var datePicker : UIDatePicker? = nil
     var pagerIndex : Int = 0
+    var agreeTermsAndCondition : Bool = false
     
     var viewModel : LoginViewModel?
-    let sampleUpload = SampleUploadViewController()
 
     var bdayCheck : Bool = true
     let errorMessage = "Only provide information that is true and correct. If you're below 18 years old, you may be required to present a parental consent. Users below 10 years old are not allowed to register."
@@ -24,16 +27,29 @@ class SignUpViewController: BaseViewControler {
     
     var validId : UIImage? {
         didSet {
-            print("SEETTTING ")
             self.collectionView.reloadData()
+            if self.viewModel?.registrationForm?.validId != nil {
+                print("NOT NILL VALID ID")
+                self.viewModel?.registrationForm?.validId = nil
+            }
         }
     }
     var selfieId : UIImage? {
         didSet {
-            print("SEETTTING ")
           self.collectionView.reloadData()
+          if self.viewModel?.registrationForm?.selfieId != nil {
+              print("NOT NILL SELFIE ID")
+               self.viewModel?.registrationForm?.selfieId = nil
+          }
         }
     }
+    var mobileNumber: String? {
+        didSet{
+            self.collectionView.reloadData()
+        }
+    }
+    
+    var uploadingType: Int = 0
     
     lazy var pager : PagerView = {
         let v = PagerView()
@@ -55,14 +71,13 @@ class SignUpViewController: BaseViewControler {
         return view
     }()
     
-//    lazy var modalView : modalLoadingView = {
-//        let v = modalLoadingView()
-//        v.backgroundColor = UIColor(white: 0, alpha: 0.2)
-//        v.container.backgroundColor = .white
-//
-//        return v
-//    }()
-
+    lazy var customProgressView : CustomProgressView = {
+       let v = CustomProgressView()
+        v.title.text = "Please wait"
+        v.message.text = ""
+       return v
+    }()
+    
     let form1 = "form1"
     let form2 = "form2"
     let form3 = "form3"
@@ -95,36 +110,79 @@ class SignUpViewController: BaseViewControler {
     }
     
     override func getData() {
+        //MARK: - GET NATIONALITIES
         self.viewModel?.returnNationalityList = { [weak self] data in
             DispatchQueue.main.async {
                 self?.nationalityList = data
+                 self?.stopAnimating()
             }
         }
+        //MARK: - BASIC REQUEST
         self.viewModel?.onSuccessRequest = { [weak self] res in
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.500, execute: {
                 if let tag = res?.tag {
-                    //MARK: -Check if OTP SUCCEED
-                    if tag == 1 {
+                    switch tag {
+                    case 1:
+                        //MARK: -Check if OTP SUCCEED
+                        self?.stopAnimationBlocker()
                         self?.gotoPage3(index: 2)//show Form 3 verification
+                    case 10:
+                    //MARK: - UPLOADED VALID ID
+                        self?.asyncAPIRequest()
+                    case 11:
+                     //MARK: - UPLOADED SELFIE ID
+                        self?.asyncAPIRequest()
+                    default:
+                        self?.stopAnimationBlocker() // stop Animation if tag is not on case
+                        break
                     }
+                }else {
+                    self?.stopAnimationBlocker() // stop animation if not saving info
+                }
+            })
+        }
+        //MARK:-Registration Successfull
+        self.viewModel?.onSuccessRegistrationData = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.stopAnimationBlocker()
+                if let result = data {
+                    self?.showAlert(buttonOK: "Ok", message: "Registration Successful.", actionOk: { (act) in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            if data?.customer != nil {
+                                self?.coordinator?.pinCodeCoordinator(isChecking: true, customerData:result.customer)
+                            }
+                            print("NO DATA GET")
+                        }
+                    }, completionHandler: nil)
                 }
             }
+            
         }
-        
+        //MARK: - UPLOAD PROGRESS
         self.viewModel?.uploadProgress = { [weak self] progress in
             DispatchQueue.main.async {
               print("PROGRESS ",progress)
-                Helper().onProgress(title: "Uploading", message: String(format: "%.0f",progress * 100)+"%")
-                // checking kung tapus na
+                self?.beginAnimation(title:"Uploading \(self?.uploadingType == 1 ? "Valid Id picture" : "Selfie with Id picture")", msg: String(format: "%.0f",progress * 100)+"%")
+                //MARK: -UX SHOW SAVING if 100%
+                if progress == 1 {
+                    if self?.uploadingType != 0 {
+                        self?.beginAnimation(title:self?.uploadingType == 1 ? "Saving Valid Id picture" :  "Saving Selfie and Id picture", msg: "Please wait...")
+                    }
+                }
+               
             }
         }
-//
+        //MARK: - ALL REQUEST ERROR
         self.viewModel?.onErrorHandling = { [weak self] error in
             DispatchQueue.main.async {
+                self?.stopAnimationBlocker()
+                //MARK:- show this code
                 self?.showAlert(buttonOK: "Ok", message: error?.message ?? "", actionOk: nil, completionHandler: nil)
             }
+            
         }
         self.viewModel?.getNationality()
+        setAnimate(msg: "Please wait")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -199,6 +257,17 @@ class SignUpViewController: BaseViewControler {
     
     override func navBackAction() {
         if pagerIndex >= 1 {
+            //MARK: - back action when keyboard is showed
+             if let cell = collectionView.cellForItem(at: IndexPath(item: pagerIndex, section: 0))  {
+                 if let cellView = cell as? IdentificationCollectionViewCell {
+                     if #available(iOS 11.0, *) {
+                         cellView.addShowKeyboard(offset: 0)
+                     } else {
+                         cellView.addShowKeyboard(offset: 0)
+                     }
+                 }
+             }
+            
             self.collectionView.scrollToItem(at: IndexPath(item: pagerIndex - 1, section: 0), at: .right, animated: true)
             self.pager.itemIndex -= 1
             self.pagerIndex -= 1
@@ -337,9 +406,11 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
                 return UICollectionViewCell()
             }
             cell.delegate = self
-            if let mobileNum = self.viewModel?.registrationForm?.phoneNumber {
-                cell.headerView.desc.text = "+63"+mobileNum
-            }
+            cell.data = self.mobileNumber
+//            print("CELLPHONE NUMBER :",self.viewModel?.registrationForm?.phoneNumber ?? "")
+//            if let mobileNum = self.viewModel?.registrationForm?.phoneNumber {
+//                cell.headerView.desc.text = "+63"+mobileNum
+//            }
             return cell
         }
     }
@@ -393,58 +464,56 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
         return false
     }
     
-    
-//    func showCustomModal(show: Bool = false) {
-//        if show{
-//            view.addSubview(modalView)
-//            self.modalView.frame = self.view.bounds
-//            UIView.animate(withDuration: 0.2, delay: 0, options: .autoreverse, animations: {
-//
-//                self.modalView.layoutIfNeeded()
-//            }, completion: nil)
-//
-//        }else {
-//            modalView.removeFromSuperview()
-//        }
-//    }
+    func beginAnimation(animate: Bool = true,title: String? = nil, msg: String? = nil) {
+        if animate {
+            customProgressView.runLoadingAnimation(vc: self,navBar: self.navigationController?.navigationBar, view: self.view,title: title,message: msg)
+        }else {
+             customProgressView.removeLoadingAnimation(vc: self, navBar: self.navigationController?.navigationBar)
+        }
+    }
+    func stopAnimationBlocker() {
+        print("STOP ANIMATION")
+        self.stopAnimating()
+        self.beginAnimation(animate: false)
+    }
 }
 
 extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollectionViewCellDelegate, VerifyCollectionViewCellDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     //MARK: - form 1
     func submitAction(cell: BasicInfoCell, index: Int,fields: [UITextField],form: RegistrationForm?) {
         self.view.endEditing(true)
-//        if showFormError(fields: fields){
-            self.view.endEditing(true)
+        if showFormError(fields: fields){
+//            self.view.endEditing(true)
             self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
             self.pager.itemIndex = 1
             self.pager.collectionView.reloadData()
             self.pagerIndex = 1
             self.viewModel?.registrationForm = form
-//        }
-        
-        //MARK: -TESTING
-//        self.viewModel?.uploadFile()
-//        Helper().onProgress(title: "Downloading",message: "0%")
+        }
     }
     //MARK: -form 2
     func submitAction(cell: IdentificationCollectionViewCell, index: Int, fields: [UITextField], passChecker: Bool, form: RegistrationForm?) {
         self.view.endEditing(true)
-//        if passChecker {
-//            self.showAlert(buttonOK: "Ok", message: "Password does not match.", actionOk: { (act) in
-//
-//            }, completionHandler: nil)
-//        }else {
-//            if showFormError(fields: fields, image: [validId,selfieId]){
-//                 self.viewModel?.registrationForm?.setUpIdentification(form: form)
-//                 self.viewModel?.getOtp(number: form?.phoneNumber ?? "", email: form?.email ?? "", isResend: 0)
-//            }
-//        }
-        //MARK: -TESTING
-        gotoPage3(index: 2)
+        if passChecker {
+            self.showAlert(buttonOK: "Ok", message: "Password does not match.", actionOk: { (act) in
+
+            }, completionHandler: nil)
+        }else {
+            if showFormError(fields: fields, image: [validId,selfieId]){
+                 self.setAnimate(msg: "Please wait..")
+                 self.viewModel?.registrationForm?.setUpIdentification(form: form)
+                 self.viewModel?.getOtp(number: form?.phoneNumber ?? "", email: form?.email ?? "", isResend: 0)
+            }
+        }
     }
     
+    func resendCode(cell: VerifyCollectionViewCell) {
+        self.setAnimate(msg: "Please wait..")
+        self.viewModel?.getOtp(number: self.viewModel?.registrationForm?.phoneNumber ?? "", email: self.viewModel?.registrationForm?.email ?? "", isResend: 1)
+    }
     func gotoPage3(index: Int) {
         self.viewModel?.registrationForm?.showValues()
+        self.mobileNumber = self.viewModel?.registrationForm?.phoneNumber
         self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
         self.pager.itemIndex = 2
         self.pager.collectionView.reloadData()
@@ -454,7 +523,14 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     //MARK: -form 3
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
      // show terms and condition
-        coordinator?.termsCoordinator()
+        self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
+        print(" VERIFICATION CODE ",self.viewModel?.registrationForm?.code)
+        if !agreeTermsAndCondition {
+            agreeTermsAndCondition = true
+            coordinator?.termsCoordinator(parentView: self)
+        }else {
+            self.agreeOnTermsAndCondition()
+        }
     }
     
     //MARK: - SELECT IMAGE
@@ -476,80 +552,34 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
         navigationController?.pushViewController(vc, animated: true)
     }
 
-}
-
-
-
-
-
-//MARK: - MODAL SAMPLE
-class modalLoadingView: UIView {
-    
-    lazy var container : UIView = {
-        let v = UIView()
-        v.backgroundColor = .white
-        return v
-    }()
-    
-    lazy var mainLabel : UILabel = {
-        let v = UILabel()
-        v.font = UIFont(name: Fonts.regular, size: 12)
-        v.text = "Please wait"
-        v.textAlignment = .center
-        return v
-    }()
-    
-    lazy var activity : UIActivityIndicatorView = {
-        let v = UIActivityIndicatorView(style: .gray)
-        return v
-    }()
-    
-    lazy var loadingPercentage : UILabel = {
-        let v = UILabel()
-        v.font = UIFont(name: Fonts.regular, size: 12)
-        v.text = "0%"
-        v.textAlignment = .center
-        return v
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = UIColor(white: 0, alpha: 0.5)
-        setUpView()
+    func agreeOnTermsAndCondition() {
+        // Uploading images
+        // save collected info if error uploading images skipped cause already uploaded then submit again collected data
+        // show MPIN Creation
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.viewModel?.uploadFile()
+//
+//        }
+        self.asyncAPIRequest()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setUpView() {
-        addSubview(container)
-        container.snp.makeConstraints { (make) in
-            make.centerY.equalTo(self)
-            make.leading.equalTo(self).offset(20)
-            make.trailing.equalTo(self).offset(-20)
-            make.height.equalTo(180)
-        }
-        container.addSubview(mainLabel)
-        mainLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(container).offset(20)
-            make.leading.equalTo(container).offset(20)
-            make.trailing.equalTo(container).offset(-20)
-            make.height.equalTo(40)
-        }
-        container.addSubview(activity)
-        activity.snp.makeConstraints { (make) in
-            make.top.equalTo(mainLabel.snp.bottom).offset(20)
-            make.width.equalTo(40).offset(20)
-            make.centerX.equalTo(container)
-            make.height.equalTo(40)
-        }
-        container.addSubview(loadingPercentage)
-        loadingPercentage.snp.makeConstraints { (make) in
-            make.top.equalTo(activity.snp.bottom).offset(10)
-            make.leading.equalTo(container).offset(20)
-            make.trailing.equalTo(container).offset(-20)
-            make.bottom.equalTo(container).offset(-20)
+    func asyncAPIRequest(){
+        //Add Delay on uploading
+        let delay : TimeInterval = 1
+        print(" CHECKING  : \(self.viewModel?.registrationForm?.validId) ==== \(self.viewModel?.registrationForm?.selfieId)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            if self.viewModel?.registrationForm?.validId == nil {
+                self.uploadingType = 1
+                self.viewModel?.uploadFile(image: self.validId, type: 0)
+            }else if self.viewModel?.registrationForm?.selfieId == nil {
+                self.uploadingType = 2
+                self.viewModel?.uploadFile(image: self.selfieId, type: 1)
+            }else {
+                print("REGISTER")
+                self.uploadingType = 2 // set 2 if skipped uploading of selfie ID
+                self.beginAnimation(title:"Saving Personal Information", msg: "Please wait...")
+                self.viewModel?.createAccount()
+            }
         }
     }
     

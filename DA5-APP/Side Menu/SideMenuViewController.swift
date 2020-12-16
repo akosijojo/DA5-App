@@ -135,7 +135,7 @@ class SideMenuView : UIView {
         case 2:
             vc?.coordinator?.showTermsViewController()
         case 3:
-            vc?.coordinator?.logInCoordinator()
+            vc?.coordinator?.logInCoordinator(didLogout: true)
         default:
             break
         }

@@ -9,7 +9,22 @@
 import UIKit
 
 class PinViewController: BaseViewControler {
+    var timer : Timer?
+    var seconds : Int = 0
+    var maxPIN : Int = 4
+    var isChecking : Bool? = false
     var MPIN : String? = ""
+    var clearedPin : Bool = false
+    var tokenData : APIToken?
+    
+    var viewModel: LoginViewModel?
+    
+    var customerData : Customer? {
+        didSet {
+            self.saveCustomerToLocal(data: self.customerData)
+        }
+    }
+    
     lazy var topView : UIView = {
        let v = UIView()
        return v
@@ -47,6 +62,7 @@ class PinViewController: BaseViewControler {
         v.textAlignment = .center
         v.text = "Incorrect MPIN"
         v.font = UIFont(name: Fonts.medium, size: 12)
+        v.isHidden = true
        return v
     }()
     
@@ -55,30 +71,89 @@ class PinViewController: BaseViewControler {
        return v
     }()
     
-    lazy var forgotMpin : UILabel = {
-       let v = UILabel()
-        v.font = UIFont(name: Fonts.medium, size: 12)
-        v.text = "Forgot MPIN?"
+    lazy var forgotMpin : UIButton = {
+        let v = UIButton(type: .system)
+        v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)!
+        v.setTitle("Forgot MPIN?", for: .normal)
+        v.addTarget(self, action: #selector(forgotMpinClick), for: .touchUpInside)
        return v
     }()
     
     lazy var numPadView : CustomNumPad = {
        let v = CustomNumPad()
-       v.maxInput = 4
+        v.btnBack.addTarget(self, action: #selector(btnBackClick), for: .touchUpInside)
        return v
     }()
+    
+    func saveCustomerToLocal(data: Customer?) {
+        if !CustomerLocal().checkIfExistingData() {
+            if let d = data {
+               let getData =  d.convertToLocalData()
+               getData.saveCustomerToLocal()
+           }
+        }
+       
+    }
 
     override func getData() {
        pinTextField.defaultText = "•"
-       pinTextField.configure(with: 4)
-       pinTextField.didEnterLastDigit = { [weak self] code in
-           self?.MPIN = code
-           //  checking of pin then goto home
-           self?.coordinator?.homeCoordinator()
+       pinTextField.configure(with: maxPIN)
+       numPadView.maxInput =  maxPIN
+       pinTextField.didEnterFirstDigit = { [weak self] code in
+            if self?.pinTextFieldError.isHidden == false {
+                self?.pinTextFieldError.isHidden = true
+            }
        }
+        
+       pinTextField.didEnterLastDigit = { [weak self] code in
+            self?.checkMPIN(pin: code)
+//           self?.MPIN = code
+           //  checking of pin then goto home
+//           self?.coordinator?.homeCoordinator()
+       }
+        
        numPadView.numPadReturnOutput = { [weak self] output in
            self?.pinTextField.textUpdate(text: output)
        }
+       
+       if isChecking ?? false {
+            self.viewModel?.onSuccessGettingList = { [weak self] res in
+                  DispatchQueue.main.async {
+                      self?.stopAnimating()
+                      //MARK: - UPDATE LOCAL DATA
+                      let updateLocal = res?.convertToLocalData()
+                      updateLocal?.saveCustomerToLocal()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self?.coordinator?.homeCoordinator()
+                        }
+                  }
+             }
+             self.viewModel?.onSuccessGenerateToken = {[weak self] data in
+                 DispatchQueue.main.async {
+                     self?.tokenData = data
+                 }
+             }
+       }
+    
+       self.viewModel?.onSuccessRequest = { [weak self] res in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+            }
+       }
+        
+       self.viewModel?.onErrorHandling = { [weak self] res in
+             DispatchQueue.main.async {
+                self?.stopAnimating()
+            }
+       }
+        
+    
+        //MARK:- Get API TOKEN
+        print("------- \n PIN VIEW \(isChecking) \n ------------")
+        if let noMPIN = isChecking , noMPIN == true {
+            print("GET API TOKEN")
+            self.viewModel?.generateAPIToken()
+        }
     }
     
     override func setUpView() {
@@ -99,7 +174,7 @@ class PinViewController: BaseViewControler {
             make.height.equalTo(view.layoutMarginsGuide).multipliedBy(0.50)
         }
         imgLogo.snp.makeConstraints { (make) in
-            make.top.equalTo(topView.snp.top).offset(20)
+            make.centerY.equalTo(topView).offset(-40)
             make.centerX.equalTo(view)
             make.width.equalTo(80)
             make.height.equalTo(50)
@@ -150,4 +225,73 @@ class PinViewController: BaseViewControler {
         }
     }
 
+    @objc func forgotMpinClick() {
+        // call API
+        print("Forgot MPIN")
+        self.setAnimate(msg: "Please wait")
+        self.coordinator?.forgotMPINCoordinator()
+    }
+    
+    func checkMPIN(pin: String) {
+        if isChecking ?? false {
+            if MPIN?.count == 0 {
+                self.numPadView.btnBack.isHidden = false
+                MPIN = pin
+                pinTextField.text = nil
+                pinTextField.clearText()
+                numPadView.clearText()
+            }else{
+                if pin.count == maxPIN {
+                   if MPIN == pin {
+                        let customerId = self.customerData?.id ?? 0
+                        self.viewModel?.saveMpin(MPIN: pin, customerId: String(describing:customerId) , token: tokenData?.accessToken ?? "")
+                   }else {
+                       self.wrongMpin()
+                   }
+                }
+            }
+        }else {
+            print("CHECK MPIN : \(pin) == \(customerData?.mpin)")
+            if pin == customerData?.mpin {
+                self.coordinator?.homeCoordinator()
+            }else {
+                self.wronPinSetUp()
+            }
+        }
+    }
+    
+    func wronPinSetUp() {
+        if self.pinTextFieldError.isHidden == true {
+            self.wrongMpin(msg: "Incorrect MPIN")
+        }
+    }
+
+    
+    func wrongMpin(msg: String? = "") {
+        pinTextField.text = nil
+        numPadView.clearText()
+        self.pinTextField.clearText(isWrong: true)
+        self.pinTextFieldError.text = msg
+        self.pinTextFieldError.isHidden = false
+    }
+    
+    @objc func btnBackClick() {
+        MPIN = ""
+        pinTextField.text = nil
+        pinTextField.clearText()
+        numPadView.clearText()
+        clearedPin = false
+        self.numPadView.btnBack.isHidden = true
+    }
+    
+//    func runTimer() {
+//       timer = Timer.scheduledTimer(timeInterval: 10, target: self,   selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
+//    }
+//
+//    @objc func updateTimer(){
+//        seconds += 1
+//        if tokenData?.expiresIn == seconds {
+//MARK:-CHECKING EXPIRATION NG TOKEN
+//        }
+//    }
 }

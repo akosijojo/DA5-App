@@ -131,7 +131,7 @@ class BaseCollectionViewControler : UICollectionViewController {
         
     }
     
-    func setUpData() {
+    func getData() {
         
     }
     

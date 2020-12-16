@@ -9,14 +9,19 @@
 import UIKit
 
 class CustomPinTextField: UITextField {
-    
+
     var defaultText = ""
     
+    var didEnterFirstDigit : ((String) -> Void)?
     var didEnterLastDigit : ((String) -> Void)?
     
     private var isConfigured = false
     
     private var digitsLabel = [UILabel()]
+    
+    var labelStackView = UIStackView()
+    
+    var showBottomLine : Bool = false
     
     private lazy var tapRecognizer : UITapGestureRecognizer = {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(becomeFirstResponder))
@@ -28,7 +33,7 @@ class CustomPinTextField: UITextField {
         isConfigured.toggle()
         configureTextField()
         
-        let labelStackView = createLabelsStackView(with: slotCount)
+        labelStackView = createLabelsStackView(with: slotCount)
         addSubview(labelStackView)
         if kbShow {
             addGestureRecognizer(tapRecognizer)
@@ -76,6 +81,10 @@ class CustomPinTextField: UITextField {
             label.text = defaultText
             label.textAlignment = .center
             label.tag = lbl
+            //MARK: - show line if you can hahah
+//            if showBottomLine {
+//                label.addBorders(edges: .bottom, color: ColorConfig().lightGray!)
+//            }
             stackView.addArrangedSubview(label)
             digitsLabel.append(label)
         }
@@ -115,10 +124,29 @@ class CustomPinTextField: UITextField {
                    currentLabel.textColor = ColorConfig().lightGray
                }
            }
+           if text.count == 1 {
+               didEnterFirstDigit?(text)
+           }
            if text.count == digitsLabel.count - 1 {
                didEnterLastDigit?(text)
            }
-       }
+     }
+    
+    func clearText(isWrong: Bool? = nil) {
+         for i in 1 ..< self.digitsLabel.count {
+           let currentLabel = self.digitsLabel[i]
+              if let _ = isWrong {
+                UIView.animate(withDuration: 2) {
+                    currentLabel.font = UIFont(name: Fonts.bold, size: 45)
+                    currentLabel.textColor = ColorConfig().darkRed
+                    self.labelStackView.layoutIfNeeded()
+                }
+              }else {
+                  currentLabel.textColor = ColorConfig().lightGray
+              }
+          }
+    }
+    
 }
 
 extension CustomPinTextField: UITextFieldDelegate {

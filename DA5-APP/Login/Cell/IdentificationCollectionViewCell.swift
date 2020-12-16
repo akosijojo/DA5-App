@@ -49,6 +49,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         v.TextField.keyboardType = .emailAddress
         v.TextField.tag = 2
         v.TextField.delegate = self
+        v.TextField.autocapitalizationType = .none
         return v
     }()
     

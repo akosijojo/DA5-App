@@ -7,6 +7,9 @@
 //
 
 import UIKit
+protocol PendingTransactionDelegate: class {
+    func onClickItem(cell: PendingTransactionCell, index: Int?)
+}
 class PendingTransactionCell: UICollectionViewCell {
     
     var data : PendingTransactionsData? {
@@ -19,6 +22,10 @@ class PendingTransactionCell: UICollectionViewCell {
             }
         }
     }
+    
+    var delegate : PendingTransactionDelegate?
+    
+    var index : Int?
     
     lazy var mainView : UIView = {
        let v = UIView()
@@ -124,6 +131,10 @@ class PendingTransactionCell: UICollectionViewCell {
            make.trailing.equalTo(containerView)
            make.height.equalTo(containerView).multipliedBy(0.25)
         }
-        
+    }
+    
+    @objc func onClick() {
+        print("CLICKING : \(index)")
+        self.delegate?.onClickItem(cell: self, index: index)
     }
 }
