@@ -156,6 +156,7 @@ struct Customer: Decodable {
         return CustomerLocal(id: id, firstName: firstName, middleName: middleName, lastName: lastName, birthDate: birthDate, mpin: mpin, gender: gender, image: image, address: address, city: city, province: province, zipCode: zipCode, nationality: nationality, facebookID: facebookID, appleID: appleID, phone: phone, email: email, idPicture: idPicture, idPicture2: idPicture2, phoneVerifiedAt: phoneVerifiedAt, emailVerifiedAt: emailVerifiedAt, referenceNo: referenceNo, kycStatus: kycStatus, kycNotice: kycNotice, kycUpdatedAt: kycUpdatedAt, platform: platform, createdAt: createdAt, updatedAt: updatedAt, idPictureThumbnail1: idPictureThumbnail1, idPictureThumbnail2: idPictureThumbnail2)
     }
 }
+
 struct CustomerLocal: Codable {
     var id: Int?
     var firstName: String?
@@ -209,3 +210,52 @@ struct CustomerLocal: Codable {
 }
 
 
+
+class UserLoginData {
+    
+    static let shared = UserLoginData()
+
+    var id: Int?
+    var firstName: String?
+    var middleName: String?
+    var lastName, birthDate, mpin, gender: String?
+    var image, address, city, province: String?
+//    var zipCode, nationality: String?
+//    var facebookID, appleID: String?
+//    var phone, email, idPicture, idPicture2: String?
+//    var phoneVerifiedAt: String?
+//    var emailVerifiedAt: String?
+//    var referenceNo: String?
+//    var kycStatus: Int?
+//    var kycNotice, kycUpdatedAt: String?
+//    var platform: Int?
+//    var createdAt, updatedAt, idPictureThumbnail1: String?
+//    var idPictureThumbnail2: String?
+
+    
+    func setUpData(data: Customer) -> UserLoginData {
+        var user = UserLoginData()
+        user.id = data.id
+        user.firstName = data.firstName
+        user.middleName = data.middleName
+        user.lastName = data.lastName
+//        user.birthDate,
+//        user.mpin,
+//        user.gender: String?
+        user.image = data.image
+//        , address, city, province: String?
+//        var zipCode, nationality: String?
+//        var facebookID, appleID: String?
+//        var phone, email, idPicture, idPicture2: String?
+//        var phoneVerifiedAt: String?
+//        var emailVerifiedAt: String?
+//        var referenceNo: String?
+//        var kycStatus: Int?
+//        var kycNotice, kycUpdatedAt: String?
+//        var platform: Int?
+//        var createdAt, updatedAt, idPictureThumbnail1: String?
+//        var idPictureThumbnail2: String?
+    
+        return user
+    }
+}

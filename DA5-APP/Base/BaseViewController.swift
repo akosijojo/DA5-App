@@ -116,6 +116,15 @@ class BaseHomeViewControler : UIViewController {
         self.navigationItem.leftBarButtonItem = leftButton
     }
 
+    func showAlert(buttonOK: String, buttonCancel: String? = nil, title: String = "", message: String,actionOk: ((UIAlertAction) -> Void)? ,actionCancel:  ((UIAlertAction) -> Void)? = nil, completionHandler: (() -> Void)?) {
+       if buttonCancel == nil {
+           let alert = self.alert(buttonOK, title, message, action: actionOk)
+           self.present(alert, animated: true, completion: completionHandler)
+       }else {
+           let alert = self.alertAction(buttonOK, buttonCancel ?? "Cancel", title, message, actionOk: actionOk, actionCancel: actionCancel)
+           self.present(alert, animated: true, completion: completionHandler)
+       }
+    }
 }
 
 

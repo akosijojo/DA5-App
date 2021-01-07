@@ -15,6 +15,8 @@ class MainCoordinator :  NSObject, Coordinator {
     var navigationController: UINavigationController
     var usersDataLocal = CustomerLocal().getCustomerFromLocal()
     var showPinOnChangeAppState : Bool = false
+    
+    var token : String? = ""
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -42,6 +44,24 @@ class MainCoordinator :  NSObject, Coordinator {
         
     }
     
+    func setUpUserLogin(user: Customer?) {
+        if let data = user {
+            UserLoginData.shared.id = data.id
+            UserLoginData.shared.firstName = data.firstName
+            UserLoginData.shared.middleName = data.middleName
+            UserLoginData.shared.lastName = data.lastName
+            UserLoginData.shared.image = data.image
+        }
+    }
+    
+    func removeUserLogin() {
+        UserLoginData.shared.id = nil
+        UserLoginData.shared.firstName = nil
+        UserLoginData.shared.middleName = nil
+        UserLoginData.shared.lastName = nil
+        UserLoginData.shared.image = nil
+    }
+    
     func removeCustomerLocalData() {
         UserDefaults.standard.removeObject(forKey: AppConfig().customerLocalKey)
     }
@@ -49,6 +69,7 @@ class MainCoordinator :  NSObject, Coordinator {
     func logInCoordinator(didLogout: Bool? = nil) {
         if let _ = didLogout {
             self.removeCustomerLocalData()
+            self.removeUserLogin()
         }
         
         if self.navigationController.viewControllers.count > 0 {
@@ -72,6 +93,7 @@ class MainCoordinator :  NSObject, Coordinator {
     }
 
     func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil) {
+        self.setUpUserLogin(user: customerData)
         let vc = PinViewController()
         vc.coordinator = self
         vc.viewModel = LoginViewModel()
@@ -135,7 +157,13 @@ class MainCoordinator :  NSObject, Coordinator {
         vc.coordinator = self
         vc.viewModel = HomeViewModel()
         vc.viewModel?.model = HomeModel()
+        if let user = self.usersDataLocal {
+            vc.customerData = user.convertData()
+        }else {
+            vc.customerData = CustomerLocal().getCustomerFromLocal()?.convertData()
+        }
         vc.customerData = self.usersDataLocal?.convertData()
+        print("DATA CUSTOMER : \(self.usersDataLocal?.convertData())")
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
@@ -202,5 +230,70 @@ extension MainCoordinator : UINavigationControllerDelegate{
             print("HEY POPPING HOME")
             childDidFinish(homeViewController.coordinator)
         }
+    }
+}
+
+
+extension MainCoordinator {
+    func showLoadWalletViewController(type: Int? = 0) {
+        let vc = LoadWalletViewController()
+        vc.coordinator = self
+        vc.type = type
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    func showCashInViewController(data: CashInData?,type: Int? = 0) {
+        let vc = WalletViewController(data: data,type:  type ?? 0)
+        vc.coordinator = self
+        vc.viewModel = LoadWalletViewModel()
+        vc.viewModel?.model = LoadWalletModel()
+        vc.viewModel?.model?.token = self.token
+        vc.headerView.title.text = type == 0 ? "Cash In" : "Cash Out"
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func ShowELoadViewController() {
+        let vc = ELoadViewController()
+        vc.viewModel = ELoadViewModel()
+        vc.viewModel?.model = ELoadModel()
+        vc.viewModel?.model?.token = self.token
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func ShowELoadProductsViewController(data: [ELoadProducts?],phone: String?) {
+        let vc = ELoadProductsViewController(data: data, phone: phone)
+        vc.viewModel = ELoadViewModel()
+        vc.viewModel?.model = ELoadModel()
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+   }
+    
+    func ShowELoadRegularViewController(data: ELoadProducts? , phone: String?) {
+        let vc = ELoadRegularViewController(data: data, phone: phone)
+        vc.viewModel = ELoadViewModel()
+        vc.viewModel?.model = ELoadModel()
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+
+    func ShowELoadProductDetailsViewController(data: ELoadProducts? , phone: String?) {
+        let vc = ELoadProductDetailsViewController(data: data, phone: phone)
+        vc.viewModel = ELoadViewModel()
+        vc.viewModel?.model = ELoadModel()
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showCashOutViewController() {
+//       let vc = WalletViewController()
+//       vc.coordinator = self
+//       navigationController.setNavigationBarHidden(false, animated: false)
+//       navigationController.pushViewController(vc, animated: false)
     }
 }

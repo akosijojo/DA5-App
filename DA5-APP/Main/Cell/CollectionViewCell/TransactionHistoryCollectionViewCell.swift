@@ -24,7 +24,7 @@ class TransactionHistoryCollectionViewCell : CollectionViewBorderedCell {
     }
         
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width
+        let width = collectionView.frame.width - 40
         return CGSize(width: width, height: 80)
     }
         
@@ -41,6 +41,8 @@ class TransactionHistoryCollectionViewCell : CollectionViewBorderedCell {
         collectionView.dataSource = self
 
         collectionView.register(TransactionHistoryCell.self, forCellWithReuseIdentifier: tHistoryCellId)
+        
+        self.collectionView.emptyView(image: "", text: "You currently have no transactions.", dataCount: self.tHistoryData?.count ?? 0,emptyViewType: .secondary)
     }
         
 }

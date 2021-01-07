@@ -10,6 +10,8 @@ import UIKit
 
 class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegateFlowLayout{
 
+    var token : String = ""
+    var isEmpty : Bool = false
     var refreshControl : UIRefreshControl?
     var isRefreshing  : Bool = false
     var viewModel : HomeViewModel?
@@ -83,7 +85,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     func setUpRefreshView() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        refreshControl?.attributedTitle = NSAttributedString(string: "Refresh Collection View", attributes: nil)
+//        refreshControl?.attributedTitle = NSAttributedString(string: "Refresh Collection View", attributes: nil)
         if #available(iOS 10.0, *) {
             collectionView.refreshControl = refreshControl
         } else {
@@ -112,20 +114,19 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                  NewsData(id: 3, name: "Western", image: "western"),
                  NewsData(id: 4, name: "Western", image: "western"),
             ]
-//
-//                self?.homeData?.pendingTransaction = []
-            self?.homeData?.pendingTransaction =  [
-               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
-               PendingTransactionsData(id: 1, title: "Western", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
-               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
-           ]
+                
+//            self?.homeData?.pendingTransaction =  [
+//               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
+//               PendingTransactionsData(id: 1, title: "Western", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
+//               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
+//           ]
 
-            self?.homeData?.transactionHistory = [
-                TransactionHistoryData(id: 1, title: "CASH IN", info: "Paymaya", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
-                TransactionHistoryData(id: 1, title: "BANK TRANSFER", info: "GCASH", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
-                TransactionHistoryData(id: 1, title: "BUY LOAD", info:"+639123456789", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
-                TransactionHistoryData(id: 1, title: "BUY LOAD", info:"+639123456789", image: "western", amount: "PHP 500.00", date: "November 11, 2020"),
-            ]
+//            self?.homeData?.transactionHistory = [
+//                TransactionHistoryData(id: 1, title: "CASH IN", info: "Paymaya", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
+//                TransactionHistoryData(id: 1, title: "BANK TRANSFER", info: "GCASH", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
+//                TransactionHistoryData(id: 1, title: "BUY LOAD", info:"+639123456789", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
+//                TransactionHistoryData(id: 1, title: "BUY LOAD", info:"+639123456789", image: "western", amount: "PHP 500.00", date: "November 11, 2020"),
+//            ]
             
             self?.servicesData = [
                 ServicesData(id: 1, name: "Load Wallet", image: "digital-wallet"),
@@ -138,10 +139,12 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                 ServicesData(id: 8, name: "Crypto", image: "crypto"),
                 ServicesData(id: 9, name: "Loans", image: "communication"),
             ]
-//              self?.customerData = dxata
-              // saving of users in local to check if logged in or not then goto pincode
-//              self?.coordinator?.pinCodeCoordinator(customerData: data)
-//              self?.stopAnimating()
+            //MARK: - REMOVE EMPTY VIEW
+            if self?.isEmpty ?? false {
+                print("REMOVE EMPTY VIEW")
+                self?.collectionView.emptyView(image: "", text: "", dataCount: 1, emptyViewType: .main)
+            }
+            self?.loaded = true
                 
            })
 
@@ -149,12 +152,21 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         
         self.viewModel?.onSuccessGenerateToken = { [weak self] data in
             DispatchQueue.main.async {
-                self?.viewModel?.getHomeData(id: self?.customerData?.id ?? 0)
+                self?.coordinator?.token = data?.accessToken
+                self?.viewModel?.getHomeData(id: UserLoginData.shared.id ?? 0) //self?.customerData?.id ?? 0
             }
         }
         
         self.viewModel?.onErrorHandling = { [weak self] status in
             DispatchQueue.main.async {
+                if status?.tag == 1 {
+                    self?.isRefreshing = false
+                    self?.refreshControl?.endRefreshing()
+                    self?.isEmpty = true
+                    if (self?.loaded == false) {
+                        self?.collectionView.emptyView(image: "warning", text: "Something went wrong.\n Pull down to retry.", dataCount: 0, emptyViewType: .main)
+                    }
+                }
                 
             }
         }
@@ -163,10 +175,9 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     override func setUpView() {
-        self.collectionView.addSubview(sideMenuView)
+        self.view.addSubview(sideMenuView)
         self.sideMenuView.vc = self
-        sideMenuView.frame = self.collectionView.bounds
-        
+        sideMenuView.frame = self.view.bounds
     }
     
     func onClickShowView(type: Int) {
@@ -193,9 +204,12 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                  return UICollectionReusableView()
              }
         header.label.text = section == 1 ? "Services Available" : section == 2 ?  "News" : section == 3 ?  "Pending Transactions" : "Transaction History"
-        if section == 2 {
+        if section != 0 && section != 1{
             header.addAction()
             header.rightBtn.text = "View All"
+        }else {
+            header.rightBtn.isUserInteractionEnabled = true
+            header.rightBtn.isHidden = true
         }
         return header
     }
@@ -249,11 +263,9 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
        
         let servicesHeight = ((self.servicesData.count / 3) * 95) // cell 80 for 40 + 10 , 20 + 10 , collection top 10 space , left and right 10 , bottom have space 10 
-        let newsHeight = indexPath.section == 3 ? (self.homeData?.pendingTransaction?.count ?? 0 > 0 ? 190 : 0) : 190
-        let tHistoryHeight = 80 * (self.homeData?.transactionHistory?.count ?? 0)
+        let newsHeight = indexPath.section == 3 ? (self.homeData?.pendingTransaction?.count ?? 0 > 0 ? 190 : 1) : 190
+        let tHistoryHeight = self.homeData?.transactionHistory?.count ?? 0 > 0 ? (80 * (self.homeData?.transactionHistory?.count ?? 0)) : 80
         let vheight = indexPath.section == 1 ? servicesHeight : (indexPath.section == 4 ? tHistoryHeight : newsHeight)
-        
-        print(" HYEYEYE : \(indexPath.section)")
         
         return CGSize(width: collectionView.frame.width, height: CGFloat(vheight))
     }
@@ -268,7 +280,6 @@ extension HomeViewController : HomeHeaderCollectionViewCellDelegate {
     func onClickMenu(cell: HomeHeaderCollectionViewCell) {
         sideMenuView.userData = self.homeData?.customer
         sideMenuView.updateSideMenu(width: sideMenuView.isShowMenu ? 0 : 250)
-        self.viewModel?.getHomeData(id: self.customerData?.id ?? 0)
     }
 }
 
@@ -277,7 +288,25 @@ extension HomeViewController : CollectionViewCellDelegate {
     func onClickShowView(cell: UICollectionViewCell, type: Int, index: Int) {
         if let itemCell = cell as? ServicesCell {
             print("SERVICES : \(servicesData[index])")
-            self.coordinator?.showBase2ndViewController()
+            switch servicesData[index].id {
+            case 1:
+                self.coordinator?.showLoadWalletViewController()
+            case 2:
+                self.coordinator?.showLoadWalletViewController(type: 1)
+            case 3:
+                self.coordinator?.showLoadWalletViewController()
+            case 4:
+                self.coordinator?.ShowELoadViewController()
+//            case 4:
+//            case 5:
+//            case 6:
+//            case 7:
+//            case 8:
+//            case 9:
+            default:
+                break
+            }
+            
         }else if let itemCell = cell as? NewsCell {
             print("NEWS : \(self.homeData?.news?[index])")
             self.coordinator?.showBase2ndViewController()

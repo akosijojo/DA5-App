@@ -188,6 +188,14 @@ extension CollectionViewCell: NewsCellDelegate ,ServicesDelegate, PendingTransac
          }
     }
     
+    func removeItem(cell: PendingTransactionCell, index: Int?) {
+        if let item = index {
+            //MARK: - show alert
+            print("REMOVING TRANSACTION AT \(item)")
+        }
+    }
+       
+       
     func onClickItem(cell: TransactionHistoryCell, index: Int?) {
          if let item = index{
             self.delegate?.onClickShowView(cell: cell, type: 4, index: item)

@@ -28,4 +28,17 @@ extension String {
         label.sizeToFit()
         return label.frame.width
     }
+    
+    func formatDate(format: String? = "MMM dd, yyyy") -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = format!
+
+        if let date = dateFormatterGet.date(from: self) {
+            return dateFormatterPrint.string(from: date)
+        }
+        return self
+    }
 }

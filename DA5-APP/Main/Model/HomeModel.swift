@@ -18,11 +18,11 @@ class HomeModel {
 
     func getHomeData(param: [String:Any],completionHandler: @escaping (HomeData?,StatusList?) -> ()) {
         NetworkService<HomeData>().networkRequest(param, token: token,jsonUrlString: jsonUrlString + homePath) { (data,status) in
-            if let dataReceived = data {
-                    completionHandler(dataReceived,nil)
-                    return
-            }
-            completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+             if let dataReceived = data {
+                     completionHandler(dataReceived,nil)
+                     return
+             }
+             completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
         }
     }
     
@@ -33,7 +33,7 @@ class HomeModel {
                completionHandler(res,nil)
                return
            }
-          completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+          completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
         }
      }
      

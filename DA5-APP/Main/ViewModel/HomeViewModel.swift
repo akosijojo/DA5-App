@@ -10,6 +10,7 @@ import Foundation
 
 class HomeViewModel : NSObject {
     var model : HomeModel?
+    var token : String = ""
     var onSuccessGettingList : ((HomeData?) -> Void)?
     var onSuccessGenerateToken : ((APIToken?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
@@ -17,27 +18,26 @@ class HomeViewModel : NSObject {
 
 
     func getHomeData(id: Int) {
-        
-        print("GET HOME DATA")
-         guard let dataModel = model else { return }
+        if token != "" {
+            guard let dataModel = model else { return }
+                    
+             let completionHandler = { (data : HomeData?,status: StatusList?) in
                 
-         let completionHandler = { (data : HomeData?,status: StatusList?) in
+                if let dataReceived = data {
+                    self.onSuccessGettingList?(dataReceived)
+                    return
+                }
+                
+                self.onErrorHandling?(status)
+             }
             
-            if let dataReceived = data {
-                self.onSuccessGettingList?(dataReceived)
-                return
-            }
-            
-            self.onErrorHandling?(status)
-         }
-        
-        let param : [String:String] = [
-            "customer_id" : String(describing: id)
-        ]
-//        if fb {
-//            dataModel.loginFb(param: param, completionHandler: completionHandler)
-//        }else {
-        dataModel.getHomeData(param: param, completionHandler: completionHandler)
+            let param : [String:String] = [
+                "customer_id" : String(describing: id)
+            ]
+            dataModel.getHomeData(param: param, completionHandler: completionHandler)
+        }else {
+            self.generateAPIToken()
+        }
     }
     
     func generateAPIToken() {
@@ -45,6 +45,8 @@ class HomeViewModel : NSObject {
                 
           let completionHandler = { (data: APIToken?,status : StatusList?) in
               if let result = data {
+                //MARK: Save Token
+                  self.token = result.accessToken ?? ""
                   self.onSuccessGenerateToken?(result)
               }else {
                   self.onErrorHandling?(status)

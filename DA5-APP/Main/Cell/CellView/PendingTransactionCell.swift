@@ -9,16 +9,37 @@
 import UIKit
 protocol PendingTransactionDelegate: class {
     func onClickItem(cell: PendingTransactionCell, index: Int?)
+    func removeItem(cell: PendingTransactionCell, index: Int?)
 }
 class PendingTransactionCell: UICollectionViewCell {
     
     var data : PendingTransactionsData? {
         didSet {
             if let d = data {
-                self.imageView.image = UIImage(named: d.image)
-                self.titleLbl.text = d.title
-                self.priceLbl.text = d.amount
-                self.dateLbl.text = d.date
+                if let cashInOut = d.cashInOut {
+    //                self.imageView.image = UIImage(named: d.cashInOut?.partnerImage)
+                    self.imageView.image = UIImage(named: "western")
+                    self.titleLbl.text = cashInOut.type == 0 ? "CASH IN" : "CASH OUT"
+                    self.priceLbl.text = "PHP \(cashInOut.amount ?? "")"
+                    self.dateLbl.text = cashInOut.transactionDate?.formatDate()
+                    self.refNoLbl.text = "Ref No. \(cashInOut.referenceNo ?? "")"
+                }
+                
+//                if let eLoad = d.eload {
+//
+//                }
+
+//                if let walletTransfer = d.walletTransfer {
+//
+//                }
+
+//                if let fx = d.fx {
+//
+//                }
+
+//                if let instapay = d.instapay {
+//
+//                }
             }
         }
     }
@@ -46,6 +67,17 @@ class PendingTransactionCell: UICollectionViewCell {
         v.contentMode = .scaleAspectFill
         return v
     }()
+    
+    lazy var removeIcon : UIButton = {
+        let v = UIButton()
+        v.layer.cornerRadius = 10
+        v.layer.masksToBounds = true
+        v.clipsToBounds = true
+        v.contentMode = .scaleAspectFit
+        v.setImage(UIImage(named: "times"), for: .normal)
+        v.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.8)
+        return v
+    }()
 
     lazy var titleLbl : UILabel = {
         let v = UILabel()
@@ -65,6 +97,12 @@ class PendingTransactionCell: UICollectionViewCell {
       let v = UILabel()
       v.font = UIFont(name: Fonts.medium, size: 12)
       v.textColor = ColorConfig().lightBlue
+      return v
+    }()
+    
+    lazy var refNoLbl : UILabel = {
+      let v = UILabel()
+      v.font = UIFont(name: Fonts.medium, size: 12)
       return v
     }()
     
@@ -100,6 +138,15 @@ class PendingTransactionCell: UICollectionViewCell {
             make.height.equalTo(mainView).multipliedBy(0.5)
         }
         
+        mainView.addSubview(removeIcon)
+        removeIcon.snp.makeConstraints { (make) in
+            make.top.equalTo(mainView).offset(5)
+            make.width.equalTo(20)
+            make.trailing.equalTo(mainView).offset(-5)
+            make.height.equalTo(20)
+        }
+        mainView.bringSubviewToFront(removeIcon)
+        
         mainView.addSubview(containerView)
         containerView.snp.makeConstraints { (make) in
             make.top.equalTo(imageView.snp.bottom).offset(5)
@@ -113,7 +160,7 @@ class PendingTransactionCell: UICollectionViewCell {
             make.top.equalTo(containerView).offset(5)
             make.leading.equalTo(containerView)
             make.trailing.equalTo(containerView)
-            make.height.equalTo(containerView).multipliedBy(0.25)
+            make.height.equalTo(containerView).multipliedBy(0.2)
         }
         
         containerView.addSubview(priceLbl)
@@ -121,7 +168,7 @@ class PendingTransactionCell: UICollectionViewCell {
             make.top.equalTo(titleLbl.snp.bottom)
             make.leading.equalTo(containerView)
             make.trailing.equalTo(containerView)
-            make.height.equalTo(containerView).multipliedBy(0.25)
+            make.height.equalTo(containerView).multipliedBy(0.2)
         }
         
         containerView.addSubview(dateLbl)
@@ -129,12 +176,32 @@ class PendingTransactionCell: UICollectionViewCell {
            make.top.equalTo(priceLbl.snp.bottom)
            make.leading.equalTo(containerView)
            make.trailing.equalTo(containerView)
-           make.height.equalTo(containerView).multipliedBy(0.25)
+           make.height.equalTo(containerView).multipliedBy(0.2)
         }
+        
+        containerView.addSubview(refNoLbl)
+        refNoLbl.snp.makeConstraints { (make) in
+           make.top.equalTo(dateLbl.snp.bottom)
+           make.leading.equalTo(containerView)
+           make.trailing.equalTo(containerView)
+           make.height.equalTo(containerView).multipliedBy(0.2)
+        }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onClick))
+        mainView.isUserInteractionEnabled = true
+        mainView.addGestureRecognizer(tap)
+        
+        removeIcon.addTarget(self, action: #selector(removeItem), for: .touchUpInside)
+        removeIcon.isUserInteractionEnabled = true
     }
     
     @objc func onClick() {
         print("CLICKING : \(index)")
         self.delegate?.onClickItem(cell: self, index: index)
+    }
+    
+    @objc func removeItem() {
+        print("REMOVING : \(index)")
+        self.delegate?.removeItem(cell: self, index: index)
     }
 }

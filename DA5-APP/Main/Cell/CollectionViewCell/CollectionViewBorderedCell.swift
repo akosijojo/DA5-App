@@ -43,5 +43,5 @@ class CollectionViewBorderedCell: CollectionViewCell {
 //        containerView.layer.borderColor = ColorConfig().lightGray?.cgColor
     
     }
-    
+
 }

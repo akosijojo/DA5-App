@@ -7,27 +7,33 @@
 //
 
 import UIKit
+enum emptyViewType {
+    case main
+    case secondary
+}
 
 extension UICollectionView {
     
-    func emptyView(image: String,text: String,dataCount: Int) {
+    func emptyView(image: String,text: String,dataCount: Int,emptyViewType: emptyViewType) {
+        print("Set Up Empty View")
         if dataCount == 0 {
-            self.backgroundView = setEmptyViewUI(image: image, text: text)
+            self.backgroundView = setEmptyViewUI(image: image, text: text, type: emptyViewType)
         }else {
             self.backgroundView = nil
         }
     
     }
     
-    func setEmptyViewUI (image: String,text: String) -> UIView {
+    func setEmptyViewUI (image: String,text: String,type: emptyViewType) -> UIView {
         if image != "" {
             let img = UIImageView()
             img.contentMode = .scaleAspectFit
-            img.image = UIImage(named: image)?.withRenderingMode(.alwaysOriginal)
+            img.tintColor = type == .main ? ColorConfig().lightGray : ColorConfig().txtSecondaryColor
+            img.image = UIImage(named: image)?.withRenderingMode(.alwaysTemplate)
             
             let desc = UILabel()
-            desc.font = UIFont(name: Fonts.bold, size: 20)
-            desc.textColor = ColorConfig().txtSecondaryColor
+            desc.font = type == .main ?  UIFont(name: Fonts.bold, size: 14) : UIFont(name: Fonts.regular, size: 12)
+            desc.textColor = type == .main ? ColorConfig().lightGray : ColorConfig().txtSecondaryColor
             desc.minimumScaleFactor = 0.2
             desc.numberOfLines = 2
             desc.adjustsFontSizeToFitWidth = true
@@ -35,19 +41,20 @@ extension UICollectionView {
             desc.textAlignment = .center
             
             let mainView = UIView()
+            mainView.frame = self.bounds
             mainView.addSubview(img)
             mainView.addSubview(desc)
             
             img.snp.makeConstraints { (make) in
                 make.centerX.equalTo(mainView)
-                make.width.equalTo(ColorConfig().screenWidth - 40)
-                make.height.equalTo(ColorConfig().screenWidth - 40)
+                make.width.equalTo(mainView).multipliedBy(0.9)
+                make.height.equalTo(80)
                 make.centerY.equalTo(mainView)
             }
             
             desc.snp.makeConstraints { (make) in
                 make.centerX.equalTo(mainView)
-                make.width.equalTo(ColorConfig().screenWidth - 40)
+                make.width.equalTo(mainView).multipliedBy(0.9)
                 make.height.equalTo(40)
                 make.top.equalTo(img.snp.bottom).offset(10)
             }
@@ -56,8 +63,8 @@ extension UICollectionView {
         }else {
         
             let desc = UILabel()
-            desc.font = UIFont(name: Fonts.bold, size: 20)
-            desc.textColor = ColorConfig().txtSecondaryColor
+            desc.font = type == .main ?  UIFont(name: Fonts.bold, size: 14) : UIFont(name: Fonts.regular, size: 12)
+            desc.textColor =  type == .main ? ColorConfig().lightGray : ColorConfig().txtSecondaryColor
             desc.minimumScaleFactor = 0.2
             desc.numberOfLines = 2
             desc.adjustsFontSizeToFitWidth = true
@@ -65,16 +72,15 @@ extension UICollectionView {
             desc.textAlignment = .center
             
             let mainView = UIView()
+            mainView.frame = self.bounds
             mainView.addSubview(desc)
             desc.snp.makeConstraints { (make) in
-                make.centerX.equalTo(mainView)
-                make.centerY.equalTo(ColorConfig().screenWidth - 40)
-                make.height.equalTo(ColorConfig().screenWidth - 40)
-                make.width.equalTo(ColorConfig().screenWidth - 40)
+                make.center.equalTo(mainView)
+                make.height.equalTo(40)
+                make.width.equalTo(mainView).multipliedBy(0.9)
             }
             
             return mainView
         }
     }
 }
-
