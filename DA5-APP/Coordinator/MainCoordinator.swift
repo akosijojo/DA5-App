@@ -10,6 +10,12 @@ import Foundation
 import UIKit
 
 class MainCoordinator :  NSObject, Coordinator {
+    var timer : Timer?
+    
+    var viewControllersActive : [UIViewController] = []
+    var alertView : UIViewController?
+    
+    
     weak var parentCoordinator: MainCoordinator?
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
@@ -23,7 +29,6 @@ class MainCoordinator :  NSObject, Coordinator {
     }
     
     func start() {
-        
         navigationController.delegate = self
         navigationController.navigationBar.barTintColor = ColorConfig().white
         navigationController.navigationBar.isTranslucent = false
@@ -51,7 +56,21 @@ class MainCoordinator :  NSObject, Coordinator {
             UserLoginData.shared.middleName = data.middleName
             UserLoginData.shared.lastName = data.lastName
             UserLoginData.shared.image = data.image
+            saveCustomerToLocal(data: user)
         }
+        
+    }
+    
+    func saveCustomerToLocal(data: Customer?) {
+        if !CustomerLocal().checkIfExistingData() {
+            if let d = data {
+               let getData =  d.convertToLocalData()
+               getData.saveCustomerToLocal()
+                print("USER SAVE TO COORDINATOR LOCAL")
+                self.usersDataLocal = getData // SAVE TO coordinator local data for checking
+           }
+        }
+       
     }
     
     func removeUserLogin() {
@@ -64,6 +83,7 @@ class MainCoordinator :  NSObject, Coordinator {
     
     func removeCustomerLocalData() {
         UserDefaults.standard.removeObject(forKey: AppConfig().customerLocalKey)
+        self.usersDataLocal = nil
     }
     
     func logInCoordinator(didLogout: Bool? = nil) {
@@ -92,14 +112,23 @@ class MainCoordinator :  NSObject, Coordinator {
        navigationController.pushViewController(vc, animated: false)
     }
 
-    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil) {
-        self.setUpUserLogin(user: customerData)
+    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false) {
+        if !fromBackground {
+            print("!FROM BACKGROUND ")
+            self.setUpUserLogin(user: customerData)
+        }
         let vc = PinViewController()
         vc.coordinator = self
         vc.viewModel = LoginViewModel()
         vc.viewModel?.model = LoginModel()
         vc.customerData = customerData
         vc.isChecking = usersDataLocal?.mpin == nil ? (customerData?.mpin == nil ? true : false) : false
+        
+        //MARK: - CHECKING IF FROM INACTIVE STATE
+        if fromBackground {
+            vc.fromBackground = fromBackground
+        }
+        
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
@@ -163,7 +192,6 @@ class MainCoordinator :  NSObject, Coordinator {
             vc.customerData = CustomerLocal().getCustomerFromLocal()?.convertData()
         }
         vc.customerData = self.usersDataLocal?.convertData()
-        print("DATA CUSTOMER : \(self.usersDataLocal?.convertData())")
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
@@ -184,31 +212,60 @@ class MainCoordinator :  NSObject, Coordinator {
             }
         }
     }
-    
+    //MARK: -COMMENT OUT TO HIDE PIN VIEW
     func becomeInActiveState() {
-        print("VIEW CONTROLLERS : \(self.navigationController.viewControllers)")
-        if let _ =  self.navigationController.viewControllers.last as? PinViewController {
-            self.showPinOnChangeAppState = false
-        }else {
-             self.showPinOnChangeAppState = true
-        }
+//        if let _ =  self.navigationController.viewControllers.first as? HomeViewController {
+//            self.showPinOnChangeAppState = true
+//        }else {
+//             self.showPinOnChangeAppState = false
+//        }
     }
+    
     func becomeActiveState() {
-        if let usersData = usersDataLocal {
-            if self.showPinOnChangeAppState {
-               self.removeAllViewController()
-               self.pinCodeCoordinator(customerData: usersData.convertData())
-            }
+//        if let usersData = usersDataLocal {
+//            if self.showPinOnChangeAppState {
+//                if let presentedView = self.navigationController.topViewController?.presentedViewController {
+//                    self.alertView = presentedView
+//                    self.navigationController.topViewController?.presentedViewController?.dismiss(animated: false, completion: nil)
+//
+//                }
+//               self.viewControllersActive = self.navigationController.viewControllers
+//               self.removeAllViewController()
+//               self.pinCodeCoordinator(customerData: usersData.convertData(),fromBackground: true)
+//            }
+//        }
+    }
+    
+    func gotoPreviousViewControllers() {
+        self.navigationController.viewControllers = self.viewControllersActive
+        if let alert = self.alertView {
+             self.navigationController.topViewController?.present(alert, animated: true, completion: nil)
         }
     }
     
     func removeAllViewController() {
         if let _ = usersDataLocal {
             if self.navigationController.viewControllers.count > 0 {
-                 print("REMOVING ACTIVE VIEWS : \(self.navigationController.viewControllers.count)")
                 self.navigationController.viewControllers.removeAll()
             }
        }
+    }
+    
+    func updateToken(data: APIToken?) {
+        DispatchQueue.main.async {
+            let interval = TimeInterval(data?.expiresIn ?? 0)
+                print("timer  \(data?.expiresIn) == \(interval)")
+            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self,   selector: (#selector(self.requestToken)), userInfo: nil, repeats: false)
+        }
+    }
+    
+    @objc func requestToken() {
+        timer?.invalidate()
+        for vc in self.navigationController.viewControllers {
+            if let homeVc = vc as? HomeViewController {
+                homeVc.viewModel?.generateAPIToken(update: true)
+            }
+        }
     }
 }
 
@@ -235,6 +292,20 @@ extension MainCoordinator : UINavigationControllerDelegate{
 
 
 extension MainCoordinator {
+    
+    func showParentView() {
+  
+        for x in self.navigationController.viewControllers {
+            if let homeVc = x as? HomeViewController {
+                self.navigationController.viewControllers = [homeVc]
+                return
+            }
+        }
+//        var navigationArray = navigationController.viewControllers // To get all UIViewController stack as Array
+//        navigationArray.remove(at: navigationArray.count - 2) // To remove previous UIViewController
+//        self.navigationController?.viewControllers = navigationArray
+    }
+    
     func showLoadWalletViewController(type: Int? = 0) {
         let vc = LoadWalletViewController()
         vc.coordinator = self
@@ -253,11 +324,21 @@ extension MainCoordinator {
         navigationController.pushViewController(vc, animated: false)
     }
     
+    func showWalletTransferViewController() {
+         let vc = WalletTransferViewController()
+         vc.coordinator = self
+         vc.viewModel = LoadWalletViewModel()
+         vc.viewModel?.model = LoadWalletModel()
+         vc.viewModel?.model?.token = self.token
+         navigationController.setNavigationBarHidden(false, animated: false)
+         navigationController.pushViewController(vc, animated: false)
+    }
+    
     func ShowELoadViewController() {
         let vc = ELoadViewController()
         vc.viewModel = ELoadViewModel()
         vc.viewModel?.model = ELoadModel()
-        vc.viewModel?.model?.token = self.token
+//        vc.viewModel?.model?.token = self.token
         vc.coordinator = self
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
@@ -283,17 +364,41 @@ extension MainCoordinator {
 
     func ShowELoadProductDetailsViewController(data: ELoadProducts? , phone: String?) {
         let vc = ELoadProductDetailsViewController(data: data, phone: phone)
+        vc.coordinator = self
         vc.viewModel = ELoadViewModel()
         vc.viewModel?.model = ELoadModel()
-        vc.coordinator = self
+//        vc.viewModel?.model?.token = self.token
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
     
-    func showCashOutViewController() {
-//       let vc = WalletViewController()
-//       vc.coordinator = self
-//       navigationController.setNavigationBarHidden(false, animated: false)
-//       navigationController.pushViewController(vc, animated: false)
+    func showBankTransferViewController() {
+        let vc = BankTransferViewController()
+        vc.coordinator = self
+        vc.viewModel = BankTransferViewModel()
+        vc.viewModel?.model = BankTransferModel()
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
     }
+    
+    func showBankTransferDetailsViewController(data: TransferDetails?) {
+        let vc = BankTransferDetailsViewController(data: data)
+        vc.coordinator = self
+        vc.viewModel = BankTransferViewModel()
+        vc.viewModel?.model = BankTransferModel()
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showFxViewController(balance: String?) {
+       let vc = FXViewController(balance: balance)
+       vc.coordinator = self
+       vc.viewModel = FxViewModel()
+       vc.viewModel?.model = FxModel()
+       navigationController.setNavigationBarHidden(false, animated: false)
+       navigationController.pushViewController(vc, animated: false)
+    }
+    
+    
+    
 }

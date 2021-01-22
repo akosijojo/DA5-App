@@ -10,17 +10,17 @@ import UIKit
 
 class LoadWalletViewModel: NSObject {
     var model : LoadWalletModel?
-    var onSuccessDataRequest: ((StatusList?) -> Void)?
+    var onSuccessDataRequest: ((SubmitCashInOutData?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
     var onErrorHandling : ((StatusList?) -> Void)?
 
     func cashIn(amount: String, customerId: Int, partnerId: String) {
         guard let dataModel = model else { return }
                 
-         let completionHandler = { (data : ELoadData?,status: StatusList?) in
+         let completionHandler = { (data : SubmitCashInOutData?,status: StatusList?) in
             
             if let dataReceived = data {
-//                self.onSuccessDataRequest?(dataReceived)
+                self.onSuccessDataRequest?(dataReceived)
                 return
             }
             
@@ -39,10 +39,10 @@ class LoadWalletViewModel: NSObject {
     func cashOut(amount: String, customerId: Int, partnerId: String) {
         guard let dataModel = model else { return }
                 
-         let completionHandler = { (data : ELoadData?,status: StatusList?) in
+         let completionHandler = { (data : SubmitCashInOutData?,status: StatusList?) in
             
             if let dataReceived = data {
-//                self.onSuccessDataRequest?(dataReceived)
+                self.onSuccessDataRequest?(dataReceived)
                 return
             }
             
@@ -55,5 +55,26 @@ class LoadWalletViewModel: NSObject {
             "partner_id": partnerId,
         ]
         dataModel.cashOut(param: param, completionHandler: completionHandler)
+    }
+    
+    func sendMoney(amount: String, customerId: Int, phone: String){
+        guard let dataModel = model else { return }
+                        
+         let completionHandler = { (data : StatusList?,status: StatusList?) in
+            
+            if let dataReceived = data {
+                self.onSuccessRequest?(dataReceived)
+                return
+            }
+            
+            self.onErrorHandling?(status)
+         }
+            
+        let param : [String:String] = [
+            "amount": amount,
+            "customer_id" : "\(customerId)",
+            "phone": phone,
+        ]
+        dataModel.sendMoney(param: param, completionHandler: completionHandler)
     }
 }

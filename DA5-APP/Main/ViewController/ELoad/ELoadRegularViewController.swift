@@ -107,6 +107,7 @@ class ELoadRegularViewController: BaseHomeViewControler {
         }
     }
     
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let textFieldText = textField.text,
             let rangeOfTextToReplace = Range(range, in: textFieldText) else {
@@ -118,7 +119,7 @@ class ELoadRegularViewController: BaseHomeViewControler {
     }
     
     @objc func onClick() {
-        if let strAmount = self.amountInput.text , strAmount.returnAmount() > (Int(data?.maxAmount ?? "0") ?? 0) {
+        if let strAmount = self.amountInput.text , strAmount.returnAmount() > data?.maxAmount?.returnAmount() ?? 0 {
             self.showAlert(buttonOK: "Ok", message: "Please enter an amount with a maximum of PHP \(data?.maxAmount ?? "0")", actionOk: nil, completionHandler: nil)
         }else {
             data?.minAmount = self.amountInput.text?.returnDecimalAmount()

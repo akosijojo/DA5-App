@@ -66,6 +66,12 @@ class CustomBasicFormInput : UIView {
         }
         TextField.padding = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 30)
     }
+    
+    func removeLblHeight() {
+        Label.snp.updateConstraints { (make) in
+            make.height.equalTo(0)
+        }
+    }
 }
 
 class CustomBasicFormInput2 : UIView {
@@ -196,6 +202,69 @@ class CustomBasicFormInputNumber : UIView {
              make.height.equalTo(40)
          }
     }
+    
+    func removeLblHeight() {
+        Label.snp.updateConstraints { (make) in
+            make.height.equalTo(0)
+        }
+    }
+}
+
+
+class CustomBasicAmountInput : UIView , UITextFieldDelegate{
+    lazy var Label : UILabel = {
+       let v = UILabel()
+        v.text = ""
+        v.textAlignment = .center
+       return v
+    }()
+  
+    lazy var amount : CustomTextField = {
+        let v = CustomTextField()
+        v.font = UIFont(name: Fonts.regular, size: 12)
+        v.layer.cornerRadius = 5
+        return v
+    }()
+
+    lazy var decimal : CustomTextField = {
+       let v = CustomTextField()
+       v.font = UIFont(name: Fonts.regular, size: 12)
+       v.layer.cornerRadius = 5
+       return v
+    }()
+   
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setUpView()
+        self.backgroundColor = ColorConfig().innerbgColor
+        self.Label.addBorders(edges: .right, color: ColorConfig().lightGray!)
+    }
+   
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+   
+    func setUpView() {
+        addSubview(Label)
+        Label.snp.makeConstraints { (make) in
+             make.top.equalTo(self).offset(10)
+             make.leading.equalTo(self)
+             make.width.equalTo(70)
+             make.bottom.equalTo(self).offset(-10)
+         }
+        
+         addSubview(amount)
+         amount.snp.makeConstraints { (make) in
+             make.top.equalTo(self)
+             make.leading.equalTo(Label.snp.trailing)
+             make.trailing.equalTo(self)
+             make.bottom.equalTo(self)
+         }
+    }
+    
+    func removeBorder() {
+        self.Label.addBorders(edges: .right, color: ColorConfig().innerbgColor!)
+    }
 }
 
 class CustomMobileNumberField : UIView {
@@ -239,6 +308,10 @@ class CustomMobileNumberField : UIView {
              make.trailing.equalTo(self)
              make.bottom.equalTo(self)
          }
+    }
+    
+    func removeBorder() {
+        self.Label.addBorders(edges: .right, color: ColorConfig().innerbgColor!)
     }
 }
 

@@ -24,7 +24,7 @@ class PendingTransactionCollectionViewCell : CollectionViewCell {
     }
         
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-         return CGSize(width: collectionView.frame.width * 0.7, height: 180)
+         return CGSize(width: collectionView.frame.width * 0.6, height: 180)
     }
         
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

@@ -9,6 +9,7 @@
 import UIKit
 protocol CollectionViewCellDelegate: class {
     func onClickShowView(cell: UICollectionViewCell, type: Int, index: Int)
+    func removeItem(cell:UICollectionViewCell,index: Int)
 }
 
 class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
@@ -192,6 +193,7 @@ extension CollectionViewCell: NewsCellDelegate ,ServicesDelegate, PendingTransac
         if let item = index {
             //MARK: - show alert
             print("REMOVING TRANSACTION AT \(item)")
+            self.delegate?.removeItem(cell: self, index: item)
         }
     }
        

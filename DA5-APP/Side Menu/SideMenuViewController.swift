@@ -16,7 +16,11 @@ class SideMenuView : UIView {
     weak var vc : HomeViewController?
     var isShowMenu : Bool = false
     var widthMultiplier : CGFloat = 0.6 // percentage
-    var userData : Customer?
+    var userData : Customer? {
+        didSet {
+            self.profileImg.downloaded(from: userData?.image ?? "")
+        }
+    }
     
     let containerView : UIView = {
         let v = UIView()
@@ -72,7 +76,7 @@ class SideMenuView : UIView {
         
         containerView.addSubview(profileImg)
         profileImg.snp.makeConstraints { (make) in
-            make.top.equalTo(containerView).offset(20)
+            make.top.equalTo(containerView.layoutMarginsGuide.snp.top).offset(20)
             make.centerX.equalTo(containerView)
             make.width.equalTo(100)
             make.height.equalTo(100)
@@ -93,6 +97,9 @@ class SideMenuView : UIView {
             make.trailing.equalTo(containerView).offset(-20)
             make.height.equalTo(menus.count * 50)
         }
+        
+        print("DOWNLOADING ==")
+        self.profileImg.downloaded(from: userData?.image ?? "")
         
         let screenGesture = UIPanGestureRecognizer(target: self, action: #selector(dismissSelfAnimate(_:)))
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissSelf))

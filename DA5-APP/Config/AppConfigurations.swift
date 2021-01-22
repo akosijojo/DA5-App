@@ -22,6 +22,8 @@ class ApiConfig {
     var apiUsername : String = "da5"
     var apiPassword : String = "da5password"
     
+    var currencyApi : String = "https://api.exchangeratesapi.io/latest"
+    
 
     func getUrl() -> String {
         if env == "live" {

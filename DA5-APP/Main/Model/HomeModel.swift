@@ -14,6 +14,7 @@ class HomeModel {
 
     let homePath = "/customer/getHomeData"
     let apiToken = "/auth/generateAPIToken"
+    let declineTransact = "/partner/declineTransaction"
     
 
     func getHomeData(param: [String:Any],completionHandler: @escaping (HomeData?,StatusList?) -> ()) {
@@ -36,5 +37,14 @@ class HomeModel {
           completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
         }
      }
-     
+    
+    func declineTransaction(param: [String:Any],completionHandler: @escaping (StatusList?,StatusList?) -> ()) {
+        NetworkService<StatusListData>().networkRequest(param, token: token, jsonUrlString: jsonUrlString + declineTransact) { (data,status) in
+            if let res = data {
+                completionHandler(StatusList(status: 0, title: "", message: res.message, tag: 2),nil)
+                return
+            }
+           completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 2))
+         }
+      }
 }

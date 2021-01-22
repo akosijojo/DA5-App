@@ -48,18 +48,25 @@ class LoadWalletCell: UICollectionViewCell {
     
     var index : Int = 0
     
+    lazy var imageViewContainer : UIView = {
+      let v = UIView()
+      return v
+    }()
+    
     lazy var imageView : UIImageView = {
         let v = UIImageView()
         v.layer.cornerRadius = 10
         v.layer.masksToBounds = true
         v.clipsToBounds = true
         v.contentMode = .scaleAspectFill
+//        v.layer.borderWidth = 1
+//        v.layer.borderColor = ColorConfig().lightGray?.cgColor
         return v
     }()
     
     var datePicker : UIDatePicker?
     
-    var data : NewsData? {
+    var data : CashInData? {
         didSet {
             self.imageView.image = UIImage(named: self.data?.image ?? "")
         }
@@ -76,22 +83,32 @@ class LoadWalletCell: UICollectionViewCell {
     
     override func layoutSubviews() {
        super.layoutSubviews()
-//       let rect = CGRect(x: 0, y: 5, width: imageView.frame.width, height: imageView.frame.height - 5)
-//       imageView.backgroundColor = .white
-//       imageView.layer.shadowPath = UIBezierPath(rect:rect).cgPath
-//       imageView.layer.shadowRadius = 4
-//       imageView.layer.shadowOffset = .zero
-//       imageView.layer.shadowOpacity = 0.2
+       imageViewContainer.layer.cornerRadius = 10
+        imageView.backgroundColor = .white
+       let rect = CGRect(x: 0, y: 5, width: imageViewContainer.frame.width, height: imageViewContainer.frame.height - 5)
+       imageViewContainer.backgroundColor = .white
+       imageViewContainer.layer.shadowPath = UIBezierPath(rect:rect).cgPath
+       imageViewContainer.layer.shadowRadius = 4
+       imageViewContainer.layer.shadowOffset = .zero
+       imageViewContainer.layer.shadowOpacity = 0.2
     }
   
     
     func setUpView() {
-      addSubview(imageView)
+        addSubview(imageViewContainer)
+        imageViewContainer.snp.makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.leading.equalTo(self)
+            make.trailing.equalTo(self)
+            make.bottom.equalTo(self)
+        }
+        
+       imageViewContainer.addSubview(imageView)
        imageView.snp.makeConstraints { (make) in
-           make.top.equalTo(self)
-           make.leading.equalTo(self)
-           make.trailing.equalTo(self)
-           make.bottom.equalTo(self)
+           make.top.equalTo(imageViewContainer)
+           make.leading.equalTo(imageViewContainer)
+           make.trailing.equalTo(imageViewContainer)
+           make.bottom.equalTo(imageViewContainer)
        }
         
        imageView.isUserInteractionEnabled = true

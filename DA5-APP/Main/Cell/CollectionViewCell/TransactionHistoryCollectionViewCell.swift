@@ -25,7 +25,9 @@ class TransactionHistoryCollectionViewCell : CollectionViewBorderedCell {
         
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width - 40
-        return CGSize(width: width, height: 80)
+        let addedHeight : CGFloat = self.tHistoryData?[indexPath.item].instapay != nil ? 20 : 0
+        print("Height CELL TRANSACTION : \(addedHeight)")
+        return CGSize(width: width, height: 100 + addedHeight)
     }
         
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

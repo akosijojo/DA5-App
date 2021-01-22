@@ -89,6 +89,16 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
         return v
     }()
     
+     override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = ColorConfig().bgColor
+        setUpView()
+        navigationController?.interactivePopGestureRecognizer?.delegate = self as? UIGestureRecognizerDelegate
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        hidesKeyboardOnTapArround()
+        setUpData()
+    }
+    
     init(data: ELoadProducts?,phone: String?) {
         super.init(nibName: nil, bundle: nil)
         self.headerView.title.text = "Buy load confirmation"
@@ -112,6 +122,31 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
         setUpNavigationBar()
     }
     
+    override func setUpData() {
+       self.viewModel?.onSuccessDataRequest = { [weak self] data in
+           DispatchQueue.main.async {
+               self?.stopAnimating()
+           }
+       }
+       
+       self.viewModel?.onSuccessRequest = { [weak self] data in
+           DispatchQueue.main.async {
+            self?.stopAnimating()
+            self?.showAlert(buttonOK: "Ok", message:  data?.message ?? "Something went wrong", actionOk: { (action) in
+                self?.coordinator?.showParentView()
+            }, completionHandler: nil)
+           
+           }
+       }
+      
+       self.viewModel?.onErrorHandling = { [weak self] status in
+           DispatchQueue.main.async {
+               self?.stopAnimating()
+               self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
+           }
+       }
+   }
+       
     override func setUpView() {
         view.addSubview(headerView)
         headerView.snp.makeConstraints { (make) in
@@ -205,6 +240,11 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
     
     @objc func onClickSubmit() {
         print("Submitting")
+        if let phone = self.number.text {
+            self.setAnimate(msg: "Please wait...")
+            self.viewModel?.submitEloadProcess(phoneNumber: phone, data: self.data, token: self.coordinator?.token)
+        }
+      
     }
         
 }

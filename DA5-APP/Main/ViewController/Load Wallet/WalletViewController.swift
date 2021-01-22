@@ -9,8 +9,17 @@
 import UIKit
 
 struct CashInData {
+    var id : Int
     var name : String
     var image : String
+}
+
+struct SubmitCashInOutData: Decodable {
+    var referenceNo : String
+     
+    enum CodingKeys: String, CodingKey {
+       case referenceNo = "reference_no"
+    }
 }
 
 class WalletViewController: BaseSecondaryViewController {
@@ -22,18 +31,25 @@ class WalletViewController: BaseSecondaryViewController {
         return v
     }()
     
+    lazy var imageView : UIView = {
+       let v = UIView()
+       return v
+    }()
+    
     lazy var cashInImageView : UIImageView = {
         let v = UIImageView()
-        v.image = UIImage(named: "western")
+//        v.image = UIImage(named: "western")
         v.layer.cornerRadius = 10
         v.layer.masksToBounds = true
         v.clipsToBounds = true
+//        v.layer.borderWidth = 1
+//        v.layer.borderColor = ColorConfig().lightGray?.cgColor
         return v
     }()
     
     lazy var cashInLbl : UILabel = {
         let v = UILabel()
-        v.text = "Western Union"
+//        v.text = "Western Union"
         v.textAlignment = .center
         v.font = UIFont(name: Fonts.regular, size: 12)
         return v
@@ -89,6 +105,8 @@ class WalletViewController: BaseSecondaryViewController {
         super.init(nibName: nil, bundle: nil)
         self.data = data
         self.type = type
+        self.cashInImageView.image = UIImage(named: data?.image ?? "")
+        self.cashInLbl.text = data?.name
         print("DATA GET \(data)")
     }
     
@@ -96,13 +114,26 @@ class WalletViewController: BaseSecondaryViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.imageView.layer.cornerRadius = 10
+        self.cashInImageView.backgroundColor = .white
+        let rect = CGRect(x: 0, y: 5, width: self.imageView.frame.width, height: self.imageView.frame.height - 5)
+        self.imageView.layer.shadowPath = UIBezierPath(rect:rect).cgPath
+        self.imageView.layer.shadowRadius = 4
+        self.imageView.layer.shadowOffset = .zero
+        self.imageView.layer.shadowOpacity = 0.2
+    }
     func getData() {
-        self.viewModel?.onSuccessRequest = { [weak self] status in
+        self.viewModel?.onSuccessDataRequest = { [weak self] status in
             DispatchQueue.main.async {
-                self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong.", actionOk: nil, completionHandler: nil)
+                self?.showAlert(buttonOK: "Ok", message: "Transaction Successful!", actionOk: { (action) in
+                    self?.coordinator?.showParentView()
+                }, completionHandler: nil)
             }
         }
-        self.viewModel?.onSuccessRequest = { [weak self] status in
+        self.viewModel?.onErrorHandling = { [weak self] status in
             DispatchQueue.main.async {
                 self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong.", actionOk: nil, completionHandler: nil)
             }
@@ -118,18 +149,26 @@ class WalletViewController: BaseSecondaryViewController {
           make.trailing.equalTo(view).offset(-20)
           make.height.equalTo(80)
        }
-        
-       view.addSubview(cashInImageView)
-       cashInImageView.snp.makeConstraints { (make) in
+       
+       view.addSubview(imageView)
+       imageView.snp.makeConstraints { (make) in
           make.centerY.equalTo(view).offset(-100)
           make.centerX.equalTo(view)
           make.width.equalTo(150)
           make.height.equalTo(120)
        }
+        
+       imageView.addSubview(cashInImageView)
+       cashInImageView.snp.makeConstraints { (make) in
+          make.centerY.equalTo(imageView.snp.centerY)
+          make.centerX.equalTo(imageView.snp.centerX)
+          make.width.equalTo(imageView)
+          make.height.equalTo(imageView)
+       }
     
         view.addSubview(cashInLbl)
         cashInLbl.snp.makeConstraints { (make) in
-            make.top.equalTo(cashInImageView.snp.bottom).offset(10)
+            make.top.equalTo(imageView.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(20)
@@ -164,9 +203,9 @@ class WalletViewController: BaseSecondaryViewController {
     
     @objc func onClickSubmit() {
         if type == 0 {
-            self.viewModel?.cashIn(amount: "\(self.amountInput.text?.returnAmount() ?? 0)",customerId: UserLoginData.shared.id ?? 0, partnerId: "1")
+            self.viewModel?.cashIn(amount: "\(self.amountInput.text?.removeStringsAmount() ?? 0)",customerId: UserLoginData.shared.id ?? 0, partnerId: "\(self.data?.id ?? 0)")
         }else {
-            self.viewModel?.cashOut(amount: "\(self.amountInput.text?.returnAmount() ?? 0)" ,customerId: UserLoginData.shared.id ?? 0, partnerId: "1")
+            self.viewModel?.cashOut(amount: "\(self.amountInput.text?.removeStringsAmount() ?? 0)" ,customerId: UserLoginData.shared.id ?? 0, partnerId:  "\(self.data?.id ?? 0)")
         }
     }
     
@@ -196,88 +235,5 @@ class WalletViewController: BaseSecondaryViewController {
         let substringToReplace = textFieldText[rangeOfTextToReplace]
         let count = textFieldText.count - substringToReplace.count + string.count
         return count <= 21
-    }
-}
-
-extension String {
-
-    // formatting text for currency textField
-    func currencyInputFormatting() -> String {
-
-        var number: NSNumber!
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currencyAccounting
-        formatter.currencySymbol = "PHP"
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 0
-
-        var amountWithPrefix = self
-
-        // remove from String: "$", ".", ","
-        let regex = try! NSRegularExpression(pattern: "[^0-9]", options: .caseInsensitive)
-        amountWithPrefix = regex.stringByReplacingMatches(in: amountWithPrefix, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count), withTemplate: "")
-
-        let double = (amountWithPrefix as NSString).doubleValue
-//        if double > 100 {
-//            number = NSNumber(value: (double / 100))
-//        }else {
-            number = NSNumber(value: double)
-//        }
-
-        // if first number is 0 or all numbers were deleted
-        guard number != 0 as NSNumber else {
-            return "PHP 0"
-        }
-
-        return formatter.string(from: number)!
-    }
-     // formatting text for currency textField
-    func returnAmount() -> Int {
-//
-        var number: NSNumber!
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currencyAccounting
-        formatter.currencySymbol = ""
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 0
-
-        var amountWithPrefix = self
-
-        let regex = try! NSRegularExpression(pattern: "[^0-9]", options: .caseInsensitive)
-        amountWithPrefix = regex.stringByReplacingMatches(in: amountWithPrefix, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count), withTemplate: "")
-
-        let double = (amountWithPrefix as NSString).doubleValue
-        number = NSNumber(value: double)
-
-        guard number != 0 as NSNumber else {
-            return 0
-        }
-
-        return Int(amountWithPrefix) ?? 0
-    }
-
-    func returnDecimalAmount() -> String {
-
-        var number: NSNumber!
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currencyAccounting
-        formatter.currencySymbol = "PHP"
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
-        var amountWithPrefix = self
-
-        // remove from String: "$", ".", ","
-        let regex = try! NSRegularExpression(pattern: "[^0-9]", options: .caseInsensitive)
-        amountWithPrefix = regex.stringByReplacingMatches(in: amountWithPrefix, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count), withTemplate: "")
-
-        let double = (amountWithPrefix as NSString).doubleValue
-        number = NSNumber(value: double)
-        // if first number is 0 or all numbers were deleted
-        guard number != 0 as NSNumber else {
-            return "PHP 0.00"
-        }
-
-        return formatter.string(from: number)!
     }
 }

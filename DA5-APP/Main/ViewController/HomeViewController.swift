@@ -40,6 +40,8 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         }
     }
     
+    var referenceNo : String = ""
+    
     var accountData : AccountData? = AccountData(id: 1, name: "User", image: "user", balance: "1,000,000.00 PHP")
     
     var servicesData : [ServicesData] = []
@@ -85,11 +87,32 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     func setUpRefreshView() {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-//        refreshControl?.attributedTitle = NSAttributedString(string: "Refresh Collection View", attributes: nil)
         if #available(iOS 10.0, *) {
             collectionView.refreshControl = refreshControl
         } else {
             collectionView.addSubview(refreshControl!)
+        }
+    }
+    
+    @objc func declineTransaction(refNo: String) {
+        self.viewModel?.declineTransaction(referenceNo: refNo)
+    }
+    
+    func removeTransaction(refNo: String) {
+        print("REMOVING : \(refNo)")
+        if let pTransaction = self.homeData?.pendingTransaction {
+            print("REMOVING 2: \(pTransaction)")
+            for index in 0...pTransaction.count - 1  {
+                print("REMOVING 3: \(index)")
+                if pTransaction[index].referenceNo == refNo {
+                    print("REMOVING 4: \(pTransaction[index].referenceNo)")
+                    if let item = self.homeData?.pendingTransaction?[index].convertToHistory(){
+                          self.homeData?.transactionHistory?.insert(item, at: index)
+                    }
+                    self.homeData?.pendingTransaction?.remove(at: index)
+                    self.collectionView.reloadData()
+                }
+            }
         }
     }
     
@@ -110,24 +133,11 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
             self?.homeData = data
             self?.homeData?.news = [
                  NewsData(id: 1, name: "Western", image: "western"),
-                 NewsData(id: 2, name: "City", image: "img_city"),
+                 NewsData(id: 2, name: "City", image: "app_logo"),
                  NewsData(id: 3, name: "Western", image: "western"),
                  NewsData(id: 4, name: "Western", image: "western"),
             ]
                 
-//            self?.homeData?.pendingTransaction =  [
-//               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
-//               PendingTransactionsData(id: 1, title: "Western", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
-//               PendingTransactionsData(id: 1, title: "Western", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
-//           ]
-
-//            self?.homeData?.transactionHistory = [
-//                TransactionHistoryData(id: 1, title: "CASH IN", info: "Paymaya", image: "western", amount: "PHP 200.00", date: "April 03, 2020"),
-//                TransactionHistoryData(id: 1, title: "BANK TRANSFER", info: "GCASH", image: "img_city", amount: "PHP 1000.00", date: "January 01, 2020"),
-//                TransactionHistoryData(id: 1, title: "BUY LOAD", info:"+639123456789", image: "western", amount: "PHP 500.00", date: "November 10, 2020"),
-//                TransactionHistoryData(id: 1, title: "BUY LOAD", info:"+639123456789", image: "western", amount: "PHP 500.00", date: "November 11, 2020"),
-//            ]
-            
             self?.servicesData = [
                 ServicesData(id: 1, name: "Load Wallet", image: "digital-wallet"),
                 ServicesData(id: 2, name: "Cash Out", image: "atm"),
@@ -135,7 +145,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                 ServicesData(id: 4, name: "Wallet transfer", image: "money"),
                 ServicesData(id: 5, name: "FX", image: "exchange"),
                 ServicesData(id: 6, name: "Pay Bills", image: "bill"),
-                ServicesData(id: 7, name: "Load", image: "smartphone"),
+                ServicesData(id: 7, name: "Buy Load", image: "smartphone"),
                 ServicesData(id: 8, name: "Crypto", image: "crypto"),
                 ServicesData(id: 9, name: "Loans", image: "communication"),
             ]
@@ -153,12 +163,34 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         self.viewModel?.onSuccessGenerateToken = { [weak self] data in
             DispatchQueue.main.async {
                 self?.coordinator?.token = data?.accessToken
+                self?.coordinator?.updateToken(data: data)
                 self?.viewModel?.getHomeData(id: UserLoginData.shared.id ?? 0) //self?.customerData?.id ?? 0
             }
         }
         
+        self.viewModel?.onSuccessUpdateToken = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.coordinator?.token = data?.accessToken
+                self?.coordinator?.updateToken(data: data)
+                //self?.customerData?.id ?? 0
+            }
+        }
+            
+        self.viewModel?.onSuccessRequest = { [weak self] status in
+           DispatchQueue.main.async {
+            //MARK: - 1 = DECLINE TRANSACTION
+            print("REMOVING MODEL : \(self?.referenceNo) == \(status?.tag)")
+               if status?.tag == 2 {
+                    if let ref = self?.referenceNo {
+                         self?.removeTransaction(refNo: ref)
+                    }
+               }
+           }
+        }
+                
         self.viewModel?.onErrorHandling = { [weak self] status in
             DispatchQueue.main.async {
+               //MARK: - 1 = ERROR LOADING HOME DATA
                 if status?.tag == 1 {
                     self?.isRefreshing = false
                     self?.refreshControl?.endRefreshing()
@@ -195,7 +227,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
               guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: mainHeaderId, for: indexPath) as? HomeHeaderCollectionViewCell else {
                   return UICollectionReusableView()
               }
-              header.maintainingBalance.text = "\(self.homeData?.balance ?? "0.00") PHP"
+              header.maintainingBalance.text = "PHP \(self.homeData?.balance ?? "0.00")"
               header.delegate = self
               return header
         }
@@ -252,9 +284,9 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
             return cell
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId4, for: indexPath) as? TransactionHistoryCollectionViewCell else {return UICollectionViewCell()}
+            cell.tHistoryData = tHistoryData
             cell.setUpCollectionView()
             cell.section = 4
-            cell.tHistoryData = tHistoryData
             cell.delegate = self
             return cell
         }
@@ -264,12 +296,25 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
        
         let servicesHeight = ((self.servicesData.count / 3) * 95) // cell 80 for 40 + 10 , 20 + 10 , collection top 10 space , left and right 10 , bottom have space 10 
         let newsHeight = indexPath.section == 3 ? (self.homeData?.pendingTransaction?.count ?? 0 > 0 ? 190 : 1) : 190
-        let tHistoryHeight = self.homeData?.transactionHistory?.count ?? 0 > 0 ? (80 * (self.homeData?.transactionHistory?.count ?? 0)) : 80
+        let tHistoryHeight = (self.homeData?.transactionHistory?.count ?? 0 > 0 ? (100 * (self.homeData?.transactionHistory?.count ?? 0)) : 80 ) + checkIfBankTransfer()
         let vheight = indexPath.section == 1 ? servicesHeight : (indexPath.section == 4 ? tHistoryHeight : newsHeight)
         
         return CGSize(width: collectionView.frame.width, height: CGFloat(vheight))
     }
 
+    func checkIfBankTransfer() -> Int {
+        if let transactions = self.homeData?.transactionHistory {
+            var height : Int = 0
+            for data in transactions {
+                if data.instapay != nil {
+                    height += 20
+                }
+            }
+            return height
+        }
+        return 0
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 0, bottom: section == 0 ? 0 : (section == 3 ? (self.homeData?.pendingTransaction?.count ?? 0 > 0 ? 10 : 0 ): 10), right: 0)
     }
@@ -285,6 +330,21 @@ extension HomeViewController : HomeHeaderCollectionViewCellDelegate {
 
 
 extension HomeViewController : CollectionViewCellDelegate {
+    func removeItem(cell: UICollectionViewCell, index: Int) {
+        //MARK: - REMOVE TRANSACTION
+        self.showAlert(buttonOK: "Ok", buttonCancel: "Cancel", title: "", message: "Are you sure you want to cancel?", actionOk: { (action) in
+            
+            if let ref = self.homeData?.pendingTransaction?[index].referenceNo {
+                self.referenceNo = ref
+                self.declineTransaction(refNo: ref)
+//                if let cc = cell as? CollectionViewCell {
+//                    cc.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
+//                }
+            }
+           
+        }, actionCancel: nil, completionHandler: nil)
+    }
+    
     func onClickShowView(cell: UICollectionViewCell, type: Int, index: Int) {
         if let itemCell = cell as? ServicesCell {
             print("SERVICES : \(servicesData[index])")
@@ -294,15 +354,19 @@ extension HomeViewController : CollectionViewCellDelegate {
             case 2:
                 self.coordinator?.showLoadWalletViewController(type: 1)
             case 3:
-                self.coordinator?.showLoadWalletViewController()
+                self.coordinator?.showBankTransferViewController()
             case 4:
+                self.coordinator?.showWalletTransferViewController()
+            case 5:
+                self.coordinator?.showFxViewController(balance: self.homeData?.balance)
+            case 6:
+                print("SHOW PAY BILL")
+            case 7:
                 self.coordinator?.ShowELoadViewController()
-//            case 4:
-//            case 5:
-//            case 6:
-//            case 7:
-//            case 8:
-//            case 9:
+            case 8:
+                 print("SHOW CRYPTO")
+            case 9:
+                print("SHOW LOANS")
             default:
                 break
             }
@@ -318,4 +382,6 @@ extension HomeViewController : CollectionViewCellDelegate {
             self.coordinator?.showBase2ndViewController()
         }
     }
+    
+    
 }

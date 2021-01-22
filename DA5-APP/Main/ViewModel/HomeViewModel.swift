@@ -11,8 +11,10 @@ import Foundation
 class HomeViewModel : NSObject {
     var model : HomeModel?
     var token : String = ""
+//    var onSuccessDeclineTransaction : ((StatusList?) -> Void)?
     var onSuccessGettingList : ((HomeData?) -> Void)?
     var onSuccessGenerateToken : ((APIToken?) -> Void)?
+    var onSuccessUpdateToken : ((APIToken?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
     var onErrorHandling : ((StatusList?) -> Void)?
 
@@ -40,14 +42,18 @@ class HomeViewModel : NSObject {
         }
     }
     
-    func generateAPIToken() {
+    func generateAPIToken(update: Bool? = false) {
          guard let dataModel = model else { return }
                 
           let completionHandler = { (data: APIToken?,status : StatusList?) in
               if let result = data {
                 //MARK: Save Token
-                  self.token = result.accessToken ?? ""
-                  self.onSuccessGenerateToken?(result)
+                self.token = result.accessToken ?? ""
+                if update == true {
+                    self.onSuccessUpdateToken?(result)
+                }else {
+                    self.onSuccessGenerateToken?(result)
+                }
               }else {
                   self.onErrorHandling?(status)
               }
@@ -59,5 +65,24 @@ class HomeViewModel : NSObject {
          ]
      
          dataModel.generateAPIToken(param: param, completionHandler: completionHandler)
-      }
+    }
+    
+    func declineTransaction(referenceNo: String) {
+        guard let dataModel = model else { return }
+                       
+        let completionHandler = { (data: StatusList?,status : StatusList?) in
+             if let result = data {
+                 self.onSuccessRequest?(result)
+             }else {
+                 self.onErrorHandling?(status)
+             }
+        }
+           
+        let param : [String:String] = [
+            "reference_no"     : referenceNo,
+        ]
+    
+        dataModel.declineTransaction(param: param, completionHandler: completionHandler)
+    }
+    
 }

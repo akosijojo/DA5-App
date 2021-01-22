@@ -17,8 +17,28 @@ struct StatusList : Decodable {
     let message: String
     let tag : Int?
 }
+
+struct StatusListData : Decodable {
+    let message: String
+}
+
+struct ReturReferenceData : Decodable {
+    let referenceNo : String
+    enum CodingKeys: String, CodingKey {
+        case referenceNo = "reference_no"
+    }
+}
+struct StatusListDataError : Decodable {
+    let status: String
+}
+
 struct StatusMessage : Decodable {
     let message: String
+}
+
+enum RequestType {
+    case get
+    case post
 }
 class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
     var hasInternet : Bool = false
@@ -27,23 +47,30 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
       self.hasInternet = true
     }
     
-    func networkRequest(_ param : [String: Any],token: String? = nil,jsonUrlString: String,completionHandler: @escaping (T?,StatusList?) -> () ) {
+    func networkRequest(_ param : [String: Any],token: String? = nil,type: RequestType = .post, jsonUrlString: String,completionHandler: @escaping (T?,StatusList?) -> () ) {
        
+        print("URL : \(jsonUrlString)")
         if let url = URL(string: jsonUrlString) {
             var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            if let bearer = token {
-                print("TOKEN :",bearer)
-//                let authorizationKey = "bearer ".appending(bearer)
-                request.addValue(" Bearer \(bearer)", forHTTPHeaderField: "Authorization")
-//                request.addValue( authorizationKey, forHTTPHeaderField: "Authorization")
+            request.httpMethod = type == .post ? "POST" : "GET"
+            
+            if type == .post {
+                if let bearer = token {
+                    print("TOKEN :",bearer)
+                //                let authorizationKey = "bearer ".appending(bearer)
+                    request.addValue(" Bearer \(bearer)", forHTTPHeaderField: "Authorization")
+                //                request.addValue( authorizationKey, forHTTPHeaderField: "Authorization")
+                }
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue("application/json", forHTTPHeaderField: "Active")
+
+                guard let httpBody = try? JSONSerialization.data(withJSONObject: param, options: []) else { return }
+                request.httpBody = httpBody
+            }else {
+                
             }
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Active")
-       
-            guard let httpBody = try? JSONSerialization.data(withJSONObject: param, options: []) else { return }
-            request.httpBody = httpBody
-            print("REQUEST : \(request) \n PARAMETERES : \(param)")
+
+           print("REQUEST : \(request) \n PARAMETERS : \(param)")
             
             URLSession.shared.dataTask(with: request) { (data, response, error) in
             //MARK: - FOR TESTING
@@ -89,7 +116,7 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
         let dataBody = createDataBody(withParameters: param, media: image, boundary: boundary)
         request.httpBody = dataBody
         
-        print("REQUEST : \(request) \n PARAMETERES : \(param)")
+        print("REQUEST : \(request) \n PARAMETERS : \(param)")
 
         session.dataTask(with: request) { (data, response, error) in
 
@@ -159,6 +186,7 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
         body.append("--\(boundary)--\(lineBreak)")
         return body
     }
+
 }
         
 extension Data {

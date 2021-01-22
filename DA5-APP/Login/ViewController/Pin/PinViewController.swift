@@ -9,6 +9,9 @@
 import UIKit
 
 class PinViewController: BaseViewControler {
+    //MARK: - CHECKING IF FROM INACTIVE STATE
+    var fromBackground: Bool = false
+
     var timer : Timer?
     var seconds : Int = 0
     var maxPIN : Int = 4
@@ -21,7 +24,7 @@ class PinViewController: BaseViewControler {
     
     var customerData : Customer? {
         didSet {
-            self.saveCustomerToLocal(data: self.customerData)
+            print("ALREADY SAVE TO LOCAL FROM COORDINATOR")
         }
     }
     
@@ -84,16 +87,6 @@ class PinViewController: BaseViewControler {
         v.btnBack.addTarget(self, action: #selector(btnBackClick), for: .touchUpInside)
        return v
     }()
-    
-    func saveCustomerToLocal(data: Customer?) {
-        if !CustomerLocal().checkIfExistingData() {
-            if let d = data {
-               let getData =  d.convertToLocalData()
-               getData.saveCustomerToLocal()
-           }
-        }
-       
-    }
 
     override func getData() {
        pinTextField.defaultText = "•"
@@ -253,7 +246,14 @@ class PinViewController: BaseViewControler {
         }else {
             print("CHECK MPIN : \(pin) == \(customerData?.mpin)")
             if pin == customerData?.mpin {
-                self.coordinator?.homeCoordinator()
+                
+                //MARK: -FROM INACTIVE STATE
+                if fromBackground {
+//                    self.navigationController?.popViewController(animated: true)
+                    self.coordinator?.gotoPreviousViewControllers()
+                }else {
+                    self.coordinator?.homeCoordinator()
+                }
             }else {
                 self.wronPinSetUp()
             }

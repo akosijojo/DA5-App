@@ -22,6 +22,7 @@ class ELoadViewController: BaseHomeViewControler {
        v.FieldView.TextField.keyboardType = .numberPad
        v.FieldView.TextField.tag = 1
        v.FieldView.TextField.delegate = self
+       v.FieldView.TextField.placeholder = "Phone number"
        return v
     }()
     
@@ -111,7 +112,7 @@ class ELoadViewController: BaseHomeViewControler {
     @objc func submitAction() {
         if let number = self.phoneNumber.FieldView.TextField.text , number != ""{
              self.setAnimate(msg: "Please wait")
-             self.viewModel?.getELoadProducts(phoneNumber: number)
+            self.viewModel?.getELoadProducts(phoneNumber: number, token: self.coordinator?.token)
         }else {
             self.showAlert(buttonOK: "Ok", message: "Phone number is invalid.", actionOk: nil, completionHandler: nil)
         }

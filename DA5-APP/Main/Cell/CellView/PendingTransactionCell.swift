@@ -18,28 +18,41 @@ class PendingTransactionCell: UICollectionViewCell {
             if let d = data {
                 if let cashInOut = d.cashInOut {
     //                self.imageView.image = UIImage(named: d.cashInOut?.partnerImage)
-                    self.imageView.image = UIImage(named: "western")
+                    self.imageView.downloaded(from: cashInOut.partnerImage ?? "",contentMode: .scaleAspectFill)
                     self.titleLbl.text = cashInOut.type == 0 ? "CASH IN" : "CASH OUT"
                     self.priceLbl.text = "PHP \(cashInOut.amount ?? "")"
                     self.dateLbl.text = cashInOut.transactionDate?.formatDate()
                     self.refNoLbl.text = "Ref No. \(cashInOut.referenceNo ?? "")"
                 }
-                
-//                if let eLoad = d.eload {
-//
-//                }
+
+                if let eLoad = d.eload {
+//                    self.imageView.downloaded(from: eLoad. .partnerImage ?? "",contentMode: .scaleAspectFill)
+                    self.imageView.image = UIImage(named: "app_logo")
+                    self.titleLbl.text = "\(eLoad.productNetwork ?? "") \(eLoad.productName)"
+                    self.priceLbl.text = "PHP \(eLoad.productAmount ?? "")"
+                    self.dateLbl.text = eLoad.transactionDate?.formatDate()
+                    self.refNoLbl.text = "Ref No. \(eLoad.referenceNo ?? "")"
+                }
 
 //                if let walletTransfer = d.walletTransfer {
 //
 //                }
 
-//                if let fx = d.fx {
-//
-//                }
+                if let fx = d.fx {
+                    self.imageView.image = UIImage(named: "app_logo")
+                    self.titleLbl.text = "FX Trade"
+                    self.priceLbl.text = "\(fx.convertedAmount ?? "") \(fx.currency ?? "")"
+                    self.dateLbl.text = fx.transactionDate?.formatDate()
+                    self.refNoLbl.text = "Ref No. \(fx.referenceNo ?? "")"
+                }
 
-//                if let instapay = d.instapay {
-//
-//                }
+                if let instapay = d.instapay {
+                    self.imageView.image = UIImage(named: "app_logo")
+                    self.titleLbl.text = "\(instapay.bankName ?? "")"
+                    self.priceLbl.text = "PHP \(instapay.amount ?? "")"
+                    self.dateLbl.text = instapay.tranRequestDate?.formatDate()
+                    self.refNoLbl.text = "Ref No. \(instapay.referenceNo ?? "")"
+                }
             }
         }
     }

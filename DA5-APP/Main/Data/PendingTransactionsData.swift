@@ -32,10 +32,10 @@ struct PendingTransactionsData: Decodable {
     var status, type: Int?
     var createdAt, updatedAt: String?
     var cashInOut: CashInOut?
-//    var eload,
+    var eload : Eload?
 //    var walletTransfer,
-//    var fx,
-//    var instapay: JSONNull?
+    var fx : Fx?
+    var instapay: Instapay?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -45,9 +45,13 @@ struct PendingTransactionsData: Decodable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case cashInOut = "cash_in_out"
-//        case eload
+        case eload
 //        case walletTransfer = "wallet_transfer"
-//        case fx, instapay
+        case fx, instapay
+    }
+    
+    func convertToHistory() -> TransactionHistoryData {
+        return TransactionHistoryData(id: self.id, customerID: self.customerID, referenceNo: self.referenceNo, status: self.status, type: self.type, createdAt: self.createdAt, updatedAt: self.updatedAt, cashInOut: self.cashInOut, eload: self.eload, fx: self.fx,instapay: self.instapay)
     }
 }
 
@@ -59,7 +63,7 @@ struct CashInOut: Decodable {
     var amount: String?
     var type, status: Int?
     var transactionDate: String?
-    var approvedAt, declinedAt, expiredAt: CGFloat?
+    var approvedAt, declinedAt, expiredAt: String?
     var customerReferenceNo, customerName, customerPhone, partnerName: String?
     var partnerImage: String?
 
@@ -79,5 +83,6 @@ struct CashInOut: Decodable {
         case partnerName = "partner_name"
         case partnerImage = "partner_image"
     }
+    
 }
 

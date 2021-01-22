@@ -13,7 +13,7 @@ class LoadWalletViewController: BaseSecondaryViewController {
       var cellId = "cellId"
       var type : Int? = 0
       
-      var data : [NewsData]? {
+      var data : [CashInData]? {
           didSet {
               self.collectionView.reloadData()
           }
@@ -42,10 +42,10 @@ class LoadWalletViewController: BaseSecondaryViewController {
     
     func getData() {
         self.data = [
-            NewsData(id: 1, name: "Western", image: "western"),
-            NewsData(id: 2, name: "City", image: "img_city"),
-            NewsData(id: 3, name: "Western", image: "western"),
-            NewsData(id: 4, name: "Western", image: "western"),
+            CashInData(id: 1, name: "Western Union", image: "western"),
+            CashInData(id: 5, name: "DA5", image: "app_logo"),
+//            NewsData(id: 3, name: "Western", image: "western"),
+//            NewsData(id: 4, name: "Western", image: "western"),
         ]
     }
     
@@ -107,7 +107,7 @@ extension LoadWalletViewController: UICollectionViewDelegateFlowLayout, UICollec
 extension LoadWalletViewController : LoadWalletCellDelegate {
     func onClickItem(cell: LoadWalletCell, index: Int) {
         print("CLICKING")
-        self.coordinator?.showCashInViewController(data: CashInData(name: "Sample", image: "Sample \(index)"),type: type)
+        self.coordinator?.showCashInViewController(data: self.data?[index],type: type)
     }
     
 }
