@@ -16,7 +16,7 @@ fileprivate var actView : UIView?
 fileprivate var actTxt : UILabel?
 
 extension UIViewController : NVActivityIndicatorViewable {
-
+    
     func setAnimate(msg: String) {
         let size = CGSize(width: 30, height: 30)
         print("MSG: ",msg)
@@ -52,7 +52,6 @@ extension UIViewController : NVActivityIndicatorViewable {
     }
     
     func removeShowedAnimation() {
-        
         self.navigationController?.navigationBar.isTranslucent = false
         overlay?.removeFromSuperview()
         overlay = nil

@@ -67,7 +67,7 @@ class HomeViewModel : NSObject {
          dataModel.generateAPIToken(param: param, completionHandler: completionHandler)
     }
     
-    func declineTransaction(referenceNo: String) {
+    func declineTransaction(referenceNo: String, type: String) {
         guard let dataModel = model else { return }
                        
         let completionHandler = { (data: StatusList?,status : StatusList?) in
@@ -80,6 +80,7 @@ class HomeViewModel : NSObject {
            
         let param : [String:String] = [
             "reference_no"     : referenceNo,
+            "type"             : type
         ]
     
         dataModel.declineTransaction(param: param, completionHandler: completionHandler)

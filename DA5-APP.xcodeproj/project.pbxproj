@@ -97,6 +97,15 @@
 		EB8850E5256C135E00B0B4CC /* BaseSecondaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850E4256C135E00B0B4CC /* BaseSecondaryViewController.swift */; };
 		EB8850EB256CDFA300B0B4CC /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850EA256CDFA300B0B4CC /* SideMenuViewController.swift */; };
 		EB8850EE256D5CA500B0B4CC /* ServicesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850ED256D5CA500B0B4CC /* ServicesData.swift */; };
+		EB92960025BB2A2700287B60 /* NewsFullListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9295FF25BB2A2700287B60 /* NewsFullListViewController.swift */; };
+		EB92960225BDD29800287B60 /* PendingTransactionFullViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92960125BDD29800287B60 /* PendingTransactionFullViewController.swift */; };
+		EB92960425BDD45300287B60 /* HeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92960325BDD45300287B60 /* HeaderCell.swift */; };
+		EB92960725BDD67100287B60 /* PendingListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92960625BDD67100287B60 /* PendingListCell.swift */; };
+		EB92960B25BE4F9400287B60 /* HomeFullListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92960A25BE4F9400287B60 /* HomeFullListModel.swift */; };
+		EB92960D25BE4FA300287B60 /* HomeFullListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92960C25BE4FA300287B60 /* HomeFullListViewModel.swift */; };
+		EB92961225BE77F100287B60 /* PendingFullData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961125BE77F100287B60 /* PendingFullData.swift */; };
+		EB92961425BE97ED00287B60 /* TransactionsFullViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961325BE97ED00287B60 /* TransactionsFullViewController.swift */; };
+		EB92961725BEBA5400287B60 /* NewsItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961625BEBA5400287B60 /* NewsItemViewController.swift */; };
 		EBA973A424EBB342001C09DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA973A324EBB342001C09DB /* AppDelegate.swift */; };
 		EBA973A824EBB342001C09DB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA973A724EBB342001C09DB /* ViewController.swift */; };
 		EBA973AB24EBB342001C09DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBA973A924EBB342001C09DB /* Main.storyboard */; };
@@ -226,6 +235,15 @@
 		EB8850E4256C135E00B0B4CC /* BaseSecondaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSecondaryViewController.swift; sourceTree = "<group>"; };
 		EB8850EA256CDFA300B0B4CC /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		EB8850ED256D5CA500B0B4CC /* ServicesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesData.swift; sourceTree = "<group>"; };
+		EB9295FF25BB2A2700287B60 /* NewsFullListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFullListViewController.swift; sourceTree = "<group>"; };
+		EB92960125BDD29800287B60 /* PendingTransactionFullViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTransactionFullViewController.swift; sourceTree = "<group>"; };
+		EB92960325BDD45300287B60 /* HeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderCell.swift; sourceTree = "<group>"; };
+		EB92960625BDD67100287B60 /* PendingListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingListCell.swift; sourceTree = "<group>"; };
+		EB92960A25BE4F9400287B60 /* HomeFullListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFullListModel.swift; sourceTree = "<group>"; };
+		EB92960C25BE4FA300287B60 /* HomeFullListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFullListViewModel.swift; sourceTree = "<group>"; };
+		EB92961125BE77F100287B60 /* PendingFullData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingFullData.swift; sourceTree = "<group>"; };
+		EB92961325BE97ED00287B60 /* TransactionsFullViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsFullViewController.swift; sourceTree = "<group>"; };
+		EB92961625BEBA5400287B60 /* NewsItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsItemViewController.swift; sourceTree = "<group>"; };
 		EBA973A024EBB342001C09DB /* DA5-APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DA5-APP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA973A324EBB342001C09DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EBA973A724EBB342001C09DB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -493,6 +511,7 @@
 		EB3DD6AF24F7747600BDBE0C /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				EB9295FE25BB29F400287B60 /* HomeFullList */,
 				EB6824EB25B3144400C5BC11 /* Fx */,
 				EB0F43A8258B4379008858B1 /* Wallet Transfer */,
 				EB0F43A6258B4359008858B1 /* Load Wallet */,
@@ -724,6 +743,54 @@
 				EB78E4E6256E08DC00754B2E /* TransactionHistoryData.swift */,
 				EB78E4E8256E0F8600754B2E /* AccountData.swift */,
 				EB77ED1025886E9500D99528 /* HomeData.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		EB9295FE25BB29F400287B60 /* HomeFullList */ = {
+			isa = PBXGroup;
+			children = (
+				EB92960E25BE737A00287B60 /* Data */,
+				EB92960925BE4F8300287B60 /* Model */,
+				EB92960825BE4F7A00287B60 /* ViewModel */,
+				EB92960525BDD66200287B60 /* Cell */,
+				EB9295FF25BB2A2700287B60 /* NewsFullListViewController.swift */,
+				EB92960125BDD29800287B60 /* PendingTransactionFullViewController.swift */,
+				EB92961325BE97ED00287B60 /* TransactionsFullViewController.swift */,
+				EB92961625BEBA5400287B60 /* NewsItemViewController.swift */,
+			);
+			path = HomeFullList;
+			sourceTree = "<group>";
+		};
+		EB92960525BDD66200287B60 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				EB92960325BDD45300287B60 /* HeaderCell.swift */,
+				EB92960625BDD67100287B60 /* PendingListCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		EB92960825BE4F7A00287B60 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EB92960C25BE4FA300287B60 /* HomeFullListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EB92960925BE4F8300287B60 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EB92960A25BE4F9400287B60 /* HomeFullListModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EB92960E25BE737A00287B60 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				EB92961125BE77F100287B60 /* PendingFullData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1105,6 +1172,8 @@
 				EB55D52F24F78A3E0094DB60 /* CustomHeaderView.swift in Sources */,
 				EB3DD6AD24F76EF800BDBE0C /* KeyboardExtension.swift in Sources */,
 				EB0F439C258A5719008858B1 /* ServicesCollectionViewCell.swift in Sources */,
+				EB92960425BDD45300287B60 /* HeaderCell.swift in Sources */,
+				EB92960025BB2A2700287B60 /* NewsFullListViewController.swift in Sources */,
 				EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */,
 				EB77ED0F25872A7800D99528 /* ForgotPinViewController.swift in Sources */,
 				EB8850EE256D5CA500B0B4CC /* ServicesData.swift in Sources */,
@@ -1117,8 +1186,10 @@
 				EB0F43CD25AB3292008858B1 /* WalletTransferViewController.swift in Sources */,
 				EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */,
 				EB78E4F42570102500754B2E /* LoginViewModel.swift in Sources */,
+				EB92961225BE77F100287B60 /* PendingFullData.swift in Sources */,
 				EB78E4E3256E08BA00754B2E /* NewsData.swift in Sources */,
 				EBFB98402507E7590057FA79 /* PagerCollectionView.swift in Sources */,
+				EB92960225BDD29800287B60 /* PendingTransactionFullViewController.swift in Sources */,
 				EB0F43B725A44BF9008858B1 /* ELoadModel.swift in Sources */,
 				EB55D53124F78A660094DB60 /* CustomBasicFormInput.swift in Sources */,
 				EB6824ED25B3145500C5BC11 /* FXViewController.swift in Sources */,
@@ -1135,6 +1206,7 @@
 				EB7A293E257A4CED00482CDC /* ViewControllerExtension.swift in Sources */,
 				EBFB983D250793DA0057FA79 /* Alert Extension.swift in Sources */,
 				EB3DD6AA24F76B5800BDBE0C /* HomeCoordinator.swift in Sources */,
+				EB92961425BE97ED00287B60 /* TransactionsFullViewController.swift in Sources */,
 				EB77ED1725886F7E00D99528 /* HomeViewModel.swift in Sources */,
 				EB0F43AA258B4394008858B1 /* LoadWalletViewController.swift in Sources */,
 				EB0F43C825A6DD38008858B1 /* LoadWalletViewModel.swift in Sources */,
@@ -1163,6 +1235,7 @@
 				EB0F43CA25A6DD57008858B1 /* LoadWalletModel.swift in Sources */,
 				EB6824E325AF396200C5BC11 /* BankListData.swift in Sources */,
 				EB6824E825AF3B2500C5BC11 /* BankDropListCell.swift in Sources */,
+				EB92960B25BE4F9400287B60 /* HomeFullListModel.swift in Sources */,
 				EB8850E3256BEBCF00B0B4CC /* TransactionHistoryCell.swift in Sources */,
 				EB0F43C325A4CAB6008858B1 /* ELoadRegularViewController.swift in Sources */,
 				EB55D53324F7B83A0094DB60 /* IdentificationCollectionViewCell.swift in Sources */,
@@ -1187,6 +1260,8 @@
 				EB78E4F1256FFC6D00754B2E /* NationalityCell.swift in Sources */,
 				EB0F439A2589AEF0008858B1 /* CollectionViewExtension.swift in Sources */,
 				EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */,
+				EB92961725BEBA5400287B60 /* NewsItemViewController.swift in Sources */,
+				EB92960D25BE4FA300287B60 /* HomeFullListViewModel.swift in Sources */,
 				EB77ED1125886E9500D99528 /* HomeData.swift in Sources */,
 				EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */,
 				EB0F43A2258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift in Sources */,
@@ -1199,6 +1274,7 @@
 				EB3DD6A624F6543D00BDBE0C /* HomeViewController.swift in Sources */,
 				EB3DD6B124F774A100BDBE0C /* AppConfigurations.swift in Sources */,
 				EBC7E4622509205B00B70B35 /* String Extension.swift in Sources */,
+				EB92960725BDD67100287B60 /* PendingListCell.swift in Sources */,
 				EB6824DE25AF307400C5BC11 /* BankTransferViewModel.swift in Sources */,
 				EBA973AE24EBB342001C09DB /* DA5_APP.xcdatamodeld in Sources */,
 				EB55D52D24F778E70094DB60 /* UsersData.swift in Sources */,

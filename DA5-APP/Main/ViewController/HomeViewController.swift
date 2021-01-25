@@ -94,8 +94,8 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         }
     }
     
-    @objc func declineTransaction(refNo: String) {
-        self.viewModel?.declineTransaction(referenceNo: refNo)
+    @objc func declineTransaction(refNo: String, type: String) {
+        self.viewModel?.declineTransaction(referenceNo: refNo,type: type)
     }
     
     func removeTransaction(refNo: String) {
@@ -236,6 +236,8 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                  return UICollectionReusableView()
              }
         header.label.text = section == 1 ? "Services Available" : section == 2 ?  "News" : section == 3 ?  "Pending Transactions" : "Transaction History"
+        
+        header.index = section
         if section != 0 && section != 1{
             header.addAction()
             header.rightBtn.text = "View All"
@@ -243,6 +245,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
             header.rightBtn.isUserInteractionEnabled = true
             header.rightBtn.isHidden = true
         }
+        header.delegate = self
         return header
     }
     
@@ -321,7 +324,20 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     
 }
 //MENU
-extension HomeViewController : HomeHeaderCollectionViewCellDelegate {
+extension HomeViewController : HomeHeaderCollectionViewCellDelegate, HeaderCollectionViewCellDelegate {
+    func onClickViewAll(cell: HeaderCollectionViewCell, index: Int) {
+        switch index {
+        case 2:
+            self.coordinator?.showNewsFullList()
+        case 3:
+            self.coordinator?.showPendingTransactionFullList()
+        case 4:
+            self.coordinator?.showTransactionHistoryFullList()
+        default:
+            break;
+        }
+    }
+    
     func onClickMenu(cell: HomeHeaderCollectionViewCell) {
         sideMenuView.userData = self.homeData?.customer
         sideMenuView.updateSideMenu(width: sideMenuView.isShowMenu ? 0 : 250)
@@ -336,7 +352,8 @@ extension HomeViewController : CollectionViewCellDelegate {
             
             if let ref = self.homeData?.pendingTransaction?[index].referenceNo {
                 self.referenceNo = ref
-                self.declineTransaction(refNo: ref)
+                let type = self.homeData?.pendingTransaction?[index].cashInOut != nil ? self.homeData?.pendingTransaction?[index].type : 4
+                self.declineTransaction(refNo: ref,type: "\(type ?? 0)")
 //                if let cc = cell as? CollectionViewCell {
 //                    cc.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
 //                }
@@ -373,10 +390,10 @@ extension HomeViewController : CollectionViewCellDelegate {
             
         }else if let itemCell = cell as? NewsCell {
             print("NEWS : \(self.homeData?.news?[index])")
-            self.coordinator?.showBase2ndViewController()
+            self.coordinator?.showNewsItem()
         }else if let itemCell = cell as? PendingTransactionCell {
             print("PENDING TRANSACTIONS : \(self.homeData?.pendingTransaction?[index])")
-            self.coordinator?.showBase2ndViewController()
+//            self.coordinator?.showBase2ndViewController()
         }else {
             print("TRANSACTION HISTORY : \(self.homeData?.transactionHistory?[index])")
             self.coordinator?.showBase2ndViewController()

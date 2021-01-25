@@ -7,10 +7,17 @@
 //
 
 import UIKit
+protocol HeaderCollectionViewCellDelegate: class {
+    func onClickViewAll(cell: HeaderCollectionViewCell,index: Int)
+}
 
 class HeaderCollectionViewCell: UICollectionReusableView {
     let label = UILabel()
     let rightBtn = UILabel()
+    
+    var index : Int = 0
+    
+    var delegate : HeaderCollectionViewCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,5 +60,6 @@ class HeaderCollectionViewCell: UICollectionReusableView {
     }
     @objc func viewAll() {
         print("TAPPING HEADER")
+        self.delegate?.onClickViewAll(cell: self, index: index)
     }
 }

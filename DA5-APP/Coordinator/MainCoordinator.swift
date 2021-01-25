@@ -291,6 +291,7 @@ extension MainCoordinator : UINavigationControllerDelegate{
 }
 
 
+//MARK:- SERVICES
 extension MainCoordinator {
     
     func showParentView() {
@@ -402,3 +403,45 @@ extension MainCoordinator {
     
     
 }
+
+//MARK:- FullList
+extension MainCoordinator {
+    func showNewsItem() {
+        let vc = NewsItemViewController()
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showNewsFullList() {
+        let vc = NewsFullListViewController()
+        vc.coordinator = self
+        vc.viewModel = HomeFullListViewModel()
+        vc.viewModel?.model = HomeFullListModel()
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showPendingTransactionFullList() {
+        let vc = PendingTransactionFullViewController()
+        vc.coordinator = self
+        vc.viewModel = HomeFullListViewModel()
+        vc.viewModel?.model = HomeFullListModel()
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showTransactionHistoryFullList() {
+        let vc = TransactionsFullViewController()
+        vc.coordinator = self
+        vc.viewModel = HomeFullListViewModel()
+        vc.viewModel?.model = HomeFullListModel()
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
+    
+}
+
+
+

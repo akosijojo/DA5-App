@@ -14,7 +14,7 @@ class HomeModel {
 
     let homePath = "/customer/getHomeData"
     let apiToken = "/auth/generateAPIToken"
-    let declineTransact = "/partner/declineTransaction"
+    let declineTransact = "/customer/cancelPendingTransaction"
     
 
     func getHomeData(param: [String:Any],completionHandler: @escaping (HomeData?,StatusList?) -> ()) {
@@ -44,7 +44,7 @@ class HomeModel {
                 completionHandler(StatusList(status: 0, title: "", message: res.message, tag: 2),nil)
                 return
             }
-           completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 2))
+           completionHandler(StatusList(status: 0, title: "",message: "Transaction cancelled",tag: 2),nil)
          }
       }
 }

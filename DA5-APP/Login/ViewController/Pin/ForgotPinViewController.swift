@@ -98,7 +98,7 @@ class ForgotPinViewController: BaseViewControler {
             
         }
         
-        self.viewModel?.getOtp(number: mobileNumber ?? "", email: emailAddress ?? "", isResend: 0, type: 2)
+//        self.viewModel?.getOtp(number: mobileNumber ?? "", email: emailAddress ?? "", isResend: 0, type: 2)
     }
     
     override func viewWillAppear(_ animated: Bool) {

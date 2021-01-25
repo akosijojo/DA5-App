@@ -68,7 +68,7 @@ class ServicesCell: UICollectionViewCell {
         }
        
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClick))
-        logo.addGestureRecognizer(tap)
+        self.addGestureRecognizer(tap)
     }
     
     @objc func onClick() {

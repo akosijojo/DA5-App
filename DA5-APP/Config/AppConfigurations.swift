@@ -20,7 +20,7 @@ class ApiConfig {
     var url = "https";
     
     var apiUsername : String = "da5"
-    var apiPassword : String = "da5password"
+    var apiPassword : String = "da5password" //5zYw9h3aMifV7da
     
     var currencyApi : String = "https://api.exchangeratesapi.io/latest"
     
