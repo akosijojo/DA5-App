@@ -299,17 +299,17 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
        
         let servicesHeight = ((self.servicesData.count / 3) * 95) // cell 80 for 40 + 10 , 20 + 10 , collection top 10 space , left and right 10 , bottom have space 10 
         let newsHeight = indexPath.section == 3 ? (self.homeData?.pendingTransaction?.count ?? 0 > 0 ? 190 : 1) : 190
-        let tHistoryHeight = (self.homeData?.transactionHistory?.count ?? 0 > 0 ? (100 * (self.homeData?.transactionHistory?.count ?? 0)) : 80 ) + checkIfBankTransfer()
+        let tHistoryHeight = (self.homeData?.transactionHistory?.count ?? 0 > 0 ? (100 * (self.homeData?.transactionHistory?.count ?? 0)) : 80 ) + checkIfBankTransferOrWalletTransfer()
         let vheight = indexPath.section == 1 ? servicesHeight : (indexPath.section == 4 ? tHistoryHeight : newsHeight)
         
         return CGSize(width: collectionView.frame.width, height: CGFloat(vheight))
     }
 
-    func checkIfBankTransfer() -> Int {
+    func checkIfBankTransferOrWalletTransfer() -> Int {
         if let transactions = self.homeData?.transactionHistory {
             var height : Int = 0
             for data in transactions {
-                if data.instapay != nil {
+                if data.instapay != nil || data.walletTransfer != nil {
                     height += 20
                 }
             }

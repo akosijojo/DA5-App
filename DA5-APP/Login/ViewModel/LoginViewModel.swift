@@ -48,16 +48,9 @@ class LoginViewModel : NSObject {
                    return
                 }
             }
-            
-//        if fb {
-//            dataModel.loginFb(param: param, completionHandler: completionHandler)
-//        }else {
+    
             dataModel.login(param: param, completionHandler: completionHandler)
-//        }
         }
-        
-        
-      
     }
     
     func loginByFb(id: String?) {
@@ -66,7 +59,6 @@ class LoginViewModel : NSObject {
          let completionHandler = { (data : LoginFb?,status: StatusList?) in
             
             if let dataReceived = data {
-//                self.returnNationalityList?(dataReceived)
                 print("DATA RECIEVED : \(dataReceived.status)")
                 if data?.status == 2 {
                     self.onErrorFbLoginData?(dataReceived)
@@ -83,9 +75,6 @@ class LoginViewModel : NSObject {
         let param : [String:String] = [
             "facebook_id" : id ?? "",
         ]
-//        if fb {
-//            dataModel.loginFb(param: param, completionHandler: completionHandler)
-//        }else {
         dataModel.loginByFb(param: param, completionHandler: completionHandler)
     }
     
@@ -102,10 +91,6 @@ class LoginViewModel : NSObject {
             
             self.onErrorHandling?(status)
          }
-        
-//        if fb {
-//            dataModel.loginFb(param: param, completionHandler: completionHandler)
-//        }else {
         dataModel.getNationality(param: [:], completionHandler: completionHandler)
     }
     
@@ -161,7 +146,6 @@ class LoginViewModel : NSObject {
             
             if let dataReceived = data {
                 print("DATA UPLOADED ", dataReceived)
-//                self.returnNationalityList?(dataReceived)
                 if type == 0 {
                     self.registrationForm?.validId = dataReceived.imagePath
                     self.onSuccessRequest?(StatusList(status: 1, title: status?.title ?? "", message: status?.message ?? "", tag: 10))

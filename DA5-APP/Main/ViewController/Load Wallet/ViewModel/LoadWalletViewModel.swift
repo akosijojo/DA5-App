@@ -60,10 +60,10 @@ class LoadWalletViewModel: NSObject {
     func sendMoney(amount: String, customerId: Int, phone: String){
         guard let dataModel = model else { return }
                         
-         let completionHandler = { (data : StatusList?,status: StatusList?) in
+         let completionHandler = { (data : ReturReferenceData?,status: StatusList?) in
             
             if let dataReceived = data {
-                self.onSuccessRequest?(dataReceived)
+                self.onSuccessRequest?(StatusList(status: 0, title: "Transaction successful!", message: dataReceived.referenceNo, tag: 1))
                 return
             }
             

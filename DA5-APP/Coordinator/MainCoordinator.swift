@@ -303,6 +303,7 @@ extension MainCoordinator {
         for x in self.navigationController.viewControllers {
             if let homeVc = x as? HomeViewController {
                 self.navigationController.viewControllers = [homeVc]
+                homeVc.refreshData()
                 return
             }
         }

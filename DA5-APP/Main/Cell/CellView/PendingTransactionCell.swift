@@ -35,7 +35,14 @@ class PendingTransactionCell: UICollectionViewCell {
                 }
 
 //                if let walletTransfer = d.walletTransfer {
-//
+//                    self.titleLbl.text = "Wallet Transfer"
+//                    self.nameLbl.text =  walletTransfer.customerName
+//                    self.descLbl.text = walletTransfer.recipientPhone
+//                    self.bankLbl.text = "Ref No. \(walletTransfer.referenceNo ?? "")"
+//                    self.bankFee.text = ""
+//                    self.priceLbl.text = "PHP \(walletTransfer.amount ?? "")"
+//                    self.timeLbl.text = walletTransfer.transactionDate?.formatDate(format: "hh:mm:ss a")
+//                    self.dateLbl.text = walletTransfer.transactionDate?.formatDate()
 //                }
 
                 if let fx = d.fx {

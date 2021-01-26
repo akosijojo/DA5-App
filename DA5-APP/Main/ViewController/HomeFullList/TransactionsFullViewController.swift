@@ -171,7 +171,9 @@ extension TransactionsFullViewController: UICollectionViewDelegateFlowLayout, UI
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width - 40, height: 80)
+        let height : CGFloat = 80 + checkIfBankTransferOrWalletTransfer(index: indexPath.item)
+        print(" HEIGHT : \(height)")
+        return CGSize(width: collectionView.frame.width - 40, height: height)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -187,6 +189,10 @@ extension TransactionsFullViewController: UICollectionViewDelegateFlowLayout, UI
                 self.requestNewData()
             }
         }
+    }
+    
+    func checkIfBankTransferOrWalletTransfer(index: Int) -> CGFloat {
+        return self.data?[index].instapay != nil || self.data?[index].walletTransfer != nil ? 20 : 0
     }
 
 }

@@ -39,9 +39,16 @@ class TransactionHistoryCell: UICollectionViewCell {
                     self.dateLbl.text = eLoad.transactionDate?.formatDate()
                 }
 
-//                if let walletTransfer = d.walletTransfer {
-//
-//                }
+                if let walletTransfer = d.walletTransfer {
+                    self.titleLbl.text = "Wallet Transfer"
+                    self.nameLbl.text =  walletTransfer.customerName
+                    self.descLbl.text = "+63\(walletTransfer.recipientPhone ?? "")"
+                    self.bankLbl.text = "Ref No. \(walletTransfer.referenceNo ?? "")"
+                    self.bankFee.text = ""
+                    self.priceLbl.text = "PHP \(walletTransfer.amount ?? "")"
+                    self.timeLbl.text = walletTransfer.transactionDate?.formatDate(format: "hh:mm:ss a")
+                    self.dateLbl.text = walletTransfer.transactionDate?.formatDate()
+                }
 
                 if let fx = d.fx {
                     let titleText = NSMutableAttributedString(string: "FX Trade", attributes: nil)
@@ -64,8 +71,8 @@ class TransactionHistoryCell: UICollectionViewCell {
                     self.dateLbl.text = instapay.tranRequestDate?.formatDate()
                 }
             }
-            
-            self.setUpBankFee(show: self.data?.instapay != nil ? true : false)
+            //MARK: - Check if instapay or wallet transfer
+            self.setUpBankFee(show: self.data?.instapay != nil || self.data?.walletTransfer != nil ? true : false)
         }
     }
     

@@ -85,7 +85,7 @@ class WalletTransferViewController: BaseHomeViewControler {
         self.viewModel?.onSuccessRequest = { [weak self] data in
             DispatchQueue.main.async {
                 self?.stopAnimating()
-                self?.showAlert(buttonOK: "Ok", message: data?.message ?? "Something went wrong.", actionOk: { (action) in
+                self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong.", actionOk: { (action) in
                     self?.coordinator?.showParentView()
                 }, completionHandler: nil)
             }

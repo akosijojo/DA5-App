@@ -16,7 +16,7 @@ struct TransactionHistoryData:Decodable {
     var createdAt, updatedAt: String?
     var cashInOut: CashInOut?
     var eload : Eload?
-//    var walletTransfer :
+    var walletTransfer : WalletTransfer?
     var fx : Fx?
     var instapay: Instapay?
 
@@ -29,14 +29,14 @@ struct TransactionHistoryData:Decodable {
         case updatedAt = "updated_at"
         case cashInOut = "cash_in_out"
         case eload
-//        case walletTransfer = "wallet_transfer"
+        case walletTransfer = "wallet_transfer"
         case fx, instapay
     }
 }
 
 
 // MARK: - Eload
-struct Eload: Codable {
+struct Eload: Decodable {
     var id, customerID: Int?
     var referenceNo: String?
     var status: Int?
@@ -65,7 +65,7 @@ struct Eload: Codable {
 }
 
 // MARK: - Fx
-struct Fx: Codable {
+struct Fx: Decodable {
     var id, customerID: Int?
     var referenceNo: String?
     var status: Int?
@@ -90,7 +90,7 @@ struct Fx: Codable {
 }
 
 // MARK: - Instapay
-struct Instapay: Codable {
+struct Instapay: Decodable {
     var id, customerID: Int?
     var referenceNo: String?
     var status: Int?
@@ -118,5 +118,23 @@ struct Instapay: Codable {
         case tranRequestDate
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+    }
+}
+// MARK: - Wallet transfer
+struct WalletTransfer: Decodable {
+    let id, customerID, recipientID: Int?
+    let referenceNo, recipientPhone, amount, transactionDate: String?
+    let createdAt, customerName: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case customerID = "customer_id"
+        case recipientID = "recipient_id"
+        case referenceNo = "reference_no"
+        case recipientPhone = "recipient_phone"
+        case amount
+        case transactionDate = "transaction_date"
+        case createdAt = "created_at"
+        case customerName = "customer_name"
     }
 }
