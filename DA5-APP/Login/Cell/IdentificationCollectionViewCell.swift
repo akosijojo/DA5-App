@@ -24,6 +24,15 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     
     var textFields : [UITextField] = []
     
+    var data : RegistrationForm? {
+       didSet {
+        print("DID GET DATA : \(data?.email) : \(data?.fbId)")
+            if data?.email != nil {
+                self.emailAddress.TextField.text = data?.email
+            }
+       }
+    }
+    
     lazy var scrollView : UIScrollView = {
         let v = UIScrollView()
         return v
@@ -269,6 +278,44 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         runAnimation()
     }
     
+    func removePassword() {
+        if data?.fbId != nil {
+            //MARK: hide show password and confirm password
+             password.snp.remakeConstraints { (make) in
+                 make.top.equalTo(emailAddress.snp.bottom).offset(5)
+                 make.leading.equalTo(self).offset(20)
+                 make.trailing.equalTo(self).offset(-20)
+                 make.height.equalTo(0)
+             }
+           
+             confirmPassword.snp.remakeConstraints { (make) in
+                 make.top.equalTo(password.snp.bottom).offset(5)
+                 make.leading.equalTo(self).offset(20)
+                 make.trailing.equalTo(self).offset(-20)
+                 make.height.equalTo(0)
+             }
+            password.isHidden = true
+            confirmPassword.isHidden = true
+        }else {
+            //MARK: hide show password and confirm password
+            password.snp.remakeConstraints { (make) in
+               make.top.equalTo(emailAddress.snp.bottom).offset(5)
+               make.leading.equalTo(self).offset(20)
+               make.trailing.equalTo(self).offset(-20)
+               make.height.equalTo(70)
+            }
+
+            confirmPassword.snp.remakeConstraints { (make) in
+               make.top.equalTo(password.snp.bottom).offset(5)
+               make.leading.equalTo(self).offset(20)
+               make.trailing.equalTo(self).offset(-20)
+               make.height.equalTo(40)
+            }
+            password.isHidden = false
+            confirmPassword.isHidden = false
+        }
+    }
+    
     func setUpForm() {
         let asteriskAttributes = NSAttributedString(string: " *", attributes: [.font:  UIFont(name: Fonts.bold, size: 14)!, .foregroundColor : ColorConfig().blue!])
        
@@ -334,13 +381,17 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     }
     
     @objc func submitAction() {
-        self.delegate?.submitAction(cell: self, index: 2, fields: textFields,passChecker: password.TextField.text != confirmPassword.TextField.text, form: setUpFormData())
+        //MARK: Added checking if login from Facebook
+        let passChecker = data?.fbId != nil ? password.TextField.text != confirmPassword.TextField.text : false
+        let fields = data?.fbId != nil ? [phoneNumber.FieldView.TextField,
+                                          emailAddress.TextField] : textFields
+        self.delegate?.submitAction(cell: self, index: 2, fields: fields,passChecker: passChecker, form: setUpFormData())
     }
     
     func setUpFormData() -> RegistrationForm {
         
 //        make checking here of images before force unwrapping
-        return RegistrationForm(fname: nil, mname: nil, lname: nil, bdate: nil, gender: nil, nationality: nil, address: nil, city: nil, province: nil, zipcode: nil, phoneNumber: phoneNumber.FieldView.TextField.text, email: emailAddress.TextField.text, password: password.TextField.text)
+        return RegistrationForm(phoneNumber: phoneNumber.FieldView.TextField.text, email: emailAddress.TextField.text, password: data?.fbId != nil ? nil : password.TextField.text)
     }
     
     @objc func onClickValidId(){

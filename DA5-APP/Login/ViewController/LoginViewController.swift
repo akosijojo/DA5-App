@@ -102,8 +102,7 @@ class LoginViewController: BaseViewControler {
 
         if let token = AccessToken.current,
              !token.isExpired {
-             // User is logged in, do work such as go to next view controller.
-            fbButton.setTitle("Log out", for: .normal)
+//            fbButton.setTitle("Log out", for: .normal)
             AccessToken.current = nil
             
          }
@@ -116,6 +115,13 @@ class LoginViewController: BaseViewControler {
     }
     
     override func getData() {
+        self.viewModel?.onErrorFbLoginData = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.coordinator?.signUpCoordinator(fbData: self?.viewModel?.registrationForm)
+                self?.stopAnimating()
+            }
+        }
+             
         self.viewModel?.onSuccessGettingList = { [weak self] data in
             DispatchQueue.main.async {
                 self?.customerData = data
@@ -245,10 +251,16 @@ class LoginViewController: BaseViewControler {
                    if let email = faceDic["email"] as? String ,let firstName = faceDic["first_name"] as? String, let lastName = faceDic["last_name"] as? String , let fid = faceDic["id"] as? String {
                     print("HAHAHAHHA   : \(email)  == \(firstName) === \(lastName) === \(fid)")
 //                       let param = ["firstname": firstName ,"lastname": lastName , "email": email ,"facebook_id": fid]
+
+                    self.setAnimate(msg: "Please wait")
+                    self.viewModel?.loginByFb(id: fid)
+                    let regForm = RegistrationForm(fname: firstName,  lname:
+                        lastName, email: email, fbId: fid)
+                    self.viewModel?.registrationForm = regForm
                     
-                    self.fbButton.setTitle("Log out ", for: .normal)
+//                    self.fbButton.setTitle("Log out ", for: .normal)
                     // LOADING AND REQUESR
-                    self.loginAction()
+//                    self.loginAction()
                     
                    }
                }

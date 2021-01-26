@@ -20,6 +20,7 @@ class LoginModel {
      let saveMpin = "/customer/saveMPIN"
      let checkMpinOtp = "/customer/checkMPINOTP"
      let apiToken = "/auth/generateAPIToken"
+     let fbLogin = "/auth/facebookLogin"
      
      func login(param: [String:Any],completionHandler: @escaping (LoginData?,StatusList?) -> ()) {
          NetworkService<LoginData>().networkRequest(param, jsonUrlString: jsonUrlString + logIn) { (data,status) in
@@ -30,6 +31,16 @@ class LoginModel {
              completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
          }
      }
+
+    func loginByFb(param: [String:Any],completionHandler: @escaping (LoginFb?,StatusList?) -> ()) {
+        NetworkService<LoginFb>().networkRequest(param, jsonUrlString: jsonUrlString + fbLogin) { (data,status) in
+            if let dataReceived = data {
+                    completionHandler(dataReceived,nil)
+                    return
+            }
+            completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+        }
+    }
     
      func getNationality(param: [String:Any],completionHandler: @escaping (Nationality?,StatusList?) -> ()) {
          NetworkService<Nationality>().networkRequest(param, jsonUrlString: jsonUrlString + nationality) { (data,status) in

@@ -2,6 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSAppTransportSecurity</key>
+      <dict>
+          <key>NSAllowsArbitraryLoads</key>
+          <true/>
+          <key>NSExceptionDomains</key>
+          <dict>
+              <key>yourdomain.com</key>
+              <dict>
+                  <key>NSIncludesSubdomains</key>
+                  <true/>
+                  <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+                  <false/>
+              </dict>
+         </dict>
+    </dict>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -21,16 +38,14 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb604205890243713</string>
+				<string>fb282347329547189</string>
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>604205890243713</string>
+	<string>282347329547189</string>
 	<key>FacebookDisplayName</key>
-	<string>DA5 App</string>
+	<string>DA5</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -83,7 +98,9 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs permission to access camera. Camera will be use to capture ID&apos;s needed to register in this app.</string>
-    <key>UIUserInterfaceStyle</key>
-    <string>Light</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs permission to access photo library. Photos will be use to select ID&apos;s needed to register in this app.</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

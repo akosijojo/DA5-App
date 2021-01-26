@@ -18,6 +18,16 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     var isBdateSelected: Bool = false
     let dateFormat = DateFormatter()
     
+    var data : RegistrationForm? {
+        didSet {
+            print("DID GET DATA")
+            if data?.fname != nil && data?.lname != nil {
+                self.fname.TextField.text = data?.fname
+                self.lname.TextField.text = data?.lname
+            }
+        }
+    }
+    
     lazy var scrollView : UIScrollView = {
         let v = UIScrollView()
         return v
@@ -114,12 +124,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     }()
     
     var datePicker : UIDatePicker?
-    
-    var data : UsersData? {
-        didSet {
-            
-        }
-    }
+
     
     override func setUpView() {
         setUpForm()
@@ -346,7 +351,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     }
     
     func setUpFormData() -> RegistrationForm {
-        return RegistrationForm(fname: fname.TextField.text, mname: mname.TextField.text, lname: lname.TextField.text, bdate: bdate.TextField.text, gender: gender.TextField.text, nationality: nationality.TextField.text, address: address.TextField.text, city: city.TextField.text, province: province.TextField.text, zipcode: zipCode.TextField.text, phoneNumber: nil, email: nil, password: nil, validId: nil, selfieId: nil)
+        return RegistrationForm(fname: fname.TextField.text, mname: mname.TextField.text, lname: lname.TextField.text, bdate: bdate.TextField.text, gender: gender.TextField.text, nationality: nationality.TextField.text, address: address.TextField.text, city: city.TextField.text, province: province.TextField.text, zipcode: zipCode.TextField.text, phoneNumber: nil, email: data?.email, password: data?.password, validId: data?.validId, selfieId: data?.selfieId,fbId: data?.fbId)
     }
 
     @objc func showGenderPicker() {

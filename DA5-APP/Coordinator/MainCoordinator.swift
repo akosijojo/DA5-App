@@ -103,10 +103,14 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
       
-    func signUpCoordinator() {
+    func signUpCoordinator(fbData: RegistrationForm? = nil) {
        let vc = SignUpViewController()
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
+        if let data = fbData {
+            print("FBID : \(data.fbId)")
+            vc.viewModel?.registrationForm = data
+        }
        vc.coordinator = self
        navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)

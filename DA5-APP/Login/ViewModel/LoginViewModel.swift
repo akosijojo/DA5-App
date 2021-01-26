@@ -11,6 +11,7 @@ import UIKit
 class LoginViewModel : NSObject {
     var model : LoginModel?
     var onSuccessRegistrationData: ((LoginData?) -> Void)?
+    var onErrorFbLoginData: ((LoginFb?) -> Void)?
     var onSuccessGettingList : ((Customer?) -> Void)?
     var returnNationalityList : ((Nationality?) -> Void)?
     var onSuccessGenerateToken : ((APIToken?) -> Void)?
@@ -59,6 +60,36 @@ class LoginViewModel : NSObject {
       
     }
     
+    func loginByFb(id: String?) {
+         guard let dataModel = model else { return }
+                
+         let completionHandler = { (data : LoginFb?,status: StatusList?) in
+            
+            if let dataReceived = data {
+//                self.returnNationalityList?(dataReceived)
+                print("DATA RECIEVED : \(dataReceived.status)")
+                if data?.status == 2 {
+                    self.onErrorFbLoginData?(dataReceived)
+                }else {
+                    self.onSuccessGettingList?(dataReceived.customer)
+                }
+                print("DATA RECIEVED")
+                return
+            }
+            
+            self.onErrorHandling?(status)
+         }
+        
+        let param : [String:String] = [
+            "facebook_id" : id ?? "",
+        ]
+//        if fb {
+//            dataModel.loginFb(param: param, completionHandler: completionHandler)
+//        }else {
+        dataModel.loginByFb(param: param, completionHandler: completionHandler)
+    }
+    
+    
     func getNationality() {
          guard let dataModel = model else { return }
                 
@@ -96,7 +127,7 @@ class LoginViewModel : NSObject {
             self.onErrorHandling?(status)
          }
         
-        let param : [String:Any] = [
+        var param : [String:Any] = [
          "first_name"        : registrationForm?.fname ?? "",
          "middle_name"       : registrationForm?.mname ?? "",
          "last_name"         : registrationForm?.lname ?? "",
@@ -115,6 +146,10 @@ class LoginViewModel : NSObject {
          "code"              : registrationForm?.code ?? "",
          "platform"          : 1,
         ]
+        
+        if let fbId = registrationForm?.fbId , fbId != ""{
+            param["facebook_id"] = fbId
+        }
     
         dataModel.createAccount(param: param, completionHandler: completionHandler)
     }

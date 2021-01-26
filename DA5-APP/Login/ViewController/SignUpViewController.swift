@@ -89,7 +89,7 @@ class SignUpViewController: BaseViewControler {
     }
     
     var nationalityList : Nationality?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -385,6 +385,7 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: form1, for: indexPath) as? BasicInfoCell else {
                 return UICollectionViewCell()
             }
+            cell.data = self.viewModel?.registrationForm
             cell.vc = self
             cell.delegate = self
             cell.nationality.TextField.text = self.nationalitySelected
@@ -400,6 +401,8 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
             if let sImg = selfieId {
                 cell.selfieIdPreview.image = sImg
             }
+            cell.data = self.viewModel?.registrationForm
+            cell.removePassword()
             return cell
         }else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: form3, for: indexPath) as? VerifyCollectionViewCell else {

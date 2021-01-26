@@ -26,6 +26,7 @@ struct RegistrationForm {
     var validId : String?
     var selfieId : String?
     var code : String?
+    var fbId : String?
 //     'first_name'        => $request->first_name,
 //     'middle_name'       => $request->middle_name,
 //     'last_name'         => $request->last_name,
@@ -69,6 +70,7 @@ struct RegistrationForm {
         print("VALID ID URL ",validId ?? "")
         print("SELFIE ID URL ",selfieId ?? "")
         print("CODE ",code ?? "")
+        print("FBID ",fbId ?? "")
     }
 }
 
@@ -83,6 +85,7 @@ struct UsersData: Decodable {
     var mobileNumber : String = ""
     var email : String = ""
 }
+
 
 // MARK: - Nationality
 struct Nationality: Decodable {
@@ -212,9 +215,7 @@ struct CustomerLocal: Codable {
 
 
 class UserLoginData {
-    
     static let shared = UserLoginData()
-
     var id: Int?
     var firstName: String?
     var middleName: String?
@@ -257,5 +258,30 @@ class UserLoginData {
 //        var idPictureThumbnail2: String?
     
         return user
+    }
+}
+
+// MARK: - FB DATA NOT REGISTERED
+struct LoginFb: Decodable {
+    var status: Int?
+    var message: String?
+    var nationals: [String]?
+
+    var accessToken, tokenType: String?
+    var expiresIn: Int?
+    var refreshToken: String?
+    var customer: Customer?
+
+    enum CodingKeys: String, CodingKey {
+      //MARK: Not Registered 
+       case status = "status"
+       case message = "message"
+       case nationals = "nationals"
+        //MARK: Already Registered
+       case accessToken = "access_token"
+       case tokenType = "token_type"
+       case expiresIn = "expires_in"
+       case refreshToken = "refresh_token"
+       case customer
     }
 }
