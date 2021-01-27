@@ -351,7 +351,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     }
     
     func setUpFormData() -> RegistrationForm {
-        return RegistrationForm(fname: fname.TextField.text, mname: mname.TextField.text, lname: lname.TextField.text, bdate: bdate.TextField.text, gender: gender.TextField.text, nationality: nationality.TextField.text, address: address.TextField.text, city: city.TextField.text, province: province.TextField.text, zipcode: zipCode.TextField.text, phoneNumber: nil, email: data?.email, password: data?.password, validId: data?.validId, selfieId: data?.selfieId,fbId: data?.fbId)
+        return RegistrationForm(fname: fname.TextField.text, mname: mname.TextField.text, lname: lname.TextField.text, bdate: bdate.TextField.text?.formatDate(dateFormat: "MMM dd, yyyy", format: "YYYY-MM-DD"), gender: gender.TextField.text, nationality: nationality.TextField.text, address: address.TextField.text, city: city.TextField.text, province: province.TextField.text, zipcode: zipCode.TextField.text, phoneNumber: nil, email: data?.email, password: data?.password, validId: data?.validId, selfieId: data?.selfieId,fbId: data?.fbId)
     }
 
     @objc func showGenderPicker() {

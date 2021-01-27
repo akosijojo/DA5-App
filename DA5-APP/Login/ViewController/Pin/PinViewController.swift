@@ -144,6 +144,11 @@ class PinViewController: BaseViewControler {
         //MARK:- Get API TOKEN
         print("------- \n PIN VIEW \(isChecking) \n ------------")
         if let noMPIN = isChecking , noMPIN == true {
+            //REMOVE FORGOT MPIN BUTTON 
+            self.forgotMpin.isHidden = true
+            //MARK: - INFO : CHECKING IF HAVE TOKEN = && self.coordinator?.token == nil
+            // also add saving token in coordinator : self.coordinator.token = token get prome request
+            // and change token send to : self.coordinator.token
             print("GET API TOKEN")
             self.viewModel?.generateAPIToken()
         }

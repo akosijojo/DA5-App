@@ -81,7 +81,6 @@ class LoginModel {
     func getOtp(param: [String:Any],completionHandler: @escaping (StatusList) -> ()) {
         NetworkService<StatusMessage>().networkRequest(param, jsonUrlString: jsonUrlString + getOtp) { (data,status) in
             if let res = data {
-            print("DATA :", res)
                 completionHandler(StatusList(status:res.message.contains("Success") ? 1 : 0, title: "",message: res.message ,tag: 1))
                 return
             }
@@ -110,9 +109,9 @@ class LoginModel {
     }
     
     func checkMpin(param: [String:Any],token: String?,completionHandler: @escaping (StatusList) -> ()) {
-        NetworkService<StatusList>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + checkMpinOtp) { (data,status) in
+        NetworkService<StatusMessage>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + checkMpinOtp) { (data,status) in
            if let res = data {
-               completionHandler(StatusList(status:res.message.contains("Success") ? 1 : 0, title: "",message: res.message ,tag: 1))
+               completionHandler(StatusList(status: 1, title: "",message: res.message ,tag: 1))
                return
            }
            completionHandler(StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))

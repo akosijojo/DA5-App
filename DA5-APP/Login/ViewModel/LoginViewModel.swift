@@ -168,24 +168,36 @@ class LoginViewModel : NSObject {
         dataModel.uploadImage(image: media, param: nil, session: session,completionHandler: completionHandler)
     }
     
-    func getOtp(number: String, email: String, isResend: Int,type: Int? = nil) {
+    func getOtp(number: String? = nil, email: String? = nil, isResend: Int,type: Int? = nil, customerId: Int? = nil) {
          guard let dataModel = model else { return }
                 
         let completionHandler = { (status : StatusList) in
-            if status.status == 1{
+            if status.status == 1 {
                 self.onSuccessRequest?(status)
-            }else {
+            } else if let _ = type , status.tag != nil {
+                self.onSuccessRequest?(status)
+            } else {
                 self.onErrorHandling?(status)
             }
          }
         
         var param : [String:String] = [
-            "phone"     : number,
-            "email"     : email,
             "is_resend" : String(describing: isResend)
         ]
+        
+        if let num = number {
+            param["phone"] = num
+        }
+        
+        if let mail = email {
+            param["email"] = mail
+        }
         if let otpType = type {
             param["type"] =  String(describing: otpType)
+        }
+        
+        if let cId = customerId {
+            param["customer_id"] =  String(describing: cId)
         }
     
         dataModel.getOtp(param: param, completionHandler: completionHandler)
@@ -229,22 +241,40 @@ class LoginViewModel : NSObject {
         dataModel.saveMpin(param: param,token: token, completionHandler: completionHandler)
     }
     
-    func checkMpinOtp(code: Int,phone: String?, email: String?,token: String?) {
+    func checkMpinOtp(code: Int,phone: String?, email: String?,token: String?,type: Int? = nil) {
         print("CHECKING ")
        guard let dataModel = model else { return }
              
        let completionHandler = { (status : StatusList) in
-          if status.status == 1{
-             self.onSuccessRequest?(status)
+        
+        print("STATUS : \(status)")
+        //MARK: - 2 if phone to email / 3 if email to pin code
+          if status.status == 1 {
+            if let _ = phone {
+                self.onSuccessRequest?(StatusList(status: status.status, title: status.title, message: status.message, tag: 2))
+            }else if let _ = email {
+                self.onSuccessRequest?(StatusList(status: status.status, title: status.title, message: status.message, tag: 3))
+            }else {
+                print("NOT AVAILABLE CHECK TYPE")
+                self.onSuccessRequest?(status)
+            }
           }else {
              self.onErrorHandling?(status)
           }
        }
-        let param : [String:Any] = [
-          "code"     : code,
-          "phone"    : phone ?? "",
-          "email"    : email ?? "",
+        
+       var param : [String:Any] = [
+          "code"     : code
        ]
+        
+        if let number = phone {
+            param["phone"] = number
+        }
+        
+        if let mail = email {
+            param["email"] = mail
+        }
+        
         dataModel.checkMpin(param: param, token: token,completionHandler: completionHandler)
    }
 }

@@ -116,7 +116,7 @@ class MainCoordinator :  NSObject, Coordinator {
        navigationController.pushViewController(vc, animated: false)
     }
 
-    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false) {
+    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false, forgotMpin: Bool? = nil) {
         if !fromBackground {
             print("!FROM BACKGROUND ")
             self.setUpUserLogin(user: customerData)
@@ -126,7 +126,7 @@ class MainCoordinator :  NSObject, Coordinator {
         vc.viewModel = LoginViewModel()
         vc.viewModel?.model = LoginModel()
         vc.customerData = customerData
-        vc.isChecking = usersDataLocal?.mpin == nil ? (customerData?.mpin == nil ? true : false) : false
+        vc.isChecking = forgotMpin != nil ? true : usersDataLocal?.mpin == nil ? (customerData?.mpin == nil ? true : false) : false
         
         //MARK: - CHECKING IF FROM INACTIVE STATE
         if fromBackground {
@@ -137,12 +137,17 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
     
-    func forgotMPINCoordinator() {
+    func forgotMPINCoordinator(type: forgotPinType? = .phone) {
        let vc = ForgotPinViewController()
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
-       vc.mobileNumber = usersDataLocal?.phone
-       vc.emailAddress = usersDataLocal?.email
+        print("TYPE : \(type) = phone :\(usersDataLocal?.phone) == email : \(usersDataLocal?.email)")
+        if type == .phone {
+            vc.mobileNumber = usersDataLocal?.phone
+        }else {
+            vc.emailAddress = usersDataLocal?.email
+        }
+       vc.type = type ?? .phone
        vc.coordinator = self
        navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
@@ -156,9 +161,9 @@ class MainCoordinator :  NSObject, Coordinator {
        navigationController.pushViewController(vc, animated: false)
     }
     
-    func showProfileViewController(data: AccountData?) {
+    func showProfileViewController(data: Customer?) {
          let vc = ProfileViewController()
-         vc.accountData = data
+         vc.data = data
          vc.coordinator = self
          navigationController.setNavigationBarHidden(false, animated: false)
          navigationController.pushViewController(vc, animated: false)
@@ -200,9 +205,10 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
 
-    func showBase2ndViewController() {
+    func showBase2ndViewController(title: String) {
        let vc = BaseSecondaryViewController()
        vc.coordinator = self
+       vc.title = title
        navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
     }

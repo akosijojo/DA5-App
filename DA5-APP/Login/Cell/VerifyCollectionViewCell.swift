@@ -175,17 +175,29 @@ protocol AuthenticationCollectionViewCellDelegate {
     func submitAction(cell: AuthenticationCollectionViewCell,index: Int)
     func resendCode(cell: AuthenticationCollectionViewCell)
 }
+
+struct AuthData {
+    var phone : String?
+    var email : String?
+}
+
 class AuthenticationCollectionViewCell: BaseCollectionViewCell, UITextFieldDelegate {
    
     var timer : Timer?
        
     var seconds : Int = 60
-    
+
     var delegate : AuthenticationCollectionViewCellDelegate?
     
-    var data : String? {
+    var data : AuthData? {
         didSet {
-            self.headerView.desc.text = "+63\(self.data ?? "")"
+            if let phone = data?.phone {
+                self.headerView.desc.text = "+63\(phone)"
+                self.headerView.title.text = "Please enter the 6 digit code sent to"
+            }else {
+                self.headerView.desc.text = String(describing: self.data?.email?.hideMidChars(type: .email) ?? "")
+                self.headerView.title.text = "Please enter the 6 digit code sent to email"
+            }
         }
     }
     
@@ -197,7 +209,7 @@ class AuthenticationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     lazy var headerView : CustomHeaderView2 = {
         let v = CustomHeaderView2()
         v.mainTitle.text = "Authentication"
-        v.title.text = "Please enter the 6 digit code sent to"
+//        v.title.text = "Please enter the 6 digit code sent to"
         v.title.font = UIFont(name: Fonts.regular, size: 12)
         v.desc.font = UIFont(name: Fonts.bold, size: 16)
         return v

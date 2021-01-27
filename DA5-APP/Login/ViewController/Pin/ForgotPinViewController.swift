@@ -9,6 +9,11 @@ import UIKit
 import AVFoundation
 import NVActivityIndicatorView
 
+enum forgotPinType {
+    case phone
+    case email
+}
+
 class ForgotPinViewController: BaseViewControler {
     var timer : Timer?
     var seconds : Int = 0
@@ -16,8 +21,10 @@ class ForgotPinViewController: BaseViewControler {
     
     var viewModel : LoginViewModel?
     
-    var mobileNumber: String? = ""
-    var emailAddress: String? = ""
+    var mobileNumber: String? = nil
+    var emailAddress: String? = nil
+    
+    var type : forgotPinType = .phone
 
     lazy var pager : PagerView = {
         let v = PagerView()
@@ -48,6 +55,7 @@ class ForgotPinViewController: BaseViewControler {
 
     let form3 = "form3"
 
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
@@ -65,29 +73,28 @@ class ForgotPinViewController: BaseViewControler {
     }
     
     override func getData() {
+        
+        //MARK: - TOKEN GET
+        self.viewModel?.onSuccessGenerateToken = {[weak self] data in
+            DispatchQueue.main.async {
+                self?.coordinator?.token = data?.accessToken
+            }
+        }
+        
         //MARK: - BASIC REQUEST
         self.viewModel?.onSuccessRequest = { [weak self] res in
             DispatchQueue.main.async {
                 self?.stopAnimationBlocker()
-            }
-        }
-        //MARK:-Registration Successfull
-        self.viewModel?.onSuccessRegistrationData = { [weak self] data in
-            DispatchQueue.main.async {
-                self?.stopAnimationBlocker()
-                if let result = data {
-                    self?.showAlert(buttonOK: "Ok", message: "Registration Successful.", actionOk: { (act) in
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            if data?.customer != nil {
-                                self?.coordinator?.pinCodeCoordinator(isChecking: true, customerData:result.customer)
-                            }
-                            print("NO DATA GET")
-                        }
-                    }, completionHandler: nil)
+                if res?.tag == 2 {
+                    self?.coordinator?.forgotMPINCoordinator(type: .email)
+                }else if res?.tag == 3 {
+                    self?.coordinator?.pinCodeCoordinator(customerData: self?.coordinator?.usersDataLocal?.convertData(),forgotMpin: true)
+                }else {
+                    print("NOT CHECK TYPE")
                 }
             }
-            
         }
+        
         //MARK: - ALL REQUEST ERROR
         self.viewModel?.onErrorHandling = { [weak self] error in
             DispatchQueue.main.async {
@@ -98,7 +105,8 @@ class ForgotPinViewController: BaseViewControler {
             
         }
         
-//        self.viewModel?.getOtp(number: mobileNumber ?? "", email: emailAddress ?? "", isResend: 0, type: 2)
+        self.viewModel?.generateAPIToken()
+        self.viewModel?.getOtp(number: self.mobileNumber, email: self.emailAddress, isResend: 1, type: 2, customerId: UserLoginData.shared.id)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -179,7 +187,7 @@ extension ForgotPinViewController : UICollectionViewDelegateFlowLayout, UICollec
             return UICollectionViewCell()
         }
         cell.delegate = self
-        cell.data = self.mobileNumber
+        cell.data = AuthData(phone: self.mobileNumber, email: self.emailAddress)
         return cell
     }
     
@@ -209,15 +217,26 @@ extension ForgotPinViewController : UICollectionViewDelegateFlowLayout, UICollec
 extension ForgotPinViewController : AuthenticationCollectionViewCellDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     func resendCode(cell: AuthenticationCollectionViewCell) {
         self.setAnimate(msg: "Please wait..")
-        self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: self.emailAddress ?? "", isResend: 1, type: 2)
+        self.viewModel?.getOtp(number: self.mobileNumber , email: self.emailAddress, isResend: 1, type: 2 ,customerId: UserLoginData.shared.id)
 
     }
     
     func submitAction(cell: AuthenticationCollectionViewCell, index: Int) {
+        
+         if cell.verificationCode.text == "" {
+             self.showAlert(buttonOK: "Ok", message: "Verification code is required", actionOk: { (action) in
+                 // action
+             }, completionHandler: nil)
+         }else {
+            guard let code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "") else { return }
+            self.viewModel?.checkMpinOtp(code: Int(code) ?? 0, phone: self.mobileNumber, email: self.emailAddress, token: self.coordinator?.token, type: 2)
+         }
+             
+        
         //MARK: - SUBMITING FORGOT MPIN
      // show terms and condition
-        coordinator?.termsCoordinator(parentView: self)
-        self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
-        print(" VERIFICATION CODE ",self.viewModel?.registrationForm?.code)
+//        coordinator?.termsCoordinator(parentView: self)
+//        self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
+//        print(" VERIFICATION CODE ",self.viewModel?.registrationForm?.code)
     }
 }

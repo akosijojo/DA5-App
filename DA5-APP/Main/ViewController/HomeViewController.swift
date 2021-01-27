@@ -212,14 +212,14 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         sideMenuView.frame = self.view.bounds
     }
     
-    func onClickShowView(type: Int) {
-        switch type {
-        case 1:
-            coordinator?.showBase2ndViewController()
-        default: break
-            
-        }
-    }
+//    func onClickShowView(type: Int) {
+//        switch type {
+//        case 1:
+//            coordinator?.showBase2ndViewController(title: <#String#>)
+//        default: break
+//            
+//        }
+//    }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let section = indexPath.section
@@ -377,26 +377,26 @@ extension HomeViewController : CollectionViewCellDelegate {
             case 5:
                 self.coordinator?.showFxViewController(balance: self.homeData?.balance)
             case 6:
-                print("SHOW PAY BILL")
+                self.coordinator?.showBase2ndViewController(title: "Pay Bills")
             case 7:
                 self.coordinator?.ShowELoadViewController()
             case 8:
-                 print("SHOW CRYPTO")
+                 self.coordinator?.showBase2ndViewController(title: "Crypto")
             case 9:
-                print("SHOW LOANS")
+                self.coordinator?.showBase2ndViewController(title: "Loans")
             default:
                 break
             }
             
         }else if let itemCell = cell as? NewsCell {
-            print("NEWS : \(self.homeData?.news?[index])")
+//            print("NEWS : \(self.homeData?.news?[index])")
             self.coordinator?.showNewsItem()
         }else if let itemCell = cell as? PendingTransactionCell {
-            print("PENDING TRANSACTIONS : \(self.homeData?.pendingTransaction?[index])")
+//            print("PENDING TRANSACTIONS : \(self.homeData?.pendingTransaction?[index])")
 //            self.coordinator?.showBase2ndViewController()
         }else {
-            print("TRANSACTION HISTORY : \(self.homeData?.transactionHistory?[index])")
-            self.coordinator?.showBase2ndViewController()
+//            print("TRANSACTION HISTORY : \(self.homeData?.transactionHistory?[index])")
+//            self.coordinator?.showBase2ndViewController()
         }
     }
     

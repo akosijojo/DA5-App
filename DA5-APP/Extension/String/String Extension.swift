@@ -29,9 +29,9 @@ extension String {
         return label.frame.width
     }
     
-    func formatDate(format: String? = "MMM dd, yyyy") -> String {
+    func formatDate(dateFormat: String? = "yyyy-MM-dd HH:mm:ss",format: String? = "MMM dd, yyyy") -> String {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatterGet.dateFormat = dateFormat
 
         let dateFormatterPrint = DateFormatter()
         dateFormatterPrint.dateFormat = format!
@@ -40,6 +40,21 @@ extension String {
             return dateFormatterPrint.string(from: date)
         }
         return self
+    }
+    
+    func hideMidChars(type: forgotPinType) -> String {
+        if type == .phone {
+            return String(self.enumerated().map { index, char in
+                return [0, 1, self.count - 1, self.count - 2].contains(index) ? char : "*"
+            })
+        }else {
+            let email = self
+            let components = email.components(separatedBy: "@")
+            let stringToConvert = components.first!
+            return String(stringToConvert.enumerated().map { index, char in
+                return [0, 1, stringToConvert.count - 1, stringToConvert.count - 2].contains(index) ? char : "*"
+            }) + "@" + components.last!
+        }
     }
 }
 

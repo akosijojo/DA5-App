@@ -138,10 +138,10 @@ class SideMenuView : UIView {
         switch gesture.view?.tag {
         case 0:
             print("0")
-        case 1:
-            vc?.coordinator?.showPrivacyViewController()
-        case 2:
-            vc?.coordinator?.showTermsViewController()
+//        case 1:
+//            vc?.coordinator?.showPrivacyViewController()
+//        case 2:
+//            vc?.coordinator?.showTermsViewController()
         case 3:
             vc?.coordinator?.logInCoordinator(didLogout: true)
         default:
@@ -214,7 +214,7 @@ class SideMenuView : UIView {
     }
     
     @objc func showProfileView() {
-        vc?.coordinator?.showProfileViewController(data: vc?.accountData)
+        vc?.coordinator?.showProfileViewController(data: vc?.customerData)
     }
 }
 
