@@ -88,9 +88,9 @@ class FXViewController: BaseHomeViewControler {
         setUpView()
         setUpData()
         self.title = "Foreign Exchange"
-        self.navigationController?.navigationBar.titleTextAttributes =
-        [NSAttributedString.Key.foregroundColor: UIColor.black,
-         NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 20)!]
+//        self.navigationController?.navigationBar.titleTextAttributes =
+//        [NSAttributedString.Key.foregroundColor: UIColor.black,
+//         NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 20)!]
     }
     
     init(balance: String?) {

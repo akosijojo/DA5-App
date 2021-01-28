@@ -294,7 +294,11 @@ class ProfileViewController: BaseHomeViewControler {
         validIdPreview.snp.makeConstraints { (make) in
             make.top.equalTo(validIdLabel.snp.bottom)
             make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            if ColorConfig().screenWidth > 500 {
+                make.width.equalTo(400)
+            }else {
+                make.trailing.equalTo(view).offset(-20)
+            }
             make.height.equalTo(200)
         }
         
@@ -310,7 +314,11 @@ class ProfileViewController: BaseHomeViewControler {
         selfieIdPreview.snp.makeConstraints { (make) in
             make.top.equalTo(selfieIdLabel.snp.bottom)
             make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            if ColorConfig().screenWidth > 500 {
+                make.width.equalTo(400)
+            }else {
+                make.trailing.equalTo(view).offset(-20)
+            }
             make.height.equalTo(200)
             make.bottom.equalTo(scrollView).offset(-20)
         }

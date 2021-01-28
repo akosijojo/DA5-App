@@ -64,8 +64,13 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
         view.addSubview(imageView)
         imageView.snp.makeConstraints { (make) in
             make.centerY.equalTo(view)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            if ColorConfig().screenWidth > 500 {
+                make.width.equalTo(400)
+                make.centerX.equalTo(view)
+            }else {
+                make.leading.equalTo(view).offset(20)
+                make.trailing.equalTo(view).offset(-20)
+            }
             make.height.equalTo(200)
         }
         

@@ -124,6 +124,7 @@ class NewsFullListViewController: BaseHomeViewControler {
         
 //        self.setAnimate(msg: "Please wait...")
         
+//        self.viewModel?.getAllNews(token: self.coordinator?.token)
     }
     
     override func setUpView() {

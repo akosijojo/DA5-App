@@ -377,7 +377,7 @@ extension HomeViewController : CollectionViewCellDelegate {
             case 5:
                 self.coordinator?.showFxViewController(balance: self.homeData?.balance)
             case 6:
-                self.coordinator?.showBase2ndViewController(title: "Pay Bills")
+                self.coordinator?.showPaybillsViewController()
             case 7:
                 self.coordinator?.ShowELoadViewController()
             case 8:

@@ -95,6 +95,33 @@ class HomeFullListViewModel: NSObject {
         ]
         dataModel.getAllTransactionHistory(param: param, token: token ,completionHandler: completionHandler)
     }
+    
+    func getAllNews(page: Int? = nil,token: String?) {
+         guard let dataModel = model else { return }
+                        
+         let completionHandler = { (data: StatusList?,status : StatusList?) in
+//              if let result = data {
+//                  self.onSuccessRequest?(result)
+//                  self.vPage += 1
+//                  print("add page for getting new")
+//              }else {
+//                  self.onErrorHandling?(status)
+//              }
+         }
+            
+        if let pager = page {
+            vPage = pager
+        }
+        
+        let pager = page != nil ? page : vPage
+        
+        let param : [String:String] = [
+            "page" : "\(pager ?? 0)",
+            "limit": "10"
+        ]
+        
+        dataModel.getAllNews(param: param, token: token ,completionHandler: completionHandler)
+    }
         
 }
 

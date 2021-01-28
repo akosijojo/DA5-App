@@ -22,7 +22,7 @@ struct SubmitCashInOutData: Decodable {
     }
 }
 
-class WalletViewController: BaseSecondaryViewController {
+class WalletViewController: BaseHomeViewControler {
     var viewModel : LoadWalletViewModel?
     
     lazy var headerView : CustomHeaderView = {
@@ -99,6 +99,11 @@ class WalletViewController: BaseSecondaryViewController {
         getData()
         
         self.hidesKeyboardOnTapArround()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        setUpNavigationBar()
     }
     
     init(data: CashInData?,type: Int?) {

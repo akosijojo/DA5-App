@@ -87,6 +87,11 @@ class PinViewController: BaseViewControler {
         v.btnBack.addTarget(self, action: #selector(btnBackClick), for: .touchUpInside)
        return v
     }()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    }
 
     override func getData() {
        pinTextField.defaultText = "•"

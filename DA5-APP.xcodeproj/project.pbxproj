@@ -106,6 +106,14 @@
 		EB92961225BE77F100287B60 /* PendingFullData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961125BE77F100287B60 /* PendingFullData.swift */; };
 		EB92961425BE97ED00287B60 /* TransactionsFullViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961325BE97ED00287B60 /* TransactionsFullViewController.swift */; };
 		EB92961725BEBA5400287B60 /* NewsItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961625BEBA5400287B60 /* NewsItemViewController.swift */; };
+		EB92961E25C1C5C700287B60 /* PaybillsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961D25C1C5C700287B60 /* PaybillsData.swift */; };
+		EB92962025C1C5EE00287B60 /* PaybillsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92961F25C1C5EE00287B60 /* PaybillsModel.swift */; };
+		EB92962225C1C61000287B60 /* PaybillsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92962125C1C61000287B60 /* PaybillsViewModel.swift */; };
+		EB92962425C1C68000287B60 /* PaybillsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92962325C1C68000287B60 /* PaybillsViewController.swift */; };
+		EB92962625C1C93500287B60 /* PaybillsSelectedItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92962525C1C93500287B60 /* PaybillsSelectedItemViewController.swift */; };
+		EB92962925C2547000287B60 /* PaybillsCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92962825C2547000287B60 /* PaybillsCategoryCell.swift */; };
+		EB92962B25C2548000287B60 /* PaybillsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92962A25C2548000287B60 /* PaybillsCell.swift */; };
+		EB92962D25C2570E00287B60 /* PaybillsHorizontalCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92962C25C2570E00287B60 /* PaybillsHorizontalCollectionCell.swift */; };
 		EBA973A424EBB342001C09DB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA973A324EBB342001C09DB /* AppDelegate.swift */; };
 		EBA973A824EBB342001C09DB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA973A724EBB342001C09DB /* ViewController.swift */; };
 		EBA973AB24EBB342001C09DB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EBA973A924EBB342001C09DB /* Main.storyboard */; };
@@ -244,6 +252,14 @@
 		EB92961125BE77F100287B60 /* PendingFullData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingFullData.swift; sourceTree = "<group>"; };
 		EB92961325BE97ED00287B60 /* TransactionsFullViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsFullViewController.swift; sourceTree = "<group>"; };
 		EB92961625BEBA5400287B60 /* NewsItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsItemViewController.swift; sourceTree = "<group>"; };
+		EB92961D25C1C5C700287B60 /* PaybillsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsData.swift; sourceTree = "<group>"; };
+		EB92961F25C1C5EE00287B60 /* PaybillsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaybillsModel.swift; sourceTree = "<group>"; };
+		EB92962125C1C61000287B60 /* PaybillsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsViewModel.swift; sourceTree = "<group>"; };
+		EB92962325C1C68000287B60 /* PaybillsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsViewController.swift; sourceTree = "<group>"; };
+		EB92962525C1C93500287B60 /* PaybillsSelectedItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsSelectedItemViewController.swift; sourceTree = "<group>"; };
+		EB92962825C2547000287B60 /* PaybillsCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsCategoryCell.swift; sourceTree = "<group>"; };
+		EB92962A25C2548000287B60 /* PaybillsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsCell.swift; sourceTree = "<group>"; };
+		EB92962C25C2570E00287B60 /* PaybillsHorizontalCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaybillsHorizontalCollectionCell.swift; sourceTree = "<group>"; };
 		EBA973A024EBB342001C09DB /* DA5-APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DA5-APP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBA973A324EBB342001C09DB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EBA973A724EBB342001C09DB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -511,6 +527,7 @@
 		EB3DD6AF24F7747600BDBE0C /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				EB92961925C1C5A000287B60 /* Paybills */,
 				EB9295FE25BB29F400287B60 /* HomeFullList */,
 				EB6824EB25B3144400C5BC11 /* Fx */,
 				EB0F43A8258B4379008858B1 /* Wallet Transfer */,
@@ -793,6 +810,53 @@
 				EB92961125BE77F100287B60 /* PendingFullData.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		EB92961925C1C5A000287B60 /* Paybills */ = {
+			isa = PBXGroup;
+			children = (
+				EB92962725C2546000287B60 /* Cell */,
+				EB92961C25C1C5BA00287B60 /* Data */,
+				EB92961B25C1C5B500287B60 /* Model */,
+				EB92961A25C1C5AE00287B60 /* ViewModel */,
+				EB92962325C1C68000287B60 /* PaybillsViewController.swift */,
+				EB92962525C1C93500287B60 /* PaybillsSelectedItemViewController.swift */,
+			);
+			path = Paybills;
+			sourceTree = "<group>";
+		};
+		EB92961A25C1C5AE00287B60 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				EB92962125C1C61000287B60 /* PaybillsViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		EB92961B25C1C5B500287B60 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EB92961F25C1C5EE00287B60 /* PaybillsModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		EB92961C25C1C5BA00287B60 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				EB92961D25C1C5C700287B60 /* PaybillsData.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		EB92962725C2546000287B60 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				EB92962825C2547000287B60 /* PaybillsCategoryCell.swift */,
+				EB92962A25C2548000287B60 /* PaybillsCell.swift */,
+				EB92962C25C2570E00287B60 /* PaybillsHorizontalCollectionCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		EBA9739724EBB342001C09DB = {
@@ -1178,10 +1242,12 @@
 				EB77ED0F25872A7800D99528 /* ForgotPinViewController.swift in Sources */,
 				EB8850EE256D5CA500B0B4CC /* ServicesData.swift in Sources */,
 				EB77E6362565776B000479CF /* HomeHeaderCollectionViewCell.swift in Sources */,
+				EB92962425C1C68000287B60 /* PaybillsViewController.swift in Sources */,
 				EB6824EA25B063A400C5BC11 /* BankTransferDetailsViewController.swift in Sources */,
 				EB8850EB256CDFA300B0B4CC /* SideMenuViewController.swift in Sources */,
 				EB78E4DB256E05FD00754B2E /* ProfileViewController.swift in Sources */,
 				EB6824F625B314B100C5BC11 /* FxData.swift in Sources */,
+				EB92962925C2547000287B60 /* PaybillsCategoryCell.swift in Sources */,
 				EB0F43CF25AC408A008858B1 /* BankTransferViewController.swift in Sources */,
 				EB0F43CD25AB3292008858B1 /* WalletTransferViewController.swift in Sources */,
 				EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */,
@@ -1193,6 +1259,7 @@
 				EB0F43B725A44BF9008858B1 /* ELoadModel.swift in Sources */,
 				EB55D53124F78A660094DB60 /* CustomBasicFormInput.swift in Sources */,
 				EB6824ED25B3145500C5BC11 /* FXViewController.swift in Sources */,
+				EB92962625C1C93500287B60 /* PaybillsSelectedItemViewController.swift in Sources */,
 				EBA973E324EBC36E001C09DB /* LoginViewController.swift in Sources */,
 				EBFB9847250919F90057FA79 /* Texfield Extension.swift in Sources */,
 				EB6824E025AF309400C5BC11 /* BankTransferModel.swift in Sources */,
@@ -1209,6 +1276,7 @@
 				EB92961425BE97ED00287B60 /* TransactionsFullViewController.swift in Sources */,
 				EB77ED1725886F7E00D99528 /* HomeViewModel.swift in Sources */,
 				EB0F43AA258B4394008858B1 /* LoadWalletViewController.swift in Sources */,
+				EB92962B25C2548000287B60 /* PaybillsCell.swift in Sources */,
 				EB0F43C825A6DD38008858B1 /* LoadWalletViewModel.swift in Sources */,
 				EBA973E524EC0FCB001C09DB /* Colors.swift in Sources */,
 				EBA973DD24EBB44D001C09DB /* BaseViewController.swift in Sources */,
@@ -1241,6 +1309,7 @@
 				EB55D53324F7B83A0094DB60 /* IdentificationCollectionViewCell.swift in Sources */,
 				EB0F43BA25A475D9008858B1 /* EloadProducts.swift in Sources */,
 				EB3DD6A424F653D800BDBE0C /* SignUpViewController.swift in Sources */,
+				EB92962225C1C61000287B60 /* PaybillsViewModel.swift in Sources */,
 				EB7A2943257E1BF800482CDC /* ButtonExtension.swift in Sources */,
 				EB0F439E258A583B008858B1 /* NewsCollectionViewCell.swift in Sources */,
 				EBA973A824EBB342001C09DB /* ViewController.swift in Sources */,
@@ -1266,6 +1335,7 @@
 				EB78E4F825768DC300754B2E /* SampleUploading .swift in Sources */,
 				EB0F43A2258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift in Sources */,
 				EB78E4E1256E077D00754B2E /* TermsAndConditionsViewController.swift in Sources */,
+				EB92962D25C2570E00287B60 /* PaybillsHorizontalCollectionCell.swift in Sources */,
 				EB77ED0A257FCF6B00D99528 /* UserDefaults.swift in Sources */,
 				EB0F43A4258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift in Sources */,
 				EB77E643256B552C000479CF /* ServicesCell.swift in Sources */,
@@ -1278,6 +1348,8 @@
 				EB6824DE25AF307400C5BC11 /* BankTransferViewModel.swift in Sources */,
 				EBA973AE24EBB342001C09DB /* DA5_APP.xcdatamodeld in Sources */,
 				EB55D52D24F778E70094DB60 /* UsersData.swift in Sources */,
+				EB92961E25C1C5C700287B60 /* PaybillsData.swift in Sources */,
+				EB92962025C1C5EE00287B60 /* PaybillsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

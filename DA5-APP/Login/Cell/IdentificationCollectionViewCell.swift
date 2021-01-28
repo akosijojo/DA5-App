@@ -217,14 +217,18 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         validIdPreview.snp.makeConstraints { (make) in
             make.top.equalTo(validIdLabel.snp.bottom)
             make.leading.equalTo(self).offset(20)
-            make.trailing.equalTo(self).offset(-20)
+            if ColorConfig().screenWidth > 500 {
+                make.width.equalTo(400)
+            }else {
+                make.trailing.equalTo(self).offset(-20)
+            }
             make.height.equalTo(200)
         }
         
         scrollView.addSubview(validIdPreviewIcon)
         validIdPreviewIcon.snp.makeConstraints { (make) in
             make.top.equalTo(validIdLabel.snp.bottom)
-            make.centerX.equalTo(self)
+            make.centerX.equalTo(validIdPreview)
             make.width.equalTo(200)
             make.height.equalTo(200)
         }
@@ -243,7 +247,11 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         selfieIdPreview.snp.makeConstraints { (make) in
             make.top.equalTo(selfieIdLabel.snp.bottom)
             make.leading.equalTo(self).offset(20)
-            make.trailing.equalTo(self).offset(-20)
+            if ColorConfig().screenWidth > 500 {
+                make.width.equalTo(400)
+            }else {
+                make.trailing.equalTo(self).offset(-20)
+            }
             make.height.equalTo(200)
         }
         

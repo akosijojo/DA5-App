@@ -364,6 +364,12 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
             self.gender.TextField.text = "Female"
             self.dismissPicker()
         }))
+        
+        if let popoverController = alert.popoverPresentationController {
+            popoverController.sourceView = gender
+            popoverController.sourceRect = CGRect(x: gender.bounds.midX, y: 0, width: 120, height: 100)
+//            popoverController.permittedArrowDirections = [] //to hide the arrow of any particular direction
+        }
         vc?.present(alert, animated: true, completion: nil)
     }
     func addShowKeyboard(offset: CGFloat) {

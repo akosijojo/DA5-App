@@ -34,7 +34,9 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.navigationBar.isTranslucent = false
         navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController.navigationBar.shadowImage = UIImage()
-        
+        navigationController.navigationBar.titleTextAttributes =
+        [NSAttributedString.Key.foregroundColor: UIColor.black,
+         NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 20)!]
 //        if user {
 //            homeCoordinator()
 //        }else {
@@ -410,6 +412,25 @@ extension MainCoordinator {
        navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
     }
+    
+    func showPaybillsViewController() {
+       let vc = PaybillsViewController()
+       vc.coordinator = self
+       vc.viewModel = PaybillsViewModel()
+       vc.viewModel?.model = PaybillsModel()
+       navigationController.setNavigationBarHidden(false, animated: false)
+       navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showPaybillsSelectedViewController(data: String?) {
+        let vc = PaybillsSelectedItemViewController(data: data ?? "")
+       vc.coordinator = self
+       vc.viewModel = PaybillsViewModel()
+       vc.viewModel?.model = PaybillsModel()
+       navigationController.setNavigationBarHidden(false, animated: false)
+       navigationController.pushViewController(vc, animated: false)
+    }
+
     
     
     

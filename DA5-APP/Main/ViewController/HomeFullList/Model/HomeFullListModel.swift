@@ -11,8 +11,9 @@ import UIKit
 class HomeFullListModel {
     let jsonUrlString = "\(ApiConfig().getUrl())"
     let getPendingList = "/customer/getPendingTransactions"
-   let declineTransact = "/customer/cancelPendingTransaction"
+    let declineTransact = "/customer/cancelPendingTransaction"
     let getTransactionHistory = "/customer/getTransactionHistories"
+    let getNews = "/customer/getNews"
 
     func getAllPendingTransaction(param: [String:Any],token: String?,completionHandler: @escaping (PendinguFullData?,StatusList?) -> ()) {
         NetworkService<PendinguFullData>().networkRequest(param,token: token, type: .post, jsonUrlString: jsonUrlString + getPendingList) { (data,status) in
@@ -43,5 +44,15 @@ class HomeFullListModel {
              completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
           }
    }
+    
+    func getAllNews(param: [String:Any],token: String?,completionHandler: @escaping (StatusList?,StatusList?) -> ()) {
+        NetworkService<StatusList>().networkRequest(param, token: token, jsonUrlString: jsonUrlString + getNews) { (data,status) in
+            if let dataReceived = data {
+               completionHandler(dataReceived,nil)
+               return
+            }
+            completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
+         }
+    }
     
 }

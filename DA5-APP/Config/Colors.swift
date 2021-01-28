@@ -11,7 +11,7 @@ import UIKit
 struct ColorConfig {
     let blueViolet : UIColor? = UIColor(hex: "333985")
     let white : UIColor? = UIColor(hex: "ffffff")
-    let black : UIColor? = UIColor(hex: "000000")
+    let black : UIColor? = UIColor(hex: "1d1d1f")
     let bgColor : UIColor? = UIColor(hex: "ffffff")
     let innerbgColor : UIColor? = UIColor(hex: "e6ebef")
     let darkBlue : UIColor? = UIColor(hex: "1C2249")

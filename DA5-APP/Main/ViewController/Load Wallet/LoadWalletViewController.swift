@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoadWalletViewController: BaseSecondaryViewController {
+class LoadWalletViewController: BaseHomeViewControler {
       var headerCell = "headerCell"
       var cellId = "cellId"
       var type : Int? = 0
@@ -39,6 +39,10 @@ class LoadWalletViewController: BaseSecondaryViewController {
         getData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        setUpNavigationBar()
+    }
     
     func getData() {
         self.data = [
