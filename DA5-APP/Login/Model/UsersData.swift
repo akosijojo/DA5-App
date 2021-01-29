@@ -253,6 +253,7 @@ class UserLoginData {
     var middleName: String?
     var lastName, birthDate, mpin, gender: String?
     var image, address, city, province: String?
+    var phoneNumber : String?
 //    var zipCode, nationality: String?
 //    var facebookID, appleID: String?
 //    var phone, email, idPicture, idPicture2: String?
@@ -276,6 +277,7 @@ class UserLoginData {
 //        user.mpin,
 //        user.gender: String?
         user.image = data.image
+        user.phoneNumber = data.phone
 //        , address, city, province: String?
 //        var zipCode, nationality: String?
 //        var facebookID, appleID: String?

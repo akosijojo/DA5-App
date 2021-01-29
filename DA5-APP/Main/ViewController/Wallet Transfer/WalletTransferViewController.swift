@@ -10,6 +10,8 @@ import UIKit
 
 class WalletTransferViewController: BaseHomeViewControler {
     
+    var data : WalletTransferData?
+    
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
         v.title.text = "Wallet transfer"
@@ -76,33 +78,28 @@ class WalletTransferViewController: BaseHomeViewControler {
     }
     
     override func setUpData() {
-        self.viewModel?.onSuccessDataRequest = { [weak self] data in
+        // add request return
+        self.viewModel?.onSuccessWalletDetailsData = { [weak self] data in
             DispatchQueue.main.async {
-                self?.stopAnimating()
+                 print("GOTO WALLET TRANSFER DETAILS ")
+                self?.data?.recipientName = "\(data?.firstName ?? "") \(data?.lastName ?? "")"
+                  self?.coordinator?.showWalletTransferDetailsViewController(data:  self?.data)
             }
         }
         
-        self.viewModel?.onSuccessRequest = { [weak self] data in
-            DispatchQueue.main.async {
-                self?.stopAnimating()
-                self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong.", actionOk: { (action) in
-                    self?.coordinator?.showParentView()
-                }, completionHandler: nil)
-            }
-        }
-       
         self.viewModel?.onErrorHandling = { [weak self] status in
             DispatchQueue.main.async {
-                self?.stopAnimating()
-                self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
+                self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong.", actionOk: nil, completionHandler: nil)
             }
         }
+        
+        
     }
     
     override func setUpView() {
         view.addSubview(headerView)
         headerView.snp.makeConstraints { (make) in
-           make.top.equalTo(view).offset(25)
+           make.top.equalTo(view.layoutMarginsGuide.snp.top).offset(25)
            make.leading.equalTo(view).offset(20)
            make.trailing.equalTo(view).offset(-20)
            make.height.equalTo(80)
@@ -219,8 +216,11 @@ class WalletTransferViewController: BaseHomeViewControler {
     
     @objc func submitAction() {
         if let number = self.phoneNumber.FieldView.TextField.text, let amount = self.amount.FieldView.TextField.text , number != "" && amount.returnAmount() >= 1{
-             self.setAnimate(msg: "Please wait")
-            self.viewModel?.sendMoney(amount: "\(amount.returnAmount() ?? 0)",customerId: UserLoginData.shared.id ?? 0, phone: number)
+
+            self.data = WalletTransferData(senderNum: UserLoginData.shared.phoneNumber ?? "", senderName: "\(UserLoginData.shared.firstName ?? "") \(UserLoginData.shared.lastName ?? "")", recipientNum: number, recipientName: "", amount: amount)
+            
+            self.viewModel?.sendMoneyDetails(amount: amount, customerId: UserLoginData.shared.id ?? 0, phone: number)
+            
         }else {
             let phone = self.phoneNumber.FieldView.TextField.text
             self.showAlert(buttonOK: "Ok", message: phone == "" ? "Phone number is invalid." : "Please enter your desired amount for trasfer.", actionOk: nil, completionHandler: nil)

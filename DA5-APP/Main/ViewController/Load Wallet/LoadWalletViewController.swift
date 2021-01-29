@@ -110,7 +110,7 @@ extension LoadWalletViewController: UICollectionViewDelegateFlowLayout, UICollec
 
 extension LoadWalletViewController : LoadWalletCellDelegate {
     func onClickItem(cell: LoadWalletCell, index: Int) {
-        print("CLICKING")
+        print("CLICKING : \(type)")
         self.coordinator?.showCashInViewController(data: self.data?[index],type: type)
     }
     

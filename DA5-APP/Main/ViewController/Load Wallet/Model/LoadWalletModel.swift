@@ -10,13 +10,14 @@ import UIKit
 
 class LoadWalletModel {
     let jsonUrlString = "\(ApiConfig().getUrl())"
-    let eloadProducts = "/partner/cashIn"
-    let eloadSubmit = "/partner/cashOut"
+    let loadWalletCashIn = "/partner/cashIn"
+    let loadWalletCashOut = "/partner/cashOut"
+    let walletTransferDetails = "/customer/checkWalletTransfer"
     let walletTransfer = "/customer/sendMoney"
     var token: String? = ""
    
     func cashIn(param: [String:Any],completionHandler: @escaping (SubmitCashInOutData?,StatusList?) -> ()) {
-        NetworkService<SubmitCashInOutData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + eloadProducts) { (data,status) in
+        NetworkService<SubmitCashInOutData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + loadWalletCashIn) { (data,status) in
                 if let dataReceived = data {
                         completionHandler(dataReceived,nil)
                         return
@@ -25,7 +26,7 @@ class LoadWalletModel {
         }
     }
     func cashOut(param: [String:Any],completionHandler: @escaping (SubmitCashInOutData?,StatusList?) -> ()) {
-          NetworkService<SubmitCashInOutData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + eloadProducts) { (data,status) in
+          NetworkService<SubmitCashInOutData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + loadWalletCashOut) { (data,status) in
                   if let dataReceived = data {
                           completionHandler(dataReceived,nil)
                           return
@@ -33,6 +34,17 @@ class LoadWalletModel {
                   completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
           }
     }
+    
+    func sendMoneyDetails(param: [String:Any],completionHandler: @escaping (WalletTransferDetailsData?,StatusList?) -> ()) {
+          NetworkService<WalletTransferDetailsData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + walletTransferDetails) { (data,status) in
+                  if let dataReceived = data {
+                          completionHandler(dataReceived,nil)
+                          return
+                  }
+                  completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
+          }
+    }
+    
     func sendMoney(param: [String:Any],completionHandler: @escaping (ReturReferenceData?,StatusList?) -> ()) {
           NetworkService<ReturReferenceData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + walletTransfer) { (data,status) in
                   if let dataReceived = data {

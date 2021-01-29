@@ -60,6 +60,7 @@ class MainCoordinator :  NSObject, Coordinator {
             UserLoginData.shared.middleName = data.middleName
             UserLoginData.shared.lastName = data.lastName
             UserLoginData.shared.image = data.image
+            UserLoginData.shared.phoneNumber = data.phone
             saveCustomerToLocal(data: user)
         }
     }
@@ -82,6 +83,7 @@ class MainCoordinator :  NSObject, Coordinator {
         UserLoginData.shared.middleName = nil
         UserLoginData.shared.lastName = nil
         UserLoginData.shared.image = nil
+        UserLoginData.shared.phoneNumber = nil
     }
     
     func removeCustomerLocalData() {
@@ -355,6 +357,16 @@ extension MainCoordinator {
     
     func showWalletTransferViewController() {
          let vc = WalletTransferViewController()
+         vc.coordinator = self
+         vc.viewModel = LoadWalletViewModel()
+         vc.viewModel?.model = LoadWalletModel()
+         vc.viewModel?.model?.token = self.token
+         navigationController.setNavigationBarHidden(false, animated: false)
+         navigationController.pushViewController(vc, animated: false)
+    }
+    
+    func showWalletTransferDetailsViewController(data: WalletTransferData?) {
+        let vc = WalletTransferDetailsViewController(data: data)
          vc.coordinator = self
          vc.viewModel = LoadWalletViewModel()
          vc.viewModel?.model = LoadWalletModel()

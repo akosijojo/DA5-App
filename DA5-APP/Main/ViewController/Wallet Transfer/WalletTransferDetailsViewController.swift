@@ -1,44 +1,70 @@
 //
-//  ELoadProductDetailsViewController.swift
+//  WalletTransferDetailsViewController.swift
 //  DA5-APP
 //
-//  Created by Jojo on 1/6/21.
+//  Created by Jojo on 1/29/21.
 //  Copyright © 2021 OA. All rights reserved.
 //
 
 import UIKit
 
-class ELoadProductDetailsViewController: BaseHomeViewControler {
+struct WalletTransferData {
+    var senderNum : String
+    var senderName : String
+    var recipientNum : String
+    var recipientName : String
+    var amount : String
+}
+
+class WalletTransferDetailsViewController: BaseHomeViewControler {
     
-    var viewModel : ELoadViewModel?
+    var viewModel : LoadWalletViewModel?
     
-    var data : ELoadProducts?
-    
-    var phone : String?
+    var data : WalletTransferData?
     
     lazy var headerView : CustomHeaderView = {
        let v = CustomHeaderView()
        return v
     }()
     
-    lazy var productLbl : UILabel = {
+    lazy var senderLbl : UILabel = {
        let v = UILabel()
-        v.text = "Load Product"
+        v.text = "Sender"
         v.font = UIFont(name: Fonts.regular, size: 12)
        return v
     }()
     
-    lazy var productName : UILabel = {
+    lazy var senderNum : UILabel = {
        let v = UILabel()
        v.font = UIFont(name: Fonts.bold, size: 16)
        v.numberOfLines = 0
        return v
     }()
     
-    lazy var productCode : UILabel = {
+    lazy var senderName : UILabel = {
        let v = UILabel()
        v.font = UIFont(name: Fonts.regular, size: 12)
        return v
+    }()
+    
+    lazy var recipientLbl : UILabel = {
+      let v = UILabel()
+       v.text = "Recipient"
+       v.font = UIFont(name: Fonts.regular, size: 12)
+      return v
+    }()
+
+    lazy var recipientNum : UILabel = {
+      let v = UILabel()
+      v.font = UIFont(name: Fonts.bold, size: 16)
+      v.numberOfLines = 0
+      return v
+    }()
+
+    lazy var recipientName : UILabel = {
+      let v = UILabel()
+      v.font = UIFont(name: Fonts.regular, size: 12)
+      return v
     }()
     
     lazy var amountLbl : UILabel = {
@@ -50,25 +76,11 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
     
     lazy var amount : UILabel = {
        let v = UILabel()
-       v.font = UIFont(name: Fonts.regular, size: 12)
+       v.font = UIFont(name: Fonts.medium, size: 16)
         v.text = "PHP 0.00"
        return v
     }()
     
-    lazy var numberLbl : UILabel = {
-       let v = UILabel()
-        v.text = "Phone Number"
-        v.font = UIFont(name: Fonts.regular, size: 12)
-       return v
-    }()
-    
-    lazy var number : UILabel = {
-       let v = UILabel()
-       v.font = UIFont(name: Fonts.regular, size: 16)
-        v.text = "+63"
-       return v
-    }()
-  
     lazy var cancelBtn : UIButton = {
          let v = UIButton()
          v.layer.cornerRadius = 5
@@ -99,18 +111,18 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
         setUpData()
     }
     
-    init(data: ELoadProducts?,phone: String?) {
+    init(data: WalletTransferData?) {
         super.init(nibName: nil, bundle: nil)
-        self.headerView.title.text = "Buy load confirmation"
-        self.headerView.desc.text = "Please ensure that the mobile number is correct"
+        self.headerView.title.text = "Wallet transfer confirmation"
+        self.headerView.desc.text = "Please ensure that the recipient and amount is correct"
         self.data = data
-        self.phone = phone
         
         //MARK: - set up values
-        self.productName.text = data?.productName
-        self.productCode.text = "\(data?.network ?? "") \(data?.productCode ?? "")"
-        self.number.text = "+63\(phone ?? "")"
-        self.amount.text = data?.minAmount
+        self.senderNum.text = "+63\(data?.senderNum ?? "")"
+        self.senderName.text = data?.senderName
+        self.recipientNum.text = "+63\(data?.recipientNum ?? "")"
+        self.recipientName.text = data?.recipientName
+        self.amount.text = "PHP \(data?.amount ?? "")"
     }
     
     required init?(coder: NSCoder) {
@@ -123,28 +135,21 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
     }
     
     override func setUpData() {
-       self.viewModel?.onSuccessDataRequest = { [weak self] data in
-           DispatchQueue.main.async {
-               self?.stopAnimating()
-           }
-       }
+        self.viewModel?.onSuccessRequest = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong.", actionOk: { (action) in
+                    self?.coordinator?.showParentView()
+                }, completionHandler: nil)
+            }
+        }
        
-       self.viewModel?.onSuccessRequest = { [weak self] data in
-           DispatchQueue.main.async {
-            self?.stopAnimating()
-            self?.showAlert(buttonOK: "Ok", message:  data?.message ?? "Something went wrong", actionOk: { (action) in
-                self?.coordinator?.showParentView()
-            }, completionHandler: nil)
-           
-           }
-       }
-      
-       self.viewModel?.onErrorHandling = { [weak self] status in
-           DispatchQueue.main.async {
-               self?.stopAnimating()
-               self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
-           }
-       }
+        self.viewModel?.onErrorHandling = { [weak self] status in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
+            }
+        }
    }
        
     override func setUpView() {
@@ -156,38 +161,58 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
             make.height.equalTo(80)
         }
 
-        view.addSubview(productLbl)
-        productLbl.snp.makeConstraints { (make) in
+        view.addSubview(senderLbl)
+        senderLbl.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom).offset(80)
             make.leading.equalTo(view).offset(20)
             make.width.equalTo(view).multipliedBy(0.3)
             make.height.equalTo(20)
         }
-
-        let width : CGFloat = (view.frame.width * 0.3 + 50) - view.frame.width
-        let height : CGFloat = data?.productName?.heightForView(font: productName.font, width: width) ?? 20
         
-        view.addSubview(productName)
-        productName.snp.makeConstraints { (make) in
+        view.addSubview(senderNum)
+        senderNum.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom).offset(80)
-            make.leading.equalTo(productLbl.snp.trailing).offset(10)
-            make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(height > 20 ? height : 20)
-        }
-        
-        print("HEEEE \(width) \(height)  === \(view.frame.width)")
-        
-        view.addSubview(productCode)
-        productCode.snp.makeConstraints { (make) in
-            make.top.equalTo(productName.snp.bottom)
-            make.leading.equalTo(productLbl.snp.trailing).offset(10)
+            make.leading.equalTo(senderLbl.snp.trailing).offset(10)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(20)
         }
         
+        view.addSubview(senderName)
+        senderName.snp.makeConstraints { (make) in
+           make.top.equalTo(senderNum.snp.bottom)
+           make.leading.equalTo(senderLbl.snp.trailing).offset(10)
+           make.trailing.equalTo(view).offset(-20)
+           make.height.equalTo(20)
+        }
+        
+        view.addSubview(recipientLbl)
+        recipientLbl.snp.makeConstraints { (make) in
+            make.top.equalTo(senderLbl.snp.bottom).offset(30)
+            make.leading.equalTo(view).offset(20)
+            make.width.equalTo(view).multipliedBy(0.3)
+            make.height.equalTo(20)
+        }
+        
+        view.addSubview(recipientNum)
+        recipientNum.snp.makeConstraints { (make) in
+            make.top.equalTo(senderName.snp.bottom).offset(10)
+            make.leading.equalTo(recipientLbl.snp.trailing).offset(10)
+            make.trailing.equalTo(view).offset(-20)
+            make.height.equalTo(20)
+        }
+        
+        view.addSubview(recipientName)
+        recipientName.snp.makeConstraints { (make) in
+           make.top.equalTo(recipientNum.snp.bottom)
+           make.leading.equalTo(recipientLbl.snp.trailing).offset(10)
+           make.trailing.equalTo(view).offset(-20)
+           make.height.equalTo(20)
+        }
+        
+
         view.addSubview(amountLbl)
         amountLbl.snp.makeConstraints { (make) in
-            make.top.equalTo(productLbl.snp.bottom).offset(height)
+            make.top.equalTo(recipientLbl.snp.bottom).offset(30)
             make.leading.equalTo(view).offset(20)
             make.width.equalTo(view).multipliedBy(0.3)
             make.height.equalTo(40)
@@ -195,24 +220,8 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
 
         view.addSubview(amount)
         amount.snp.makeConstraints { (make) in
-            make.top.equalTo(productCode.snp.bottom).offset(0)
+            make.top.equalTo(recipientName.snp.bottom).offset(10)
             make.leading.equalTo(amountLbl.snp.trailing).offset(10)
-            make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(40)
-        }
-        
-        view.addSubview(numberLbl)
-        numberLbl.snp.makeConstraints { (make) in
-            make.top.equalTo(amountLbl.snp.bottom).offset(0)
-            make.leading.equalTo(view).offset(20)
-            make.width.equalTo(view).multipliedBy(0.3)
-            make.height.equalTo(40)
-        }
-
-        view.addSubview(number)
-        number.snp.makeConstraints { (make) in
-            make.top.equalTo(amount.snp.bottom).offset(0)
-            make.leading.equalTo(numberLbl.snp.trailing).offset(10)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(40)
         }
@@ -239,12 +248,8 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
     }
     
     @objc func onClickSubmit() {
-        print("Submitting")
-        if let phone = self.number.text {
-            self.setAnimate(msg: "Please wait...")
-            self.viewModel?.submitEloadProcess(phoneNumber: phone, data: self.data, token: self.coordinator?.token)
-        }
-      
+        self.setAnimate(msg: "Please wait")
+        self.viewModel?.sendMoney(amount: data?.amount ?? "" ,customerId: UserLoginData.shared.id ?? 0, phone: data?.recipientNum ?? "")
     }
         
 }

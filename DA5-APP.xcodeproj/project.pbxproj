@@ -89,6 +89,8 @@
 		EB7A293E257A4CED00482CDC /* ViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7A293D257A4CED00482CDC /* ViewControllerExtension.swift */; };
 		EB7A2940257DD6A500482CDC /* CustomProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7A293F257DD6A500482CDC /* CustomProgressView.swift */; };
 		EB7A2943257E1BF800482CDC /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7A2942257E1BF800482CDC /* ButtonExtension.swift */; };
+		EB82C32E25C43FBF00C94A04 /* WalletTransferDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB82C32D25C43FBF00C94A04 /* WalletTransferDetailsViewController.swift */; };
+		EB82C33125C46EB600C94A04 /* WalletTransferDetailsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB82C33025C46EB600C94A04 /* WalletTransferDetailsData.swift */; };
 		EB8850DA256B5A3000B0B4CC /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */; };
 		EB8850DD256B790500B0B4CC /* CollectionViewBorderedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */; };
 		EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8850DE256BDD8300B0B4CC /* NewsCell.swift */; };
@@ -235,6 +237,8 @@
 		EB7A293D257A4CED00482CDC /* ViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtension.swift; sourceTree = "<group>"; };
 		EB7A293F257DD6A500482CDC /* CustomProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProgressView.swift; sourceTree = "<group>"; };
 		EB7A2942257E1BF800482CDC /* ButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtension.swift; sourceTree = "<group>"; };
+		EB82C32D25C43FBF00C94A04 /* WalletTransferDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferDetailsViewController.swift; sourceTree = "<group>"; };
+		EB82C33025C46EB600C94A04 /* WalletTransferDetailsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferDetailsData.swift; sourceTree = "<group>"; };
 		EB8850D9256B5A3000B0B4CC /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		EB8850DC256B790500B0B4CC /* CollectionViewBorderedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewBorderedCell.swift; sourceTree = "<group>"; };
 		EB8850DE256BDD8300B0B4CC /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
@@ -415,7 +419,9 @@
 		EB0F43A8258B4379008858B1 /* Wallet Transfer */ = {
 			isa = PBXGroup;
 			children = (
+				EB82C32F25C46EA800C94A04 /* Data */,
 				EB0F43CC25AB3292008858B1 /* WalletTransferViewController.swift */,
+				EB82C32D25C43FBF00C94A04 /* WalletTransferDetailsViewController.swift */,
 			);
 			path = "Wallet Transfer";
 			sourceTree = "<group>";
@@ -738,6 +744,14 @@
 				EB7A2942257E1BF800482CDC /* ButtonExtension.swift */,
 			);
 			path = Button;
+			sourceTree = "<group>";
+		};
+		EB82C32F25C46EA800C94A04 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				EB82C33025C46EB600C94A04 /* WalletTransferDetailsData.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		EB8850E9256CDF8F00B0B4CC /* Side Menu */ = {
@@ -1320,6 +1334,7 @@
 				EB0F43BC25A4A1D9008858B1 /* ELoadProductsViewController.swift in Sources */,
 				EB78E4DF256E077000754B2E /* PrivacyViewController.swift in Sources */,
 				EB3DD6B524F774E500BDBE0C /* BasicInfoCell.swift in Sources */,
+				EB82C33125C46EB600C94A04 /* WalletTransferDetailsData.swift in Sources */,
 				EB3DD6B724F7752400BDBE0C /* BaseCollectionViewCell.swift in Sources */,
 				EBA973F024EC15CF001C09DB /* Fonts.swift in Sources */,
 				EBA973DF24EBB47B001C09DB /* Coordinator.swift in Sources */,
@@ -1336,6 +1351,7 @@
 				EB0F43A2258A59CB008858B1 /* PendingTransactionCollectionViewCell.swift in Sources */,
 				EB78E4E1256E077D00754B2E /* TermsAndConditionsViewController.swift in Sources */,
 				EB92962D25C2570E00287B60 /* PaybillsHorizontalCollectionCell.swift in Sources */,
+				EB82C32E25C43FBF00C94A04 /* WalletTransferDetailsViewController.swift in Sources */,
 				EB77ED0A257FCF6B00D99528 /* UserDefaults.swift in Sources */,
 				EB0F43A4258A5A76008858B1 /* TransactionHistoryCollectionViewCell.swift in Sources */,
 				EB77E643256B552C000479CF /* ServicesCell.swift in Sources */,

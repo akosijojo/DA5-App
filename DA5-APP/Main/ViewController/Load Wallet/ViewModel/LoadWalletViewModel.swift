@@ -10,6 +10,7 @@ import UIKit
 
 class LoadWalletViewModel: NSObject {
     var model : LoadWalletModel?
+    var onSuccessWalletDetailsData: ((WalletDetailsData?) -> Void)?
     var onSuccessDataRequest: ((SubmitCashInOutData?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
     var onErrorHandling : ((StatusList?) -> Void)?
@@ -55,6 +56,27 @@ class LoadWalletViewModel: NSObject {
             "partner_id": partnerId,
         ]
         dataModel.cashOut(param: param, completionHandler: completionHandler)
+    }
+    
+    func sendMoneyDetails(amount: String, customerId: Int, phone: String){
+          guard let dataModel = model else { return }
+                          
+           let completionHandler = { (data : WalletTransferDetailsData?,status: StatusList?) in
+              
+              if let dataReceived = data {
+                self.onSuccessWalletDetailsData?(dataReceived.data)
+                  return
+              }
+              
+              self.onErrorHandling?(status)
+           }
+              
+          let param : [String:String] = [
+              "amount": amount,
+              "customer_id" : "\(customerId)",
+              "phone": phone,
+          ]
+          dataModel.sendMoneyDetails(param: param, completionHandler: completionHandler)
     }
     
     func sendMoney(amount: String, customerId: Int, phone: String){

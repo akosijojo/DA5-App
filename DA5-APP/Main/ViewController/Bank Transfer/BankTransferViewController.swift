@@ -134,7 +134,7 @@ class BankTransferViewController: BaseHomeViewControler {
     override func setUpView() {
         view.addSubview(headerView)
         headerView.snp.makeConstraints { (make) in
-           make.top.equalTo(view).offset(25)
+            make.top.equalTo(view.layoutMarginsGuide.snp.top).offset(25)
            make.leading.equalTo(view).offset(20)
            make.trailing.equalTo(view).offset(-20)
            make.height.equalTo(80)
