@@ -498,9 +498,7 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     func submitAction(cell: IdentificationCollectionViewCell, index: Int, fields: [UITextField], passChecker: Bool, form: RegistrationForm?) {
         self.view.endEditing(true)
         if passChecker {
-            self.showAlert(buttonOK: "Ok", message: "Password does not match.", actionOk: { (act) in
-
-            }, completionHandler: nil)
+            self.showAlert(buttonOK: "Ok", message: "Password does not match.", actionOk: nil, completionHandler: nil)
         }else {
             if showFormError(fields: fields, image: [validId,selfieId]){
                  self.setAnimate(msg: "Please wait..")

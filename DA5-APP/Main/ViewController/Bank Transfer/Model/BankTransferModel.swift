@@ -24,8 +24,8 @@ class BankTransferModel {
          }
      }
     
-    func submitBankTransfer(param: [String:Any],token: String? ,completionHandler: @escaping (StatusList?,StatusList?) -> ()) {
-           NetworkService<StatusList>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + submitTransfer) { (data,status) in
+    func submitBankTransfer(param: [String:Any],token: String? ,completionHandler: @escaping (BankTransactionDetails?,StatusList?) -> ()) {
+           NetworkService<BankTransactionDetails>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + submitTransfer) { (data,status) in
                    if let dataReceived = data {
                            completionHandler(dataReceived,nil)
                            return

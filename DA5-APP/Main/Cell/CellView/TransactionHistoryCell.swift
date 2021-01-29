@@ -69,6 +69,8 @@ class TransactionHistoryCell: UICollectionViewCell {
                     self.priceLbl.text = "PHP \(instapay.amount ?? "")"
                     self.timeLbl.text = instapay.tranRequestDate?.formatDate(format: "hh:mm:ss a")
                     self.dateLbl.text = instapay.tranRequestDate?.formatDate()
+                    self.bankFee.text = "PHP 25.00"
+                    self.bankLbl.text = "Bank Convenience Fee"
                 }
             }
             //MARK: - Check if instapay or wallet transfer

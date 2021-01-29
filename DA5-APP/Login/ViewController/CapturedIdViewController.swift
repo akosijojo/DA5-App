@@ -47,7 +47,6 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         self.selectImage()
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,43 +91,36 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
     }
     
     @objc func selectImage() {
-//        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: {(action: UIAlertAction) in
-//MARK: -show this capture photos from camera 
-//        if UIImagePickerController.isSourceTypeAvailable(.camera){
-//                self.getImageFrom(sourceType: .camera)
-               if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
-                    self.getImageFrom(sourceType: .photoLibrary)
-               }else{
-                    let alert = self.alert("Ok", "Camera is not Available", "", action: { (action) in
-                  
-                    })
-                    self.present(alert, animated: true, completion: nil)
-               }
-            
-//        }))
-//        alert.addAction(UIAlertAction(title: "Photo Album", style: .default, handler: {(action: UIAlertAction) in
-//            self.getImageFrom(sourceType: .photoLibrary)
-//        }))
-//        alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
-//        self.present(alert, animated: true, completion: nil)
-        
-        
+        if UIImagePickerController.isSourceTypeAvailable(.camera){//.camera //.photoLibrary
+            let vc = UIImagePickerController()
+            vc.sourceType = .camera
+//            vc.sourceType = .photoLibrary
+//            vc.allowsEditing = true
+            vc.delegate = self
+//            vc.showsCameraControls = true
+            self.present(vc, animated: true)
+        }else{
+            let alert = self.alert("Ok", "Camera is not Available", "", action: { (action) in
+          
+            })
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
-    func getImageFrom(sourceType: UIImagePickerController.SourceType) {
-        if UIImagePickerController.isSourceTypeAvailable(sourceType){
-             let vc = UIImagePickerController()
-                if sourceType == .camera {
-                    vc.allowsEditing = true
-                    vc.showsCameraControls = true
-                }
-             vc.sourceType = sourceType
-             vc.delegate = self
-             self.present(vc, animated: true)
-         }
-    }
-    
+//    func getImageFrom(sourceType: UIImagePickerController.SourceType) {
+//        if UIImagePickerController.isSourceTypeAvailable(sourceType){
+//             let vc = UIImagePickerController()
+//                if sourceType == .camera {
+//                    vc.allowsEditing = true
+//                    vc.showsCameraControls = true
+//                }
+//                
+//             vc.sourceType = sourceType
+//             vc.delegate = self
+//             self.present(vc, animated: true)
+//         }
+//    }
+//    
     @objc func returnImageSelected() {
         
         if let vc = vc {

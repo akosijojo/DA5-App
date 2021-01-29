@@ -437,8 +437,8 @@ extension MainCoordinator {
        navigationController.pushViewController(vc, animated: false)
     }
     
-    func showPaybillsSelectedViewController(data: String?) {
-        let vc = PaybillsSelectedItemViewController(data: data ?? "")
+    func showPaybillsSelectedViewController(data: BillerData) {
+        let vc = PaybillsSelectedItemViewController(data: data )
        vc.coordinator = self
        vc.viewModel = PaybillsViewModel()
        vc.viewModel?.model = PaybillsModel()

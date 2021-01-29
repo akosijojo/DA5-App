@@ -19,42 +19,52 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
         return v
     }()
 
-    lazy var policyNumber: CustomBasicFormInput = {
-        let v = CustomBasicFormInput()
-        v.Label.text = "Policy Number"
-        v.Label.font = UIFont(name: Fonts.regular, size: 12)
-        v.TextField.keyboardType = .numberPad
-        v.TextField.tag = 1
-        v.TextField.placeholder = ""
-        v.TextField.delegate = self
-        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
+//    lazy var policyNumber: CustomBasicFormInput = {
+//        let v = CustomBasicFormInput()
+//        v.Label.text = "Policy Number"
+//        v.Label.font = UIFont(name: Fonts.regular, size: 12)
+//        v.TextField.keyboardType = .numberPad
+//        v.TextField.tag = 1
+//        v.TextField.placeholder = ""
+//        v.TextField.delegate = self
+//        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
+//        return v
+//    }()
+//
+//    lazy var amount: CustomBasicFormInput = {
+//        let v = CustomBasicFormInput()
+//        v.Label.text = "Amount"
+//        v.Label.font = UIFont(name: Fonts.regular, size: 12)
+//        v.TextField.keyboardType = .decimalPad
+//        v.TextField.tag = 2
+//        v.TextField.placeholder = ""
+//        v.TextField.delegate = self
+//        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
+//        return v
+//    }()
+//
+//     lazy var date: CustomBasicFormInput = {
+//         let v = CustomBasicFormInput()
+//         v.Label.text = "Due Date"
+//         v.Label.font = UIFont(name: Fonts.regular, size: 12)
+//         v.TextField.keyboardType = .decimalPad
+//         v.TextField.tag = 3
+//         v.TextField.placeholder = ""
+//         v.TextField.delegate = self
+//         v.TextField.font = UIFont(name: Fonts.regular, size: 12)
+//         return v
+//     }()
+
+    let cellId = "itemCellId"
+    
+    lazy var collectionView : UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let v = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        v.bounces = false
+        v.showsHorizontalScrollIndicator = false
+        v.backgroundColor = ColorConfig().white
         return v
     }()
-
-    lazy var amount: CustomBasicFormInput = {
-        let v = CustomBasicFormInput()
-        v.Label.text = "Amount"
-        v.Label.font = UIFont(name: Fonts.regular, size: 12)
-        v.TextField.keyboardType = .decimalPad
-        v.TextField.tag = 2
-        v.TextField.placeholder = ""
-        v.TextField.delegate = self
-        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
-        return v
-    }()
-
-     lazy var date: CustomBasicFormInput = {
-         let v = CustomBasicFormInput()
-         v.Label.text = "Due Date"
-         v.Label.font = UIFont(name: Fonts.regular, size: 12)
-         v.TextField.keyboardType = .decimalPad
-         v.TextField.tag = 3
-         v.TextField.placeholder = ""
-         v.TextField.delegate = self
-         v.TextField.font = UIFont(name: Fonts.regular, size: 12)
-         return v
-     }()
-
 
     lazy var submitBtn : UIButton = {
       let v = UIButton()
@@ -66,6 +76,12 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
       return v
     }()
     
+    var data : BillerData? {
+        didSet {
+//            self.collectionView.reloadData()
+            print("GET DATA : \(data)")
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         hidesKeyboardOnTapArround()
@@ -73,11 +89,13 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
         setUpData()
     }
     
-    init(data: String) {
+    init(data: BillerData) {
         super.init(nibName: nil, bundle: nil)
         // set up initial data to view
-        self.headerView.title.text = data
-        self.headerView.desc.text = data
+        print("DATA GET : \(data)")
+        self.data = data
+        self.headerView.title.text = data.name
+        self.headerView.desc.text = data.type
     }
     
     required init?(coder: NSCoder) {
@@ -130,45 +148,45 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
 //          make.height.equalTo(20)
 //        }
         
-        view.addSubview(policyNumber)
-        policyNumber.snp.makeConstraints { (make) in
-            make.top.equalTo(headerView.snp.bottom).offset(10)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(70)
-        }
-//
-//        view.addSubview(amountLbl)
-//        amountLbl.snp.makeConstraints { (make) in
+//        view.addSubview(policyNumber)
+//        policyNumber.snp.makeConstraints { (make) in
+//            make.top.equalTo(headerView.snp.bottom).offset(10)
+//            make.leading.equalTo(view).offset(20)
+//            make.trailing.equalTo(view).offset(-20)
+//            make.height.equalTo(70)
+//        }
+////
+////        view.addSubview(amountLbl)
+////        amountLbl.snp.makeConstraints { (make) in
+////            make.top.equalTo(policyNumber.snp.bottom).offset(5)
+////            make.leading.equalTo(view).offset(20)
+////            make.trailing.equalTo(view).offset(-20)
+////            make.height.equalTo(20)
+////        }
+////
+//        view.addSubview(amount)
+//        amount.snp.makeConstraints { (make) in
 //            make.top.equalTo(policyNumber.snp.bottom).offset(5)
 //            make.leading.equalTo(view).offset(20)
 //            make.trailing.equalTo(view).offset(-20)
-//            make.height.equalTo(20)
+//            make.height.equalTo(70)
 //        }
 //
-        view.addSubview(amount)
-        amount.snp.makeConstraints { (make) in
-            make.top.equalTo(policyNumber.snp.bottom).offset(5)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(70)
-        }
-        
-//        view.addSubview(dateLbl)
-//       dateLbl.snp.makeConstraints { (make) in
+////        view.addSubview(dateLbl)
+////       dateLbl.snp.makeConstraints { (make) in
+////           make.top.equalTo(amount.snp.bottom).offset(5)
+////           make.leading.equalTo(view).offset(20)
+////           make.trailing.equalTo(view).offset(-20)
+////           make.height.equalTo(20)
+////       }
+//
+//       view.addSubview(date)
+//       date.snp.makeConstraints { (make) in
 //           make.top.equalTo(amount.snp.bottom).offset(5)
 //           make.leading.equalTo(view).offset(20)
 //           make.trailing.equalTo(view).offset(-20)
-//           make.height.equalTo(20)
+//           make.height.equalTo(70)
 //       }
-       
-       view.addSubview(date)
-       date.snp.makeConstraints { (make) in
-           make.top.equalTo(amount.snp.bottom).offset(5)
-           make.leading.equalTo(view).offset(20)
-           make.trailing.equalTo(view).offset(-20)
-           make.height.equalTo(70)
-       }
 
         
         view.addSubview(submitBtn)

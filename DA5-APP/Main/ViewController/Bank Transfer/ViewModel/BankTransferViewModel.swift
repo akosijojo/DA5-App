@@ -33,10 +33,10 @@ class BankTransferViewModel: NSObject {
     func submitBankTransfer(data: TransferDetails?,token: String?) {
        guard let dataModel = model else { return }
                   
-       let completionHandler = { (data : StatusList?,status: StatusList?) in
+       let completionHandler = { (data : BankTransactionDetails?,status: StatusList?) in
               
-           if let dataReceived = data {
-               self.onSuccessRequest?(dataReceived)
+           if let _ = data {
+               self.onSuccessRequest?(StatusList(status: 1, title: "", message: "Transaction successful", tag: 1))
                return
            }
               
@@ -55,7 +55,6 @@ class BankTransferViewModel: NSObject {
             "Bank"  : data?.bank?.code ?? "",
             "BankName"  : data?.bank?.bank ?? "" ,
         ]
-        
         
         dataModel.submitBankTransfer(param:param,token: token, completionHandler: completionHandler)
    }

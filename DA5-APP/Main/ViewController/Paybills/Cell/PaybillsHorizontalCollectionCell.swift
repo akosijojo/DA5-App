@@ -9,7 +9,7 @@
 import UIKit
 
 protocol PaybillsHorizontalCollectionCellDelegate: class {
-    func onClickShowView(cell: PaybillsHorizontalCollectionCell, index: Int)
+    func onClickShowView(cell: PaybillsHorizontalCollectionCell, data: CategoryData)
 }
 
 class PaybillsHorizontalCollectionCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
@@ -22,15 +22,16 @@ class PaybillsHorizontalCollectionCell: UICollectionViewCell, UICollectionViewDe
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? PaybillsCategoryCell else {
             return UICollectionViewCell()
         }
-        cell.data = self.data?[indexPath.item].rawValue
+        cell.data = self.data?[indexPath.item]
         cell.index = indexPath.item
         cell.delegate = self
+        cell.selectedItem(isActive: self.data?[indexPath.item] == activeCategory ? true : false)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = self.data?[indexPath.item].rawValue.widthForView(font: UIFont(name: Fonts.medium, size: 16)!, width: collectionView.frame.width) ?? 0
-        return CGSize(width: width + 20, height: collectionView.frame.height)
+        let width = self.data?[indexPath.item].rawValue.widthForView(font: UIFont(name: Fonts.medium, size: 14)!, width: collectionView.frame.width) ?? 0
+        return CGSize(width: width + 22, height: collectionView.frame.height) // + 2 offset
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -48,6 +49,8 @@ class PaybillsHorizontalCollectionCell: UICollectionViewCell, UICollectionViewDe
             self.collectionView.reloadData()
         }
     }
+    
+    var activeCategory : CategoryData = .insurance
     
     lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -84,10 +87,10 @@ class PaybillsHorizontalCollectionCell: UICollectionViewCell, UICollectionViewDe
 }
 
 extension PaybillsHorizontalCollectionCell: PaybillsCategoryCellDelegate {
-    func onClick(cell: PaybillsCategoryCell, index: Int?) {
-        if let item = index {
-            self.delegate?.onClickShowView(cell: self, index: item)
-            cell.selectedItem(isActive: true)
+    func onClick(cell: PaybillsCategoryCell, data: CategoryData?) {
+        if let d = data {
+            self.delegate?.onClickShowView(cell: self, data: d)
+//            cell.selectedItem(isActive: true)
         }
     }
     

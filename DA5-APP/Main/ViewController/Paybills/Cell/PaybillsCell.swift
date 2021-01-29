@@ -9,19 +9,19 @@
 import UIKit
 
 protocol PaybillsCellDelegate : class {
-    func onClick(cell: PaybillsCell, data: String?)
+    func onClick(cell: PaybillsCell, data: BillerData?)
 }
 class PaybillsCell : UICollectionViewCell {
 
     var index : Int = 0
     var delegate : PaybillsCellDelegate?
     
-     var data : String? {
+     var data : BillerData? {
         didSet {
-            self.imageView.image = UIImage(named: "app_logo")
-            self.name.text = data
-            self.title.text = data
-            self.price.text = data
+            self.imageView.downloaded(from: data?.logo ?? "", contentMode: .scaleAspectFit)
+            self.title.text = data?.name
+            self.name.text = data?.type
+            self.price.text = "Fee \(data?.fee ?? "0.00")"
             self.updateHeight()
         }
     }
@@ -32,19 +32,20 @@ class PaybillsCell : UICollectionViewCell {
         v.contentMode = .scaleAspectFit
         v.layer.masksToBounds = true
         v.clipsToBounds = true
+        v.image = nil
         return v
     }()
     
     lazy var title : UILabel = {
        let v = UILabel()
        v.font = UIFont(name: Fonts.regular, size: 12)
-       v.textColor = ColorConfig().lightGray
        return v
     }()
     
     lazy var name : UILabel = {
        let v = UILabel()
        v.font = UIFont(name: Fonts.regular, size: 12)
+       v.textColor = ColorConfig().lightGray
         v.numberOfLines = 0
        return v
     }()
@@ -52,7 +53,6 @@ class PaybillsCell : UICollectionViewCell {
     lazy var price : UILabel = {
        let v = UILabel()
        v.font = UIFont(name: Fonts.regular, size: 12)
-       v.textColor = ColorConfig().lightBlue
         v.textAlignment = .right
        return v
     }()
@@ -87,7 +87,7 @@ class PaybillsCell : UICollectionViewCell {
         name.snp.makeConstraints { (make) in
             make.top.equalTo(title.snp.bottom)
             make.height.equalTo(20)
-            make.width.equalTo(self).multipliedBy(0.4)
+            make.width.equalTo(self).multipliedBy(0.5)
             make.leading.equalTo(imageView.snp.trailing).offset(10)
         }
         
@@ -106,7 +106,7 @@ class PaybillsCell : UICollectionViewCell {
     
     func updateHeight() {
         
-        let height : CGFloat = data?.heightForView(font: name.font, width: (self.frame.width * 0.4 ) - 10) ?? 20
+        let height : CGFloat = data?.type.heightForView(font: name.font, width: (self.frame.width * 0.4 ) - 10) ?? 20
         
         name.snp.remakeConstraints { (make) in
             make.top.equalTo(title.snp.bottom)

@@ -16,6 +16,8 @@ class PaybillsViewController: BaseHomeViewControler {
     
       var viewModel : PaybillsViewModel?
       
+      var activeCategory : CategoryData = .insurance
+    
       var categories : [CategoryData]? {
          didSet {
             print("CATEGORY : \(self.categories?[1].rawValue)")
@@ -24,9 +26,15 @@ class PaybillsViewController: BaseHomeViewControler {
 
       var data : PaybillsData? {
           didSet {
-              self.collectionView.reloadData()
+                self.dataFiltered = self.filterData(from: self.activeCategory, data: self.data?.billers)
           }
       }
+    
+     var dataFiltered : [BillerData]? {
+         didSet {
+            self.collectionView.reloadData()
+         }
+     }
     
       lazy var collectionView : UICollectionView = {
           let layout = UICollectionViewFlowLayout()
@@ -60,6 +68,8 @@ class PaybillsViewController: BaseHomeViewControler {
             DispatchQueue.main.async {
                 self?.stopAnimating()
                 self?.data = data
+                self?.categories = [CategoryData.insurance,CategoryData.government ,CategoryData.electricity ,CategoryData.utilities,CategoryData.others ,CategoryData.cable
+                ,CategoryData.water ,CategoryData.telecom ,CategoryData.airlines ,CategoryData.sssContribution ,CategoryData.mobileLoad,CategoryData.realEstate, CategoryData.onlineShopping ]
             }
         }
     
@@ -101,7 +111,7 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
         if section == 0{
             return 1
         }
-        return self.data?.billers.count ?? 0
+        return self.dataFiltered?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -109,15 +119,17 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as? PaybillsHorizontalCollectionCell else {
                 return UICollectionViewCell()
             }
-            cell.data = [CategoryData.airlines, CategoryData.cable ,CategoryData.electricity,CategoryData.government ,CategoryData.insurance ,CategoryData.mobileLoad,CategoryData.onlineShopping ,CategoryData.others
-                ,CategoryData.realEstate ,CategoryData.sssContribution ,CategoryData.telecom ,CategoryData.utilities ,CategoryData.water]
+            cell.data = self.categories
             cell.delegate = self
+            cell.activeCategory = self.activeCategory
+            
             return cell
         }else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: itemCellId, for: indexPath) as? PaybillsCell else {
                 return UICollectionViewCell()
             }
-            cell.data = "Sample ITEM ON CELLL AWDWADAWDAWDWDAD"
+            cell.imageView.image = nil
+            cell.data = self.dataFiltered?[indexPath.item]
             cell.delegate = self
             cell.index = indexPath.item
             return cell
@@ -127,7 +139,7 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("SECTION : \(indexPath.section)")
         if indexPath.section == 0 {
-            return CGSize(width: collectionView.frame.width, height: 40)
+            return CGSize(width: collectionView.frame.width, height: 35) 
         }
         return CGSize(width: collectionView.frame.width - 40 , height: 80)
     }
@@ -142,15 +154,31 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
 
 //
 extension PaybillsViewController : PaybillsHorizontalCollectionCellDelegate, PaybillsCellDelegate {
-    func onClickShowView(cell: PaybillsHorizontalCollectionCell, index: Int) {
+    func onClickShowView(cell: PaybillsHorizontalCollectionCell, data: CategoryData) {
         //MARK: change the data to reload collection
 //        self.data = self.categories[index].data
         print("SELECTING CATEGORY")
-        self.collectionView.reloadData()
+        self.activeCategory = data
+        self.dataFiltered = self.filterData(from: data, data: self.data?.billers)
+        
     }
     
-    func onClick(cell: PaybillsCell, data: String?) {
-        self.coordinator?.showPaybillsSelectedViewController(data: data)
+    func onClick(cell: PaybillsCell, data: BillerData?) {
+        if let d = data {
+            self.coordinator?.showPaybillsSelectedViewController(data: d)
+        }
+    }
+    
+    func filterData(from: CategoryData, data: [BillerData]?) -> [BillerData] {
+        var dataFiltered : [BillerData] = []
+        if let bData = data {
+            for item in bData {
+                 if  item.category == from {
+                    dataFiltered.append(item)
+                }
+            }
+        }
+        return dataFiltered
     }
         
 
