@@ -23,6 +23,8 @@ class MainCoordinator :  NSObject, Coordinator {
     var showPinOnChangeAppState : Bool = false
     
     var token : String? = ""
+    
+    var refreshToken : String? = ""
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -60,7 +62,6 @@ class MainCoordinator :  NSObject, Coordinator {
             UserLoginData.shared.image = data.image
             saveCustomerToLocal(data: user)
         }
-        
     }
     
     func saveCustomerToLocal(data: Customer?) {
@@ -88,10 +89,15 @@ class MainCoordinator :  NSObject, Coordinator {
         self.usersDataLocal = nil
     }
     
+    func removeRefreshTokenLocalData() {
+        UserDefaults.standard.removeObject(forKey: AppConfig().refreshTokenLocalKey)
+    }
+    
     func logInCoordinator(didLogout: Bool? = nil) {
         if let _ = didLogout {
             self.removeCustomerLocalData()
             self.removeUserLogin()
+            self.removeRefreshTokenLocalData()
         }
         
         if self.navigationController.viewControllers.count > 0 {
@@ -118,11 +124,20 @@ class MainCoordinator :  NSObject, Coordinator {
        navigationController.pushViewController(vc, animated: false)
     }
 
-    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false, forgotMpin: Bool? = nil) {
+    func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false, forgotMpin: Bool? = nil,refreshToken : String? = nil) {
         if !fromBackground {
             print("!FROM BACKGROUND ")
             self.setUpUserLogin(user: customerData)
         }
+        
+        //MARK: - Save Refresh token used in logout
+        if let refToken = refreshToken {
+            print("SAVING REFRESH TOKEN ")
+            let rToken = RefreshTokenLocal(refreshToken: refToken)
+            rToken.saveRefreshTokenLocal()
+        }
+        
+        
         let vc = PinViewController()
         vc.coordinator = self
         vc.viewModel = LoginViewModel()

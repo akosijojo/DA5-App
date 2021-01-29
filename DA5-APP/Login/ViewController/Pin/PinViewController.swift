@@ -115,12 +115,15 @@ class PinViewController: BaseViewControler {
        }
        
        if isChecking ?? false {
-            self.viewModel?.onSuccessGettingList = { [weak self] res in
+        self.secondaryLabel.text = "Please enter your MPIN."
+            self.viewModel?.onSuccessGettingList = { [weak self] res, rtoken in
                   DispatchQueue.main.async {
                       self?.stopAnimating()
                       //MARK: - UPDATE LOCAL DATA
                       let updateLocal = res?.convertToLocalData()
                       updateLocal?.saveCustomerToLocal()
+                      let token = RefreshTokenLocal(refreshToken: rtoken)
+                      token.saveRefreshTokenLocal()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self?.coordinator?.homeCoordinator()
                         }
@@ -238,6 +241,7 @@ class PinViewController: BaseViewControler {
     func checkMPIN(pin: String) {
         if isChecking ?? false {
             if MPIN?.count == 0 {
+                self.secondaryLabel.text =  "Verify your MPIN."
                 self.numPadView.btnBack.isHidden = false
                 MPIN = pin
                 pinTextField.text = nil
@@ -292,6 +296,7 @@ class PinViewController: BaseViewControler {
         numPadView.clearText()
         clearedPin = false
         self.numPadView.btnBack.isHidden = true
+        self.secondaryLabel.text = "Please enter your MPIN."
     }
     
 //    func runTimer() {

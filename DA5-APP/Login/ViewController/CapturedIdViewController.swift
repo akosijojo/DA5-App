@@ -94,8 +94,10 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
     @objc func selectImage() {
 //        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 //        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: {(action: UIAlertAction) in
-//
-               if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){//.camera
+//MARK: -show this capture photos from camera 
+//        if UIImagePickerController.isSourceTypeAvailable(.camera){
+//                self.getImageFrom(sourceType: .camera)
+               if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
                     self.getImageFrom(sourceType: .photoLibrary)
                }else{
                     let alert = self.alert("Ok", "Camera is not Available", "", action: { (action) in

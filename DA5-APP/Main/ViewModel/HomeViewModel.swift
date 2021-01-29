@@ -13,12 +13,35 @@ class HomeViewModel : NSObject {
     var token : String = ""
 //    var onSuccessDeclineTransaction : ((StatusList?) -> Void)?
     var onSuccessGettingList : ((HomeData?) -> Void)?
+    var onSuccessLogout : ((StatusList?) -> Void)?
     var onSuccessGenerateToken : ((APIToken?) -> Void)?
     var onSuccessUpdateToken : ((APIToken?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
     var onErrorHandling : ((StatusList?) -> Void)?
 
 
+    func logout(rToken: String?) {
+        if token != "" {
+            guard let dataModel = model else { return }
+                    
+             let completionHandler = { (status: StatusList?) in
+                
+                if let dataReceived = status {
+                    self.onSuccessLogout?(dataReceived)
+                    return
+                }
+
+             }
+            
+            let param : [String:String] = [
+                "access_token" : token,
+                "refresh_token" : rToken ?? "",
+            ]
+            
+            dataModel.logout(param: param, completionHandler: completionHandler)
+        }
+    }
+    
     func getHomeData(id: Int) {
         if token != "" {
             guard let dataModel = model else { return }

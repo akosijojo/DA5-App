@@ -16,13 +16,13 @@ class PaybillsViewController: BaseHomeViewControler {
     
       var viewModel : PaybillsViewModel?
       
-      var categories : [CashInData]? {
+      var categories : [CategoryData]? {
          didSet {
-             self.collectionView.reloadData()
+            print("CATEGORY : \(self.categories?[1].rawValue)")
          }
       }
 
-      var data : [CashInData]? {
+      var data : PaybillsData? {
           didSet {
               self.collectionView.reloadData()
           }
@@ -55,12 +55,16 @@ class PaybillsViewController: BaseHomeViewControler {
     }
     
     func getData() {
-        self.data = [
-            CashInData(id: 1, name: "Western Union", image: "western"),
-            CashInData(id: 5, name: "DA5", image: "app_logo"),
-//            NewsData(id: 3, name: "Western", image: "western"),
-//            NewsData(id: 4, name: "Western", image: "western"),
-        ]
+        
+        self.viewModel?.onSuccessPaybillsData = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                self?.data = data
+            }
+        }
+    
+        self.setAnimate(msg: "Please wait...")
+        self.viewModel?.getBillers(token: self.coordinator?.token)
     }
     
     override func setUpView() {
@@ -97,7 +101,7 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
         if section == 0{
             return 1
         }
-        return 10
+        return self.data?.billers.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -105,7 +109,8 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as? PaybillsHorizontalCollectionCell else {
                 return UICollectionViewCell()
             }
-            cell.data = [ "ITS A CATEGORY HAHAHHHH", "daiwdhaoiwd", "dgawuidawud", "awudgiuawgdi"]
+            cell.data = [CategoryData.airlines, CategoryData.cable ,CategoryData.electricity,CategoryData.government ,CategoryData.insurance ,CategoryData.mobileLoad,CategoryData.onlineShopping ,CategoryData.others
+                ,CategoryData.realEstate ,CategoryData.sssContribution ,CategoryData.telecom ,CategoryData.utilities ,CategoryData.water]
             cell.delegate = self
             return cell
         }else {

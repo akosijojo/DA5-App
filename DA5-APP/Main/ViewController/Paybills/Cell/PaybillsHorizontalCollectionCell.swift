@@ -22,14 +22,14 @@ class PaybillsHorizontalCollectionCell: UICollectionViewCell, UICollectionViewDe
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? PaybillsCategoryCell else {
             return UICollectionViewCell()
         }
-        cell.data = self.data?[indexPath.item]
+        cell.data = self.data?[indexPath.item].rawValue
         cell.index = indexPath.item
         cell.delegate = self
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = self.data?[indexPath.item].widthForView(font: UIFont(name: Fonts.medium, size: 16)!, width: collectionView.frame.width) ?? 0
+        let width = self.data?[indexPath.item].rawValue.widthForView(font: UIFont(name: Fonts.medium, size: 16)!, width: collectionView.frame.width) ?? 0
         return CGSize(width: width + 20, height: collectionView.frame.height)
     }
     
@@ -43,7 +43,7 @@ class PaybillsHorizontalCollectionCell: UICollectionViewCell, UICollectionViewDe
     
     var cellId = "cellId"
     
-    var data : [String]? {
+    var data : [CategoryData]? {
         didSet {
             self.collectionView.reloadData()
         }

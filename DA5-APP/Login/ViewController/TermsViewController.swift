@@ -108,7 +108,7 @@ class TermsViewController: BaseViewControler {
         if let vc = parentView as? SignUpViewController {
             self.navigationController?.popViewController(animated: true)
             
-            vc.agreeOnTermsAndCondition()
+            vc.agreeTermsAndCondition = true //agreeOnTermsAndCondition()
         }else {
             self.navBackAction()
         }

@@ -160,6 +160,12 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
 
         }
         
+       self.viewModel?.onSuccessLogout = { [weak self] status in
+            DispatchQueue.main.async {
+                self?.coordinator?.logInCoordinator(didLogout: true)
+            }
+        }
+        
         self.viewModel?.onSuccessGenerateToken = { [weak self] data in
             DispatchQueue.main.async {
                 self?.coordinator?.token = data?.accessToken
@@ -377,7 +383,9 @@ extension HomeViewController : CollectionViewCellDelegate {
             case 5:
                 self.coordinator?.showFxViewController(balance: self.homeData?.balance)
             case 6:
-                self.coordinator?.showPaybillsViewController()
+
+                self.coordinator?.showBase2ndViewController(title: "Paybills")
+//                self.coordinator?.showPaybillsViewController()
             case 7:
                 self.coordinator?.ShowELoadViewController()
             case 8:

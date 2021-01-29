@@ -149,7 +149,7 @@ class SignUpViewController: BaseViewControler {
                     self?.showAlert(buttonOK: "Ok", message: "Registration Successful.", actionOk: { (act) in
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             if data?.customer != nil {
-                                self?.coordinator?.pinCodeCoordinator(isChecking: true, customerData:result.customer)
+                                self?.coordinator?.pinCodeCoordinator(isChecking: true, customerData:result.customer,refreshToken: data?.refreshToken)
                             }
                             print("NO DATA GET")
                         }
@@ -529,7 +529,7 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
         self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
         print(" VERIFICATION CODE ",self.viewModel?.registrationForm?.code)
         if !agreeTermsAndCondition {
-            agreeTermsAndCondition = true
+//            agreeTermsAndCondition = true
             coordinator?.termsCoordinator(parentView: self)
         }else {
             self.agreeOnTermsAndCondition()

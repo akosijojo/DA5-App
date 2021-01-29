@@ -109,6 +109,38 @@ struct LoginData: Decodable {
     }
 }
 
+struct RefreshTokenLocal: Codable {
+    var refreshToken : String?
+    
+     func saveRefreshTokenLocal() {
+       let encoder = JSONEncoder()
+       if let encoded = try? encoder.encode(self) {
+            print("Saving REFRESH TOKEN to local")
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: AppConfig().refreshTokenLocalKey)
+       }
+    }
+
+    func getRefreshTokenLocal() -> RefreshTokenLocal? {
+       let defaults = UserDefaults.standard
+       if let saveToken = defaults.object(forKey: AppConfig().refreshTokenLocalKey) as? Data {
+           let decoder = JSONDecoder()
+           if let customerData = try? decoder.decode(RefreshTokenLocal.self, from: saveToken) {
+              print("Get Token from local")
+              return customerData
+           }
+       }
+       return nil
+    }
+    
+    func checkIfExistingData() -> Bool {
+        if UserDefaults.standard.object(forKey: AppConfig().refreshTokenLocalKey) != nil {
+            return true
+        }
+        return false
+    }
+}
+
 // MARK: - Customer
 struct Customer: Decodable {
     var id: Int?
@@ -127,7 +159,7 @@ struct Customer: Decodable {
     var platform: Int?
     var createdAt, updatedAt, idPictureThumbnail1: String?
     var idPictureThumbnail2: String?
-
+    
     enum CodingKeys: String, CodingKey {
         case id
         case firstName = "first_name"

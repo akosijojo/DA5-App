@@ -122,11 +122,12 @@ class LoginViewController: BaseViewControler {
             }
         }
              
-        self.viewModel?.onSuccessGettingList = { [weak self] data in
+        self.viewModel?.onSuccessGettingList = { [weak self] data, rtoken in
             DispatchQueue.main.async {
+                
                 self?.customerData = data
                 // saving of users in local to check if logged in or not then goto pincode
-                self?.coordinator?.pinCodeCoordinator(customerData: data)
+                self?.coordinator?.pinCodeCoordinator(customerData: data,refreshToken: rtoken)
                 self?.stopAnimating()
             }
         }

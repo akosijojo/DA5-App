@@ -12,7 +12,7 @@ class LoginViewModel : NSObject {
     var model : LoginModel?
     var onSuccessRegistrationData: ((LoginData?) -> Void)?
     var onErrorFbLoginData: ((LoginFb?) -> Void)?
-    var onSuccessGettingList : ((Customer?) -> Void)?
+    var onSuccessGettingList : ((Customer?,String?) -> Void)?
     var returnNationalityList : ((Nationality?) -> Void)?
     var onSuccessGenerateToken : ((APIToken?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
@@ -36,7 +36,8 @@ class LoginViewModel : NSObject {
                     print("DATA : \(data)")
                     if let dataRecieved = data, dataRecieved.customer != nil {
                         print("DATA GET LOGIN : \(dataRecieved)")
-                        self.onSuccessGettingList?(dataRecieved.customer)
+                        
+                        self.onSuccessGettingList?(dataRecieved.customer,data?.refreshToken)
                         return
                     }else {
                          print("NO DATA")
@@ -63,7 +64,7 @@ class LoginViewModel : NSObject {
                 if data?.status == 2 {
                     self.onErrorFbLoginData?(dataReceived)
                 }else {
-                    self.onSuccessGettingList?(dataReceived.customer)
+                    self.onSuccessGettingList?(dataReceived.customer, dataReceived.refreshToken)
                 }
                 print("DATA RECIEVED")
                 return
@@ -227,7 +228,7 @@ class LoginViewModel : NSObject {
                
         let completionHandler = { (data : LoginData?,status: StatusList?) in
            if let dataRecieved = data, dataRecieved.customer != nil {
-                self.onSuccessGettingList?(dataRecieved.customer)
+            self.onSuccessGettingList?(dataRecieved.customer, data?.refreshToken)
            }else {
                self.onErrorHandling?(status)
            }

@@ -34,6 +34,8 @@ class TransactionsFullViewController: BaseHomeViewControler {
         didSet {
             print("RELOADING NEW DATA")
             self.collectionView.reloadData()
+            
+            self.collectionView.emptyView(image: "", text: "You currently have no transactions", dataCount: data?.count ?? 0, emptyViewType: .secondary)
         }
     }
 

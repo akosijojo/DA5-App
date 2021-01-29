@@ -11,7 +11,8 @@ import Foundation
 //MARK:- APP CONFIGURATIONS
 class AppConfig {
     var customerLocalKey : String = "CustomerLocalData"
-    var tokenLocalKey : String = "CustomerLocalData"
+    var tokenLocalKey : String = "CustomerTokenKey"
+    var refreshTokenLocalKey : String = "CustomerRefreshToken"
 }
 //MARK:- API CONFIGURATIONS
 class ApiConfig {
@@ -23,6 +24,8 @@ class ApiConfig {
     var apiPassword : String = "da5password" //5zYw9h3aMifV7da
     
     var currencyApi : String = "https://api.exchangeratesapi.io/latest"
+    var liveUrl : String = "https://daps.com.ph/api"
+    
     
 
     func getUrl() -> String {

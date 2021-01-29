@@ -15,7 +15,14 @@ class HomeModel {
     let homePath = "/customer/getHomeData"
     let apiToken = "/auth/generateAPIToken"
     let declineTransact = "/customer/cancelPendingTransaction"
+    let logoutUser = "/auth/logout"
     
+    func logout(param: [String:Any],completionHandler: @escaping (StatusList?) -> ()) {
+        NetworkService<StatusMessage>().networkRequest(param,jsonUrlString: jsonUrlString + logoutUser) { (data,status) in
+    
+             completionHandler(StatusList(status: 1, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+        }
+    }
 
     func getHomeData(param: [String:Any],completionHandler: @escaping (HomeData?,StatusList?) -> ()) {
         NetworkService<HomeData>().networkRequest(param, token: token,jsonUrlString: jsonUrlString + homePath) { (data,status) in

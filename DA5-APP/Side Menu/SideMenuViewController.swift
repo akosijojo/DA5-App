@@ -143,7 +143,10 @@ class SideMenuView : UIView {
 //        case 2:
 //            vc?.coordinator?.showTermsViewController()
         case 3:
-            vc?.coordinator?.logInCoordinator(didLogout: true)
+            let rToken = RefreshTokenLocal().getRefreshTokenLocal()
+            vc?.viewModel?.logout(rToken: rToken?.refreshToken)
+            //MARK: show this and remove checking on vc to logout even without internet or error occured
+//            vc?.coordinator?.logInCoordinator(didLogout: true)
         default:
             break
         }

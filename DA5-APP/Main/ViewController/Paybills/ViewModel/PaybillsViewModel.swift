@@ -12,33 +12,23 @@ class PaybillsViewModel: NSObject {
     
     var model: PaybillsModel?
     
-    func getBillers() {
-//         guard let dataModel = model else { return }
+    var onSuccessPaybillsData: ((PaybillsData?) -> Void)?
+    var onErrorHandling: ((StatusList?) -> Void)?
+    
+    func getBillers(token: String?) {
+         guard let dataModel = model else { return }
+
+         let completionHandler = { (response : PaybillsData?,status: StatusList?) in
 //
-//         let completionHandler = { (response : TransactHistoryFullData?,status: StatusList?) in
-////
-//            if let dataReceived = response {
-//                self.onSuccessTransactionsList?(dataReceived.data)
-//                self.vPage += 1
-//                print("add page for getting new")
-//                return
-//            }
-//
-//            self.onErrorHandling?(status)
-//         }
-//        
-//        if let pager = page {
-//            vPage = pager
-//        }
-//        
-//        let pager = page != nil ? page : vPage
-//        
-//        let param : [String:String] = [
-//            "customer_id" : "\(UserLoginData.shared.id ?? 0)",
-//            "page" : "\(pager ?? 0)",
-//            "limit": "10"
-//        ]
-//        dataModel.getAllTransactionHistory(param: param, token: token ,completionHandler: completionHandler)
+            if let dataReceived = response {
+                self.onSuccessPaybillsData?(dataReceived)
+                return
+            }
+
+            self.onErrorHandling?(status)
+         }
+    
+        dataModel.getBillers(param: [:], token: token ,completionHandler: completionHandler)
         
     }
     
