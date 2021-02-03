@@ -10,12 +10,23 @@ import UIKit
 
 class LoadWalletModel {
     let jsonUrlString = "\(ApiConfig().getUrl())"
+    let getListPartner = "/partner/getList"
     let loadWalletCashIn = "/partner/cashIn"
     let loadWalletCashOut = "/partner/cashOut"
     let walletTransferDetails = "/customer/checkWalletTransfer"
     let walletTransfer = "/customer/sendMoney"
     var token: String? = ""
-   
+
+    func getList(param: [String:Any],completionHandler: @escaping (PartnerList?,StatusList?) -> ()) {
+       NetworkService<PartnerList>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + getListPartner) { (data,status) in
+               if let dataReceived = data {
+                       completionHandler(dataReceived,nil)
+                       return
+               }
+               completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: 1))
+       }
+    }
+    
     func cashIn(param: [String:Any],completionHandler: @escaping (SubmitCashInOutData?,StatusList?) -> ()) {
         NetworkService<SubmitCashInOutData>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + loadWalletCashIn) { (data,status) in
                 if let dataReceived = data {

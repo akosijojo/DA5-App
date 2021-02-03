@@ -66,9 +66,9 @@ class LoadWalletCell: UICollectionViewCell {
     
     var datePicker : UIDatePicker?
     
-    var data : CashInData? {
+    var data : PartnerListItem? {
         didSet {
-            self.imageView.image = UIImage(named: self.data?.image ?? "")
+            self.imageView.downloaded(from: data?.image ?? "", contentMode: .scaleAspectFill)
         }
     }
 

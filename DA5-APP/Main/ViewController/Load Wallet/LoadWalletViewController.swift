@@ -13,7 +13,7 @@ class LoadWalletViewController: BaseHomeViewControler {
       var cellId = "cellId"
       var type : Int? = 0
       
-      var data : [CashInData]? {
+      var data : PartnerList? {
           didSet {
               self.collectionView.reloadData()
           }
@@ -28,6 +28,7 @@ class LoadWalletViewController: BaseHomeViewControler {
          return v
       }()
     
+    var viewModel : LoadWalletViewModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +46,15 @@ class LoadWalletViewController: BaseHomeViewControler {
     }
     
     func getData() {
-        self.data = [
-            CashInData(id: 1, name: "Western Union", image: "western"),
-            CashInData(id: 5, name: "DA5", image: "app_logo"),
-//            NewsData(id: 3, name: "Western", image: "western"),
-//            NewsData(id: 4, name: "Western", image: "western"),
-        ]
+        self.viewModel?.onSuccessPartnerList = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                self?.data = data
+            }
+        }
+        
+        self.setAnimate(msg: "Please wait...")
+        self.viewModel?.getList()
     }
     
     override func setUpView() {
@@ -85,14 +89,14 @@ extension LoadWalletViewController: UICollectionViewDelegateFlowLayout, UICollec
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.data?.count ?? 0
+        return self.data?.data.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? LoadWalletCell else {
             return UICollectionViewCell()
         }
-        cell.data = self.data?[indexPath.item]
+        cell.data =  self.data?.data[indexPath.item]
         cell.delegate = self
         cell.index = indexPath.item
         return cell
@@ -111,7 +115,7 @@ extension LoadWalletViewController: UICollectionViewDelegateFlowLayout, UICollec
 extension LoadWalletViewController : LoadWalletCellDelegate {
     func onClickItem(cell: LoadWalletCell, index: Int) {
         print("CLICKING : \(type)")
-        self.coordinator?.showCashInViewController(data: self.data?[index],type: type)
+        self.coordinator?.showCashInViewController(data: self.data?.data[index],type: type)
     }
     
 }

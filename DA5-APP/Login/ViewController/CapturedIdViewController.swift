@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelegate , UINavigationControllerDelegate {
-    weak var vc : SignUpViewController?
+    weak var vc : UIViewController?
     var type : Int = 0
     
     lazy var imageView : UIImageView = {
@@ -123,11 +123,19 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
 //    
     @objc func returnImageSelected() {
         
-        if let vc = vc {
+        if let signUpVc = vc as? SignUpViewController {
             if type == 1 {
-                vc.validId = self.imageView.image
+              signUpVc.validId = self.imageView.image
             }else {
-                vc.selfieId = self.imageView.image
+              signUpVc.selfieId = self.imageView.image
+            }
+        }
+        
+        if let profileVc = vc as? ProfileViewController {
+            if type == 1 {
+              profileVc.validId = self.imageView.image
+            }else {
+              profileVc.selfieId = self.imageView.image
             }
         }
         

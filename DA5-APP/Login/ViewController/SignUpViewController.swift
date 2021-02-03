@@ -43,6 +43,7 @@ class SignUpViewController: BaseViewControler {
           }
         }
     }
+    
     var mobileNumber: String? {
         didSet{
             self.collectionView.reloadData()
@@ -117,6 +118,7 @@ class SignUpViewController: BaseViewControler {
                  self?.stopAnimating()
             }
         }
+        
         //MARK: - BASIC REQUEST
         self.viewModel?.onSuccessRequest = { [weak self] res in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.500, execute: {

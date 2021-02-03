@@ -7,9 +7,32 @@
 //
 
 import UIKit
+extension UIView {
+    func showLoading(style: UIActivityIndicatorView.Style = .gray,tag: Int) {
+//        print("TAG TO BE DOWNLOADED : with tag = \(self.tag) : load tag = \(tag)")
+        var loading = viewWithTag(self.tag) as? UIActivityIndicatorView
+        if loading == nil {
+           loading = UIActivityIndicatorView(style: style)
+        }
+
+        loading?.translatesAutoresizingMaskIntoConstraints = false
+        loading!.startAnimating()
+        loading!.hidesWhenStopped = true
+        loading?.tag = tag
+        addSubview(loading!)
+        loading?.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        loading?.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    }
+
+    func stopLoading(tag: Int) {
+        let loading = viewWithTag(tag) as? UIActivityIndicatorView
+        loading?.stopAnimating()
+        loading?.removeFromSuperview()
+    }
+}
 
 extension UIImageView {
-    func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
+    func downloaded(from url: URL, tag: Int? = nil , contentMode mode: UIView.ContentMode = .scaleAspectFit) {
         contentMode = mode
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard
@@ -19,13 +42,30 @@ extension UIImageView {
                 let image = UIImage(data: data)
                 else { return }
             DispatchQueue.main.async() { [weak self] in
-                self?.image = image
+//                if let tagging = tag {
+//                    self?.stopLoading(tag: tagging)
+//                }
+            
+                if let keyTag = tag {
+                    if self?.tag == keyTag {
+                        self?.image = image
+                    }
+                }else {
+                    self?.image = image
+                }
+              
             }
         }.resume()
     }
-    func downloaded(from link: String, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
+    func downloaded(from link: String, tag: Int? = nil,contentMode mode: UIView.ContentMode = .scaleAspectFit) {
+        //show this for reuse cell but same view bug infinite loading add to tag if which section
+//        print("DOWNLOADING : with tag = \(self.tag) : loadingTag = \(tag)")
+//        if let tagging = tag {
+//            self.showLoading(tag: tagging)
+//        }
+        if let tagging = tag { self.tag = tagging } // save tag to itself
         guard let url = URL(string: link) else { return }
-        downloaded(from: url, contentMode: mode)
+        downloaded(from: url, tag: tag, contentMode: mode)
     }
 
 }

@@ -140,6 +140,48 @@ class LoginViewModel : NSObject {
         dataModel.createAccount(param: param, completionHandler: completionHandler)
     }
     
+    
+    func updateKyc(token: String?) {
+         guard let dataModel = model else { return }
+                
+         let completionHandler = { (data : LoginData?,status: StatusList?) in
+            
+            if let dataReceived = data {
+                print("REGISTRATION DATA : ", dataReceived)
+                if data?.customer != nil {
+                    self.onSuccessRegistrationData?(dataReceived)
+                }else {
+                    self.onErrorHandling?(status)
+                }
+                return
+            }
+            
+            self.onErrorHandling?(status)
+         }
+        
+        var param : [String:Any] = [
+         "customer_id"       : UserLoginData.shared.id ?? "",
+         "first_name"        : registrationForm?.fname ?? "",
+         "middle_name"       : registrationForm?.mname ?? "",
+         "last_name"         : registrationForm?.lname ?? "",
+         "birth_date"        : registrationForm?.bdate ?? "",
+         "gender"            : registrationForm?.gender ?? "",
+         "address"           : registrationForm?.address ?? "",
+         "nationality"       : registrationForm?.nationality ?? "",
+         "phone"             : registrationForm?.phoneNumber ?? "",
+         "email"             : registrationForm?.email ?? "",
+         "id_picture"        : registrationForm?.validId ?? "",
+         "id_picture2"       : registrationForm?.selfieId ?? "",
+         "code"              : registrationForm?.code ?? "",
+        ]
+        
+        if let fbId = registrationForm?.fbId , fbId != ""{
+            param["facebook_id"] = fbId
+        }
+        
+        dataModel.updatekycAccount(param: param ,token: token, completionHandler: completionHandler)
+    }
+    
     func uploadFile(image: UIImage?,type: Int) {
          guard let dataModel = model else { return }
                 

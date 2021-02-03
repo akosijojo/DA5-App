@@ -13,12 +13,14 @@ protocol PaybillsCellDelegate : class {
 }
 class PaybillsCell : UICollectionViewCell {
 
+    var section : Int? = nil // added for the key
     var index : Int = 0
     var delegate : PaybillsCellDelegate?
     
      var data : BillerData? {
         didSet {
-            self.imageView.downloaded(from: data?.logo ?? "", contentMode: .scaleAspectFit)
+//            self.imageView.tag = index
+            self.imageView.downloaded(from: data?.logo ?? "", tag: index, contentMode: .scaleAspectFit)
             self.title.text = data?.name
             self.name.text = data?.type
             self.price.text = "Fee \(data?.fee ?? "0.00")"

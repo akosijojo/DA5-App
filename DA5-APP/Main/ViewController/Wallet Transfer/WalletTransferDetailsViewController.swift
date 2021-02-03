@@ -113,7 +113,7 @@ class WalletTransferDetailsViewController: BaseHomeViewControler {
     
     init(data: WalletTransferData?) {
         super.init(nibName: nil, bundle: nil)
-        self.headerView.title.text = "Wallet transfer confirmation"
+        self.headerView.title.text = "Send Money confirmation"
         self.headerView.desc.text = "Please ensure that the recipient and amount is correct"
         self.data = data
         

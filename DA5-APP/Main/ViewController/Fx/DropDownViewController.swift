@@ -9,6 +9,12 @@
 import UIKit
 
 
+struct DropItem : Decodable {
+    var key : String
+    var value : String
+}
+
+
 class DropDownCell: UICollectionViewCell{
     let label = UILabel()
     
@@ -49,6 +55,11 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
             cell.label.text = d
         }
         
+        if let d = self.data?[indexPath.item] as? DropItem {
+            cell.label.text = d.key
+        }
+               
+        
         return cell
     }
 
@@ -68,17 +79,27 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
                 vc.selectedCurrency = d
             }
         }
+        if let vc = self.parentView as? PaybillsSelectedItemViewController {
+            //RETURN SELECTED ITEM
+            if let item = self.data?[indexPath.item] as? DropItem {
+                print("ITEM SELECTED : \(item.key) == \(item.value)")
+                 vc.dropItemSelected = item
+            }
+        }
         self.dismiss(animated: false) {
             self.hideModal()
         }
     }
 
     let cellId = "Cell ID"
+    var mainFrame : CGSize = CGSize(width: 0, height: 0)
+    
     var data : [T]? {
         didSet {
             print("DATA RECEIVED :",self.data?.count )
         }
     }
+    
     var parentView : UIViewController?
 
     lazy var BackDropView : UIView = {
@@ -110,7 +131,16 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
         collectionView.dataSource = self
         
     }
-
+    
+    init(width: CGFloat, height : CGFloat) {
+        super.init(nibName: nil, bundle: nil)
+        mainFrame = CGSize(width: width, height: height)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         setUpNavigationBar()
@@ -145,8 +175,8 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
         view.addSubview(containerView)
         containerView.snp.makeConstraints { (make) in
             make.center.equalTo(view)
-            make.width.equalTo(80)
-            make.height.equalTo(view).multipliedBy(0.8)
+            make.width.equalTo(mainFrame.width)
+            make.height.equalTo(mainFrame.height)
         }
         
         containerView.addSubview(collectionView)

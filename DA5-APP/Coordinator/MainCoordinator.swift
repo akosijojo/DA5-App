@@ -38,7 +38,7 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.navigationBar.shadowImage = UIImage()
         navigationController.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.foregroundColor: UIColor.black,
-         NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 20)!]
+         NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 16)!]
 //        if user {
 //            homeCoordinator()
 //        }else {
@@ -172,8 +172,8 @@ class MainCoordinator :  NSObject, Coordinator {
        navigationController.pushViewController(vc, animated: false)
     }
     
-    func termsCoordinator(parentView: UIViewController?) {
-       let vc = TermsViewController()
+    func termsCoordinator(parentView: UIViewController?,forViewing: Bool? = nil) {
+       let vc = TermsViewController(forViewing: forViewing)
        vc.coordinator = self
        vc.parentView = parentView
        navigationController.setNavigationBarHidden(false, animated: false)
@@ -182,11 +182,27 @@ class MainCoordinator :  NSObject, Coordinator {
     
     func showProfileViewController(data: Customer?) {
          let vc = ProfileViewController()
+         vc.viewModel = LoginViewModel()
+         vc.viewModel?.model = LoginModel()
          vc.data = data
          vc.coordinator = self
          navigationController.setNavigationBarHidden(false, animated: false)
          navigationController.pushViewController(vc, animated: false)
     }
+    
+    func showProfileVerificationViewController(data: Customer?, vM: LoginViewModel?, view: ProfileViewController?) {
+        let vc = ProfileVerificationViewController()
+        vc.validId = view?.validId
+        vc.selfieId = view?.selfieId
+        vc.viewModel = vM
+        vc.viewModel?.model = vM?.model
+        vc.mobileNumber = vM?.registrationForm?.phoneNumber
+        vc.vc = view
+//        vc.data = data
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+   }
     
     func showPrivacyViewController() {
          let vc = PrivacyViewController()
@@ -195,13 +211,13 @@ class MainCoordinator :  NSObject, Coordinator {
          navigationController.pushViewController(vc, animated: false)
     }
     
-    func showTermsViewController() {
-         let vc = TermsAndConditionsViewController()
-         vc.coordinator = self
-         navigationController.setNavigationBarHidden(false, animated: false)
-         navigationController.pushViewController(vc, animated: false)
-    }
-    
+//    func showTermsViewController() {
+//         let vc = TermsAndConditionsViewController()
+//         vc.coordinator = self
+//         navigationController.setNavigationBarHidden(false, animated: false)
+//         navigationController.pushViewController(vc, animated: false)
+//    }
+//
     func dismissViewController() {
 //        navigationController.navigationBar.isHidden = true
     }
@@ -341,10 +357,14 @@ extension MainCoordinator {
         let vc = LoadWalletViewController()
         vc.coordinator = self
         vc.type = type
+        vc.viewModel = LoadWalletViewModel()
+        vc.viewModel?.model = LoadWalletModel()
+        vc.viewModel?.model?.token = self.token
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
-    func showCashInViewController(data: CashInData?,type: Int? = 0) {
+    
+    func showCashInViewController(data: PartnerListItem?,type: Int? = 0) {
         let vc = WalletViewController(data: data,type:  type ?? 0)
         vc.coordinator = self
         vc.viewModel = LoadWalletViewModel()
@@ -465,8 +485,8 @@ extension MainCoordinator {
 
 //MARK:- FullList
 extension MainCoordinator {
-    func showNewsItem() {
-        let vc = NewsItemViewController()
+    func showNewsItem(data: NewsData?) {
+        let vc = NewsItemViewController(data: data)
         vc.coordinator = self
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)

@@ -21,6 +21,7 @@ class LoginModel {
      let checkMpinOtp = "/customer/checkMPINOTP"
      let apiToken = "/auth/generateAPIToken"
      let fbLogin = "/auth/facebookLogin"
+     let resubmitKYC = "/customer/resubmitKYC"
      
      func login(param: [String:Any],completionHandler: @escaping (LoginData?,StatusList?) -> ()) {
          NetworkService<LoginData>().networkRequest(param, jsonUrlString: jsonUrlString + logIn) { (data,status) in
@@ -65,6 +66,16 @@ class LoginModel {
      
          }
      }
+    
+    func updatekycAccount(param: [String:Any], token: String?, completionHandler: @escaping (LoginData?,StatusList?) -> ()) {
+        NetworkService<LoginData?>().networkRequest(param,token: token, jsonUrlString: jsonUrlString + resubmitKYC) { (data,status) in
+            if let dataReceived = data {
+                completionHandler(dataReceived,nil)
+                return
+            }
+           completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+        }
+    }
     
     func uploadImage(image: [Media],param: Parameter?, session: URLSession,completionHandler: @escaping (ImageUploadData?,StatusList?) -> ()) {
         NetworkService<ImageUploadData?>().uploadFile(image, param, jsonUrlString: jsonUrlString + uploadImage, session: session) { (data, status) in

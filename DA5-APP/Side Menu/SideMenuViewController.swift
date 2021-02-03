@@ -138,10 +138,10 @@ class SideMenuView : UIView {
         switch gesture.view?.tag {
         case 0:
             print("0")
-//        case 1:
-//            vc?.coordinator?.showPrivacyViewController()
-//        case 2:
-//            vc?.coordinator?.showTermsViewController()
+        case 1:
+            vc?.coordinator?.showPrivacyViewController()
+        case 2:
+            vc?.coordinator?.termsCoordinator(parentView: nil, forViewing: true)
         case 3:
             let rToken = RefreshTokenLocal().getRefreshTokenLocal()
             vc?.viewModel?.logout(rToken: rToken?.refreshToken)

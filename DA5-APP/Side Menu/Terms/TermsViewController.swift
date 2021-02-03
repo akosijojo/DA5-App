@@ -10,6 +10,8 @@ import UIKit
 
 class TermsViewController: BaseViewControler {
     
+    var forViewing : Bool? = nil
+    
     let terms = "The information provided above and documents hereby submitted/attached have been made in good faith, verified correct to the best of my knowledge and pursuant to all laws and regulations applicable. I fully understand that Direct Agent 5, Inc. (DA5) is authorized to accept and process payments and remittances submitted to its branches.\n\n With this, I hereby provide the necessary information in order for DA5 to complete the transaction, wherefore, we can avail of the services requested. DA5 reserves the right not to accept, process or payout any money transfer at its sole discretion after having made a determination that processing of thetransaction will result to a violation of any DA5 policy, BSP, AMLA or any applicable laws or regulations. Likewise, I voluntarily give my consent for the collection, use, processing, storage and retention of my personal data or information to DA5 for the purpose(s) described herein and hold free and harmless and indentify DA5 from any complaint or damages which any party may file or claim in relation to my consent.\n\n I also understand that my consent does not prevent the existence of other criteria for lawful processing of personal data and does not waive any of my rights under Data Privacy Act of 2012 and other applicable laws."
     
     weak var parentView : UIViewController?
@@ -25,7 +27,6 @@ class TermsViewController: BaseViewControler {
         v.text = ""
 //        v.numberOfLines = 0
         v.font = UIFont(name: Fonts.regular, size: 14)
-        v.backgroundColor = .green
         v.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 100, right: 20)
         v.isScrollEnabled = false
         v.isEditable = false
@@ -85,6 +86,15 @@ class TermsViewController: BaseViewControler {
         coordinator?.dismissViewController()
     }
     
+    init(forViewing: Bool? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.forViewing = forViewing
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func setUpNavigationBar() {
         self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.setNavigationBarHidden(false, animated: false)
@@ -93,7 +103,6 @@ class TermsViewController: BaseViewControler {
         backButton.tintColor = ColorConfig().black
         backButton.addTarget(self, action: #selector(navBackAction), for: .touchUpInside)
         self.title = "Terms and Conditions"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 20)!]
         let leftButton = UIBarButtonItem(customView: backButton)
         self.navigationItem.leftBarButtonItem = leftButton
     }
@@ -138,25 +147,29 @@ class TermsViewController: BaseViewControler {
             make.top.equalTo(termsLabel.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(60)
+            make.height.equalTo(self.forViewing == true ?  0 : 60)
             make.bottom.equalTo(scrollView)
         }
         
-        btnContainer.addSubview(cancel)
-        cancel.snp.makeConstraints { (make) in
-            make.top.equalTo(btnContainer)
-            make.leading.equalTo(btnContainer)
-            make.width.equalTo(btnContainer).multipliedBy(0.5)
-            make.height.equalTo(40)
+        if self.forViewing == nil {
+            btnContainer.addSubview(cancel)
+            cancel.snp.makeConstraints { (make) in
+                make.top.equalTo(btnContainer)
+                make.leading.equalTo(btnContainer)
+                make.width.equalTo(btnContainer).multipliedBy(0.5)
+                make.height.equalTo(40)
+            }
+            
+            btnContainer.addSubview(agree)
+            agree.snp.makeConstraints { (make) in
+                make.top.equalTo(btnContainer)
+                make.leading.equalTo(cancel.snp.trailing)
+                make.width.equalTo(btnContainer).multipliedBy(0.5)
+                make.height.equalTo(40)
+            }
         }
         
-        btnContainer.addSubview(agree)
-        agree.snp.makeConstraints { (make) in
-            make.top.equalTo(btnContainer)
-            make.leading.equalTo(cancel.snp.trailing)
-            make.width.equalTo(btnContainer).multipliedBy(0.5)
-            make.height.equalTo(40)
-        }
+        
         
         
 //        scrollView.addSubview(btnView)

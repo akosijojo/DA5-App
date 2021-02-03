@@ -275,6 +275,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         zipCode.TextField.placeholder = "Zip Code"
         
         setUpDatePicker()
+        
         dateFormat.dateFormat = "MMM dd, yyyy"
         
         
@@ -330,10 +331,6 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
      }
      @objc func selectBDate() {
         self.endEditing(true)
-        //"Only provide information that is true and correct. If you're below 18 years old, you may be required to present a parental consent. Users below 10 years old are not allowed to register."
-        
-        // checking below 10 cannot click next
-        // under 18 yrs old show alert and cant click next
      }
 
        
@@ -372,6 +369,7 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         }
         vc?.present(alert, animated: true, completion: nil)
     }
+    
     func addShowKeyboard(offset: CGFloat) {
         scrollView.snp.updateConstraints { (make) in
            make.bottom.equalTo(self).offset(offset)

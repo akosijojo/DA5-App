@@ -8,54 +8,12 @@
 
 import UIKit
 
+struct MetaFields {
+    var key: String?
+    var value : String
+}
+
 class PaybillsSelectedItemViewController: BaseHomeViewControler {
-    
-    var viewModel : PaybillsViewModel?
-    
-    lazy var headerView : CustomHeaderView = {
-        let v = CustomHeaderView()
-        v.title.text = ""
-        v.desc.text = ""
-        return v
-    }()
-
-//    lazy var policyNumber: CustomBasicFormInput = {
-//        let v = CustomBasicFormInput()
-//        v.Label.text = "Policy Number"
-//        v.Label.font = UIFont(name: Fonts.regular, size: 12)
-//        v.TextField.keyboardType = .numberPad
-//        v.TextField.tag = 1
-//        v.TextField.placeholder = ""
-//        v.TextField.delegate = self
-//        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
-//        return v
-//    }()
-//
-//    lazy var amount: CustomBasicFormInput = {
-//        let v = CustomBasicFormInput()
-//        v.Label.text = "Amount"
-//        v.Label.font = UIFont(name: Fonts.regular, size: 12)
-//        v.TextField.keyboardType = .decimalPad
-//        v.TextField.tag = 2
-//        v.TextField.placeholder = ""
-//        v.TextField.delegate = self
-//        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
-//        return v
-//    }()
-//
-//     lazy var date: CustomBasicFormInput = {
-//         let v = CustomBasicFormInput()
-//         v.Label.text = "Due Date"
-//         v.Label.font = UIFont(name: Fonts.regular, size: 12)
-//         v.TextField.keyboardType = .decimalPad
-//         v.TextField.tag = 3
-//         v.TextField.placeholder = ""
-//         v.TextField.delegate = self
-//         v.TextField.font = UIFont(name: Fonts.regular, size: 12)
-//         return v
-//     }()
-
-    let cellId = "itemCellId"
     
     lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -66,15 +24,34 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
         return v
     }()
 
-    lazy var submitBtn : UIButton = {
-      let v = UIButton()
-       v.layer.cornerRadius = 5
-       v.backgroundColor = ColorConfig().black
-       v.setTitle("Proceed", for: .normal)
-       v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)
-       v.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
-      return v
-    }()
+//    lazy var submitBtn : UIButton = {
+//      let v = UIButton()
+//       v.layer.cornerRadius = 5
+//       v.backgroundColor = ColorConfig().black
+//       v.setTitle("Proceed", for: .normal)
+//       v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)
+//       v.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
+//      return v
+//    }()
+    
+    var cellDropSelected : Int? {
+        didSet {
+            print("SELECTED ITEM : \(cellDropSelected)")
+        }
+    }
+    
+    var dropItemSelected : DropItem? {
+        didSet {
+            DispatchQueue.main.async {
+                if let cell = self.collectionView.cellForItem(at: IndexPath(item: self.cellDropSelected! , section: 0)) as? PaybillsItemViewCell {
+                    cell.dataDropDown = self.dropItemSelected
+                    
+                }
+                self.collectionView.reloadItems(at: [IndexPath(item: self.cellDropSelected!, section: 0)])
+//                self.collectionView.reloadData()
+            }
+        }
+    }
     
     var data : BillerData? {
         didSet {
@@ -82,11 +59,28 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
             print("GET DATA : \(data)")
         }
     }
+    var viewModel : PaybillsViewModel?
+    
+    var itemCellId = "ItemCellId"
+    
+    var headerCellId = "HeaderCellId"
+    var footerCellId = "FooterCellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         hidesKeyboardOnTapArround()
         setUpView()
         setUpData()
+        
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.register(PaybillsItemViewCell.self, forCellWithReuseIdentifier: itemCellId)
+        self.collectionView.register(HeaderCell.self, forSupplementaryViewOfKind:  UICollectionView.elementKindSectionHeader, withReuseIdentifier:headerCellId)
+        self.collectionView.register(SubmitFooterViewCell.self, forSupplementaryViewOfKind:  UICollectionView.elementKindSectionFooter, withReuseIdentifier:footerCellId)
+        
+        let notification = NotificationCenter.default
+          notification.addObserver(self, selector: #selector(self.whenShowKeyboard(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+          notification.addObserver(self, selector: #selector(self.whenHideKeyboard(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     init(data: BillerData) {
@@ -94,12 +88,25 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
         // set up initial data to view
         print("DATA GET : \(data)")
         self.data = data
-        self.headerView.title.text = data.name
-        self.headerView.desc.text = data.type
+        collectionView.reloadData()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc func whenShowKeyboard(_ notification : NSNotification) {
+          if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+           
+            self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height - view.safeAreaInsets.bottom, right: 0)
+            
+//            self.collectionView.scrollRectToVisible(<#T##rect: CGRect##CGRect#>, animated: <#T##Bool#>)
+        }
+    }
+
+    @objc func whenHideKeyboard(_ notification : NSNotification) {
+        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,165 +115,201 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
     }
     
     override func setUpData() {
-//        self.viewModel?.onSuccessDataRequest = { [weak self] data in
-//            DispatchQueue.main.async {
-//                self?.stopAnimating()
-//            }
-//        }
-//
-//        self.viewModel?.onSuccessRequest = { [weak self] data in
-//            DispatchQueue.main.async {
-//                self?.stopAnimating()
-//                self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong.", actionOk: { (action) in
-//                    self?.coordinator?.showParentView()
-//                }, completionHandler: nil)
-//            }
-//        }
-//
-//        self.viewModel?.onErrorHandling = { [weak self] status in
-//            DispatchQueue.main.async {
-//                self?.stopAnimating()
-//                self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
-//            }
-//        }
+        self.viewModel?.onSuccessPaybillsData = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                self?.showAlert(buttonOK: "Ok", message: data?.message ?? "", actionOk: { (action) in
+                    self?.coordinator?.showParentView()
+                }, completionHandler: nil)
+                
+            }
+        }
+        
+        self.viewModel?.onErrorHandling = { [weak self] status in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                if status?.tag == 1 {
+                    self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: { (action) in
+                        self?.coordinator?.showParentView()
+                    }, completionHandler: nil)
+                }else {
+                    self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
+                }
+                
+            }
+        }
     }
     
     override func setUpView() {
-        view.addSubview(headerView)
-        headerView.snp.makeConstraints { (make) in
-            make.top.equalTo(view.layoutMarginsGuide.snp.top).offset(25)
-           make.leading.equalTo(view).offset(20)
-           make.trailing.equalTo(view).offset(-20)
-           make.height.equalTo(80)
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { (make) in
+            make.top.equalTo(view.layoutMarginsGuide.snp.top)
+            make.leading.equalTo(view)
+            make.trailing.equalTo(view)
+            make.bottom.equalTo(view)
         }
         
-//        view.addSubview(policyNumberLbl)
-//        policyNumberLbl.snp.makeConstraints { (make) in
-//          make.top.equalTo(headerView).offset(100)
-//          make.leading.equalTo(view).offset(20)
-//          make.trailing.equalTo(view).offset(-20)
-//          make.height.equalTo(20)
-//        }
-        
-//        view.addSubview(policyNumber)
-//        policyNumber.snp.makeConstraints { (make) in
-//            make.top.equalTo(headerView.snp.bottom).offset(10)
-//            make.leading.equalTo(view).offset(20)
-//            make.trailing.equalTo(view).offset(-20)
-//            make.height.equalTo(70)
-//        }
-////
-////        view.addSubview(amountLbl)
-////        amountLbl.snp.makeConstraints { (make) in
-////            make.top.equalTo(policyNumber.snp.bottom).offset(5)
-////            make.leading.equalTo(view).offset(20)
-////            make.trailing.equalTo(view).offset(-20)
-////            make.height.equalTo(20)
-////        }
-////
-//        view.addSubview(amount)
-//        amount.snp.makeConstraints { (make) in
-//            make.top.equalTo(policyNumber.snp.bottom).offset(5)
-//            make.leading.equalTo(view).offset(20)
-//            make.trailing.equalTo(view).offset(-20)
-//            make.height.equalTo(70)
-//        }
-//
-////        view.addSubview(dateLbl)
-////       dateLbl.snp.makeConstraints { (make) in
-////           make.top.equalTo(amount.snp.bottom).offset(5)
-////           make.leading.equalTo(view).offset(20)
-////           make.trailing.equalTo(view).offset(-20)
-////           make.height.equalTo(20)
-////       }
-//
-//       view.addSubview(date)
-//       date.snp.makeConstraints { (make) in
-//           make.top.equalTo(amount.snp.bottom).offset(5)
-//           make.leading.equalTo(view).offset(20)
-//           make.trailing.equalTo(view).offset(-20)
-//           make.height.equalTo(70)
-//       }
-
-        
-        view.addSubview(submitBtn)
-        submitBtn.snp.makeConstraints { (make) in
-            make.bottom.equalTo(view.layoutMarginsGuide.snp.bottom).offset(-20)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
-            make.height.equalTo(40)
-        }
-
     }
-    
-//    @objc func amountChanged(_ textField: UITextField) {
-//        if let amountString = amount.FieldView.TextField.text?.amountEntered() {
-//           textField.text = amountString
-//        }
-//    }
-//
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        if textField.tag == 2 {
-//            textField.text = textField.text?.replacingOccurrences(of: ",", with: "")
-//        }
-//    }
-//
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        print("CHANGING INPUT")
-//         guard let text = textField.text else { return true }
-//         if textField.tag == 1 {
-//            let count = text.count + string.count - range.length
-//            return count <= 10
-//         } else if textField.tag == 2 {
-//            return self.amountFormating(textField: textField, string: string)
-//         }else {
-//            return true
-//         }
-//    }
-//
-//    //MARK:- RESTRICTIONS
-//    func amountFormating(textField: UITextField,string: String) -> Bool{
-//        switch string {
-//         case "0","1","2","3","4","5","6","7","8","9":
-//             if (textField.text?.first == "0") {
-//               return false
-//             }
-//             return true
-//         case ".":
-//           var decimalCount : Int = 0
-//           let array = Array(arrayLiteral: textField.text)
-//             for character in array {
-//               print("CHANGING INPUT HEREEEE ARRAY = \(array.count) == \(character)" )
-//               if character?.contains(".") ??  false{
-//                   print("CHANGING INPUT HEREEEE ARRAY INPUT . = \(decimalCount)" )
-//                     decimalCount += 1
-//                 }
-//             }
-//             print("CHANGING INPUT HEREEEE = \(decimalCount)" )
-//
-//             if decimalCount >= 1 {
-//                 return false
-//             } else {
-//                 return true
-//             }
-//         default:
-//             let array = Array(string)
-//             if array.count == 0 {
-//                 return true
-//             }
-//             return false
-//         }
-//    }
     
     @objc func submitAction() {
-//        if let number = self.phoneNumber.FieldView.TextField.text, let amount = self.amount.FieldView.TextField.text , number != "" && amount.returnAmount() >= 1{
-//             self.setAnimate(msg: "Please wait")
-//            self.viewModel?.sendMoney(amount: "\(amount.returnAmount() ?? 0)",customerId: UserLoginData.shared.id ?? 0, phone: number)
-//        }else {
-//            let phone = self.phoneNumber.FieldView.TextField.text
-//            self.showAlert(buttonOK: "Ok", message: phone == "" ? "Phone number is invalid." : "Please enter your desired amount for trasfer.", actionOk: nil, completionHandler: nil)
-//        }
-       
+        //MARK: - Getting all fields to fillup from collection view
+        var error : Bool = false
+        
+        var parameters : [[String:String]] = []
+        
+        for x in 0...((data?.meta.count ?? 0) - 1) {
+            if let cell = collectionView.cellForItem(at: IndexPath(item: x, section: 0)) as? PaybillsItemViewCell{
+                if data?.meta[x].isRequired == IsRequired.bool(true) {
+                    if cell.textField.TextField.text == "" {
+                        error = true
+                    }
+                }
+                
+                if let field = data?.meta[x].field {
+                    //MARK: - checking if field type is dropdown
+                    var perItem : [String: String] = [:]
+                    if let drop = cell.dataDropDown {
+                        perItem["key"]  = field
+                        perItem["value"] =  drop.value
+                    }else if cell.textField.TextField.tag == 1 {
+                        perItem["key"]  = field
+                        perItem["value"] = cell.textField.TextField.text?.formatDate(dateFormat: "MMM dd, yyyy", format: "YYYY-MM-DD") ?? ""
+                        
+                    }else {
+                        perItem["key"]  = field
+                        perItem["value"] =  cell.textField.TextField.text ?? ""
+                    }
+                    
+                    parameters.append(perItem)
+        
+                }
+            }
+        }
+        
+        if error {
+            self.showAlert(buttonOK: "Ok", message: "Please fill up all required fields.", actionOk: nil, completionHandler: nil)
+        }else {
+            print("PARAM : \(parameters)")
+            self.setAnimate(msg: "Please wait...")
+            self.viewModel?.paybillsProcess(token: self.coordinator?.token, param: parameters, billerCode: self.data?.code ?? "")
+        }
     }
+    
+    deinit {
+          NotificationCenter.default.removeObserver(self)
+    }
+    
+}
+
+extension PaybillsSelectedItemViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerCellId, for: indexPath) as? HeaderCell else {
+                        return UICollectionReusableView()
+            }
+            header.headerView.title.text = data?.name
+            header.headerView.desc.text = data?.type
+            return header
+        case UICollectionView.elementKindSectionFooter:
+            guard let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerCellId, for: indexPath) as? SubmitFooterViewCell else {
+                return UICollectionReusableView()
+            }
+
+            footer.delegate = self
+            return footer
+        default:
+            return UICollectionReusableView()
+        }
+        
+    }
+       
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width:collectionView.frame.width, height:100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width:collectionView.frame.width, height: (data?.meta.count ?? 0) > 0 ? 80 : 0)
+    }
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.data?.meta.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        //MARK: - Last section is the submit button
+        // checking per cell if input field or dropdown
+        // checking if required fields
+        // checking if fields accept number only or not
+        // gather all input upon submiting and make dictionary of paramaters
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: itemCellId, for: indexPath) as? PaybillsItemViewCell else {
+            return UICollectionViewCell()
+        }
+//        cell.data = self.data?[indexPath.item]
+//        cell.delegate = self
+//        if cellDropSelected == indexPath.item, let drop = self.dropItemSelected {
+//            cell.dataDropDown = drop
+//        }
+        
+        cell.dataDropDown = indexPath.item == cellDropSelected ? self.dropItemSelected : nil
+        cell.index = indexPath.item
+        cell.data = self.data?.meta[indexPath.item]
+        cell.delegate = self
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let textHeight = (self.data?.meta[indexPath.item].label?.heightForView(font: UIFont(name: Fonts.regular, size: 12)!, width: collectionView.frame.width - 80) ?? 0)
+       
+        return CGSize(width: collectionView.frame.width - 40, height: textHeight > 29 ? 60 + 40 : 70)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+    }
+
+}
+extension PaybillsSelectedItemViewController {
+    //MARK: - cell Actions
+
+    func showDropdownView(data: [DropItem]) {
+        let itemHeight = CGFloat((data.count * 50) + 10)
+        let frameHeight = CGFloat(view.frame.width * 0.8)
+        let height : CGFloat = itemHeight >= frameHeight ? frameHeight : itemHeight
+        let vc = DropDownViewController<DropItem>(width: view.frame.width * 0.8, height: height)
+        vc.data = data
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.parentView = self
+        self.present(vc, animated: false) {
+           vc.showModal()
+        }
+    }
+}
+extension PaybillsSelectedItemViewController : SubmitFooterViewCellDelegate , PaybillsItemViewCellDelegate {
+    func onClickDropDown(cell: PaybillsItemViewCell, data: MetaData?, index: Int?) {
+        if let d = data, let options = d.options {
+            self.view.endEditing(true)
+            var items: [DropItem] = []
+            for x in options {
+                items.append(DropItem(key: x.key, value: x.value?.string ?? ""))
+            }
+            
+            self.cellDropSelected = index
+            self.showDropdownView(data: items)
+        }
+    }
+    
+    func onSubmit(cell: SubmitFooterViewCell) {
+        self.submitAction()
+    }
+    
     
 }

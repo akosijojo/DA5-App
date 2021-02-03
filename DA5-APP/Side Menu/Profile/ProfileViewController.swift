@@ -8,29 +8,87 @@
 
 import UIKit
 
-class ProfileViewController: BaseHomeViewControler {
+class ProfileViewController: BaseHomeViewControler{
     var data : Customer? {
         didSet {
             if data?.kycStatus == 0  {
                 self.statusLbl.text =  "KYC Pending Approval"
-            }else {
+                self.statusDescLbl.isHidden = true
+            }else if data?.kycStatus == 2 {
+                self.statusLbl.text =  "KYC Application is Rejected"
+                self.statusLbl.backgroundColor = ColorConfig().lightGray
+                self.statusDescLbl.isHidden = false
+                self.statusDescLbl.text = data?.kycNotice ?? ""
+            }  else {
+                self.statusDescLbl.isHidden = true
                 self.statusLbl.isHidden = true
             }
         
             self.fname.TextField.text = data?.firstName
             self.mname.TextField.text = data?.middleName
             self.lname.TextField.text = data?.lastName
-            self.bdate.TextField.text = data?.birthDate?.formatDate(dateFormat: "YYYY-MM-DD",format: "MMMM dd, YYYY")
+            self.bdate.TextField.text = data?.birthDate?.formatDate(dateFormat: "YYYY-MM-DD",format: "MMM dd, YYYY")
             self.gender.TextField.text = data?.gender
             self.nationality.TextField.text = data?.nationality
             self.address.TextField.text = data?.address
             self.phoneNumber.FieldView.TextField.text = data?.phone
             self.emailAddress.TextField.text = data?.email
+            
             self.validIdPreview.downloaded(from: data?.idPicture ?? "", contentMode: .scaleAspectFill)
+            
             self.selfieIdPreview.downloaded(from: data?.idPicture2 ?? "", contentMode: .scaleAspectFill)
         }
     }
-
+    
+    var nationalityList : Nationality?
+    
+    var nationalitySelected : String = "" {
+          didSet {
+               self.nationality.TextField.text = self.nationalitySelected
+          }
+    }
+    
+    var validId : UIImage? {
+      didSet {
+            self.validIdPreview.image = validId
+          if self.viewModel?.registrationForm?.validId != nil {
+              print("NOT NILL VALID ID")
+              self.viewModel?.registrationForm?.validId = nil
+          }
+      }
+    }
+    
+    var selfieId : UIImage? {
+      didSet {
+            self.selfieIdPreview.image = selfieId
+            if self.viewModel?.registrationForm?.selfieId != nil {
+                print("NOT NILL SELFIE ID")
+                 self.viewModel?.registrationForm?.selfieId = nil
+            }
+      }
+    }
+    
+    let errorMessage = "Only provide information that is true and correct. If you're below 18 years old, you may be required to present a parental consent. Users below 10 years old are not allowed to register."
+    
+    var bdayCheck : Bool = false
+    
+    var rightBarButton : UIBarButtonItem?
+    
+    var editViewShow : Bool = false
+    
+    var datePicker : UIDatePicker?
+    
+    let dateFormat = DateFormatter()
+    
+    var viewModel : LoginViewModel?
+    
+    lazy var customProgressView : CustomProgressView = {
+       let v = CustomProgressView()
+        v.title.text = "Please wait"
+        v.message.text = ""
+       return v
+    }()
+    
     lazy var scrollView : UIScrollView = {
         let v = UIScrollView()
         return v
@@ -44,6 +102,13 @@ class ProfileViewController: BaseHomeViewControler {
         v.textColor = ColorConfig().white
         v.font = UIFont(name: Fonts.bold, size: 14)
         v.layer.cornerRadius = 10
+        return v
+    }()
+    
+    lazy var statusDescLbl : UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: Fonts.regular, size: 12)
+        v.numberOfLines = 0
         return v
     }()
     
@@ -128,7 +193,7 @@ class ProfileViewController: BaseHomeViewControler {
     lazy var emailAddress: CustomBasicFormInput = {
         let v = CustomBasicFormInput()
         v.TextField.keyboardType = .emailAddress
-        v.TextField.tag = 8
+        v.TextField.tag = 9
         v.TextField.delegate = self
         v.TextField.autocapitalizationType = .none
         v.TextField.isEnabled = false
@@ -144,7 +209,7 @@ class ProfileViewController: BaseHomeViewControler {
     lazy var validIdPreview : UIImageView = {
         let v = UIImageView()
         v.layer.cornerRadius = 5
-        v.tag = 2
+        v.tag = 1
         v.backgroundColor = ColorConfig().innerbgColor
         v.layer.masksToBounds = true
         v.clipsToBounds = true
@@ -160,23 +225,99 @@ class ProfileViewController: BaseHomeViewControler {
     lazy var selfieIdPreview : UIImageView = {
         let v = UIImageView()
         v.layer.cornerRadius = 5
-        v.tag = 1
+        v.tag = 2
         v.backgroundColor = ColorConfig().innerbgColor
         v.layer.masksToBounds = true
         v.clipsToBounds = true
         return v
     }()
     
+    lazy var submitBtn : UIButton = {
+        let v = UIButton()
+        v.setTitle("Next", for: .normal)
+        v.titleLabel?.font = UIFont(name: Fonts.bold, size: 12)
+        v.tintColor = ColorConfig().white
+        v.backgroundColor = ColorConfig().black
+        v.layer.cornerRadius = 5
+        v.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
+        return v
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpForm()
         setUpView()
+        setUpData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         setUpNavigationBar()
+        
+        if data?.kycStatus != 1 { // && data?.kycUpdatedAt == nil
+            setUpEditingActions()
+            setUpRightNavigationBar()
+            dismissCheckingDate()
+        }else {
+            disableEditing()
+        }
+    }
+    
+    func setUpRightNavigationBar() {
+        let rightButton = UIButton(type: .system)
+        rightButton.setTitle("Edit", for: .normal)
+        rightButton.tintColor = ColorConfig().black
+        rightButton.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
+        rightBarButton = UIBarButtonItem(customView: rightButton)
+        self.navigationItem.rightBarButtonItem = rightBarButton
+    }
+    
+    @objc func showEditView() {
+        editViewShow = !editViewShow
+//        let item = self.navigationItem.rightBarButt
+        let rightButton = UIButton(type: .system)
+        rightButton.setTitle(editViewShow ? "Cancel" : "Edit", for: .normal)
+        rightButton.tintColor = ColorConfig().black
+        rightButton.addTarget(self, action: #selector(showEditView), for: .touchUpInside)
+        rightBarButton = UIBarButtonItem(customView: rightButton)
+        self.navigationItem.rightBarButtonItem = rightBarButton
+        self.setUpTextFieldEditing(editing: editViewShow)
+    }
+    
+    func disableEditing() {
+        if editViewShow {
+//            self.navigationItem.rightBarButtonItem = nil
+             editViewShow = false
+             self.setUpTextFieldEditing(editing: editViewShow)
+        }
+    }
+    
+    override func setUpData() {
+        if data?.kycStatus != 1 { //&& data?.kycUpdatedAt == nil
+            self.viewModel?.returnNationalityList = { [weak self] data in
+                DispatchQueue.main.async {
+                    self?.nationalityList = data
+                     self?.stopAnimating()
+                }
+            }
+            self.setAnimate(msg: "Please wait...")
+            self.viewModel?.getNationality()
+        }
+    }
+    func beginAnimation(animate: Bool = true,title: String? = nil, msg: String? = nil) {
+       if animate {
+           customProgressView.runLoadingAnimation(vc: self,navBar: self.navigationController?.navigationBar, view: self.view,title: title,message: msg)
+       }else {
+            customProgressView.removeLoadingAnimation(vc: self, navBar: self.navigationController?.navigationBar)
+       }
+   }
+    
+    func stopAnimationBlocker() {
+        print("STOP ANIMATION")
+        self.stopAnimating()
+        self.beginAnimation(animate: false)
     }
     
     override func setUpView() {
@@ -188,15 +329,23 @@ class ProfileViewController: BaseHomeViewControler {
         
         scrollView.addSubview(statusLbl)
         statusLbl.snp.makeConstraints { (make) in
-           make.top.equalTo(scrollView).offset(25)
+           make.top.equalTo(scrollView).offset(data?.kycStatus != 1 ? 25 : 0)
            make.leading.equalTo(view).offset(20)
            make.trailing.equalTo(view).offset(-20)
-           make.height.equalTo(data?.kycStatus == 0 ? 40 : 0)
+           make.height.equalTo(data?.kycStatus != 1 ? 40 : 0)
+        }
+        
+        let height = data?.kycNotice?.heightForView(font: statusDescLbl.font, width: self.view.frame.width - 20) ?? 0
+        scrollView.addSubview(statusDescLbl)
+        statusDescLbl.snp.makeConstraints { (make) in make.top.equalTo(statusLbl.snp.bottom).offset(data?.kycStatus == 2 ? 20 : 0)
+            make.leading.equalTo(view).offset(20)
+            make.trailing.equalTo(view).offset(-20)
+            make.height.equalTo(data?.kycStatus == 2 ? height : 0)
         }
         
         scrollView.addSubview(headerView)
         headerView.snp.makeConstraints { (make) in
-           make.top.equalTo(statusLbl.snp.bottom).offset(20)
+           make.top.equalTo(statusDescLbl.snp.bottom).offset(20)
            make.leading.equalTo(view).offset(20)
            make.trailing.equalTo(view).offset(-20)
            make.height.equalTo(40)
@@ -320,12 +469,19 @@ class ProfileViewController: BaseHomeViewControler {
                 make.trailing.equalTo(view).offset(-20)
             }
             make.height.equalTo(200)
+//            make.bottom.equalTo(scrollView).offset(-20)
+        }
+         
+        scrollView.addSubview(submitBtn)
+        submitBtn.snp.makeConstraints { (make) in
+            make.top.equalTo(selfieIdPreview.snp.bottom).offset(20)
+            make.leading.equalTo(view).offset(20)
+            make.trailing.equalTo(view).offset(-20)
+            make.height.equalTo(0)
             make.bottom.equalTo(scrollView).offset(-20)
         }
-                
     }
-    
-
+   
     func setUpForm() {
         let asteriskAttributes = NSAttributedString(string: " *", attributes: [.font:  UIFont(name: Fonts.bold, size: 14)!, .foregroundColor : ColorConfig().blue!])
         
@@ -386,5 +542,228 @@ class ProfileViewController: BaseHomeViewControler {
         selfieIdLabel.attributedText = selfieIdAttributes
 
     }
+    
+    @objc func submitAction() {
+        //MARK: - check Customer data if have any changes and submit if fields change error if no changes
         
+        self.viewModel?.registrationForm = RegistrationForm(fname: self.fname.TextField.text ?? "", mname: self.mname.TextField.text ?? "", lname: self.lname.TextField.text ?? "", bdate: self.bdate.TextField.text?.formatDate(dateFormat: "MMM dd, yyyy", format: "YYYY-MM-DD") ?? "" , gender: self.gender.TextField.text ?? "", nationality: self.nationality.TextField.text ?? "", address: self.address.TextField.text ?? "", city: self.data?.city, province: self.data?.province, zipcode: self.data?.zipCode, phoneNumber: self.phoneNumber.FieldView.TextField.text ?? "", email: self.emailAddress.TextField.text ?? "", password: nil, validId: self.validId != nil ? nil : self.data?.idPicture, selfieId: selfieId != nil ? nil : self.data?.idPicture2, code: nil, fbId: self.data?.facebookID ?? nil)
+        
+        let fields = [fname.TextField, lname.TextField,bdate.TextField, gender.TextField, nationality.TextField, address.TextField,phoneNumber.FieldView.TextField,emailAddress.TextField]
+        
+        if !checkFieldsChanges(fields: fields) {
+            if !bdayCheck {
+                self.showAlert(buttonOK: "Ok", message: errorMessage, actionOk: nil, completionHandler: nil)
+            }else {
+                self.coordinator?.showProfileVerificationViewController(data: self.data, vM: self.viewModel, view: self)
+            }
+            
+        }else {
+            // no action no changes
+            self.showAlert(buttonOK: "Ok", message: "Please fill up all required fields.", actionOk: nil, completionHandler: nil)
+        }
+    }
+    
+    func checkFieldsChanges(fields: [UITextField]) -> Bool {
+        //MARK: CHECKING FOR CHANGES IN INFO
+         for x in 0...fields.count - 1 {
+             print("CHECK : ",fields[x].text)
+             if (fields[x].text ?? "") == "" {
+                 return true
+             }
+         }
+         return false
+    }
+    
+        
+}
+
+extension ProfileViewController {
+     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+           guard let text = textField.text else { return true }
+           if textField.tag == 8 {
+              let count = text.count + string.count - range.length
+              return count <= 10
+           }
+          return true
+      }
+}
+
+
+//MARK: - EDITING ACTION AND SETUP
+extension ProfileViewController {
+    @objc func selectValidId() {
+        let vc = CapturedIdViewController()
+        vc.coordinator = self.coordinator
+        vc.vc = self
+        vc.imageView.image = self.validId
+        vc.type = 1
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func selectSelfieId() {
+        let vc = CapturedIdViewController()
+        vc.coordinator = self.coordinator
+        vc.vc = self
+        vc.type = 2
+        vc.imageView.image = self.selfieId
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func showNationality() {
+       self.view.endEditing(true)
+       let vc = NationalityViewController()
+       vc.modalPresentationStyle = .overCurrentContext
+       vc.parentView = self
+       vc.data = self.nationalityList
+       self.present(vc, animated: false) {
+            vc.showModal()
+       }
+   }
+    
+    @objc func showGenderPicker() {
+        if editViewShow {
+            let alert = UIAlertController(title: "Select Gender", message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Male", style: .default, handler: { action in
+                self.gender.TextField.text = "Male"
+                self.dismissPicker()
+            }))
+            alert.addAction(UIAlertAction(title: "Female", style: .default, handler: { action in
+                self.gender.TextField.text = "Female"
+                self.dismissPicker()
+            }))
+            
+            if let popoverController = alert.popoverPresentationController {
+                popoverController.sourceView = gender
+                popoverController.sourceRect = CGRect(x: gender.bounds.midX, y: 0, width: 120, height: 100)
+    //            popoverController.permittedArrowDirections = [] //to hide the arrow of any particular direction
+            }
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    
+    func setUpDatePicker() {
+        datePicker = UIDatePicker()
+        datePicker?.datePickerMode = .date
+        
+        if let bDay = dateFormat.date(from: bdate.TextField.text ?? ""){
+             datePicker?.date = bDay
+        }
+       
+        datePicker?.maximumDate = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+        datePicker?.addTarget(self, action: #selector(dateSelected(_:)), for: .valueChanged)
+        
+        bdate.TextField.inputView = datePicker
+        
+
+        let toolBar = UIToolbar(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.view.frame.width, height: CGFloat(44))))
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
+        toolBar.tintColor = UIColor.black
+        
+        toolBar.sizeToFit()
+
+        let doneButton = UIBarButtonItem(title: "Done", style: UIBarButtonItem.Style.plain, target: self, action: #selector(selectBDate))
+        let spaceButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.plain, target: self, action:  #selector(dismissDatePicker))
+        toolBar.setItems([cancelButton,spaceButton,doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+
+        bdate.TextField.inputAccessoryView = toolBar
+     }
+    
+     @objc func dismissPicker() {
+        self.view.endEditing(true)
+     }
+    
+     @objc func dismissDatePicker() {
+        self.view.endEditing(true)
+        self.dismissCheckingDate()
+     }
+    
+     @objc func selectBDate() {
+        self.view.endEditing(true)
+        self.dismissCheckingDate()
+     }
+
+     @objc func dateSelected(_ datePicker: UIDatePicker ) {
+            bdate.TextField.text = dateFormat.string(from: datePicker.date)
+     }
+    
+    func dismissCheckingDate() {
+        guard let bDay = dateFormat.date(from: bdate.TextField.text ?? "") else {
+           return
+         }
+        self.birthDateChecker(bDay: bDay)
+    }
+    
+    func birthDateChecker(bDay: Date) {
+        // 0 ok // 1 under 18 but > 10 // 2 under Age
+        let userAge = Calendar.current.dateComponents([.year], from: bDay, to: Date())
+        var haveError : Bool = false
+        print("DATE : \(userAge.year)")
+        if let age = userAge.year {
+            if age >= 18 {
+              haveError = false
+              bdayCheck = true
+            }else if age > 10 {
+               haveError = true
+               bdayCheck = true
+            }else {
+               haveError = true
+               bdayCheck = false
+            }
+        }
+        if haveError {
+            self.showAlert(buttonOK: "Ok", message: errorMessage, actionOk: { (act) in
+                
+            }, completionHandler: nil)
+        }
+    }
+
+    func setUpTextFieldEditing(editing: Bool) {
+        print("IS EDITING : \(editing)")
+        self.fname.TextField.isEnabled = editing
+        self.mname.TextField.isEnabled = editing
+        self.lname.TextField.isEnabled = editing
+        self.bdate.TextField.isEnabled = editing
+        self.gender.TextField.isEnabled = editing
+        self.nationality.TextField.isEnabled = editing
+        self.address.TextField.isEnabled = editing
+        self.phoneNumber.FieldView.TextField.isEnabled = editing
+        self.emailAddress.TextField.isEnabled = editing
+        self.validIdPreview.isUserInteractionEnabled = editing
+        self.selfieIdPreview.isUserInteractionEnabled = editing
+        self.gender.isUserInteractionEnabled = editing
+    
+        submitBtn.snp.remakeConstraints { (make) in
+            make.top.equalTo(selfieIdPreview.snp.bottom).offset(20)
+            make.leading.equalTo(view).offset(20)
+            make.trailing.equalTo(view).offset(-20)
+            make.height.equalTo(editing ? 40 : 0)
+            make.bottom.equalTo(scrollView).offset(-20)
+        }
+        
+        print("GENDER EDITING : \(self.gender.isUserInteractionEnabled)")
+    }
+    
+    func setUpEditingActions() {
+        let validTap = UITapGestureRecognizer(target: self, action: #selector(selectValidId))
+        self.validIdPreview.addGestureRecognizer(validTap)
+        
+        let selfieTap = UITapGestureRecognizer(target: self, action: #selector(selectSelfieId))
+        self.selfieIdPreview.addGestureRecognizer(selfieTap)
+        
+        let gTap = UITapGestureRecognizer(target: self, action: #selector(showGenderPicker))
+        self.gender.addGestureRecognizer(gTap)
+        
+        let tapNationality = UITapGestureRecognizer(target: self, action: #selector(showNationality))
+        self.nationality.TextField.addGestureRecognizer(tapNationality)
+        
+        setUpDatePicker()
+        dateFormat.dateFormat = "MMM dd, yyyy"
+    }
+
+    
 }

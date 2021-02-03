@@ -16,7 +16,7 @@ class NewsCell: UICollectionViewCell {
     var data : NewsData? {
         didSet {
             if let d = data {
-                self.imageView.image = UIImage(named: d.image)
+                self.imageView.downloaded(from: data?.image ?? "", contentMode: .scaleAspectFill)
             }
         }
     }

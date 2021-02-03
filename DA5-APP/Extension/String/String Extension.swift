@@ -9,6 +9,13 @@
 import UIKit
 
 extension String {
+    func trimValuesFromEnum() -> String {
+        let word = self.components(separatedBy: .decimalDigits)
+        print("WORD : \(word)")
+    
+        return word[0].replacingOccurrences(of: ".string(\"\")", with: "")
+    }
+    
     func heightForView(font:UIFont, width:CGFloat) -> CGFloat{
         let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: 999999999))
         label.numberOfLines = 0

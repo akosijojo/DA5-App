@@ -32,5 +32,30 @@ class PaybillsViewModel: NSObject {
         
     }
     
+ 
+    func paybillsProcess(token: String?, param: [[String:String]], billerCode : String) {
+         guard let dataModel = model else { return }
+
+         let completionHandler = { (response : PaybillsData?,status: StatusList?) in
+//
+            if let dataReceived = response {
+                self.onSuccessPaybillsData?(dataReceived)
+                return
+            }
+
+            self.onErrorHandling?(status)
+            
+         }
+        
+        let paramData : [String : Any] = [
+            "customer_id" : UserLoginData.shared.id ?? 0,
+            "biller_code" : billerCode,
+            "meta_fields" : param,
+        ]
+        
+        dataModel.paybillsProcess(param: paramData, token: token ,completionHandler: completionHandler)
+        
+    }
+    
     
 }

@@ -79,10 +79,11 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
                 print("\n===============================================================\n")
             //MARK: - END
                 if error == nil {
+                    let dataRes = response as? HTTPURLResponse
                     if let receivedData = data {
                         do {
                         //MARK: - CHECK STATUS IF NO ERROR
-                            if let res = response as? HTTPURLResponse {
+                            if let res = dataRes {
                                 print("DECODING :",T.self, "RESPONSE ",res.statusCode)
                                 if res.statusCode != 200 {
                                     let data = try JSONDecoder().decode(StatusMessage.self, from: receivedData)
@@ -95,7 +96,8 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
                             completionHandler(data,nil)
                         } catch let jsonErr {
                             print("Error serializing json:", jsonErr)
-                            completionHandler(nil,StatusList(status: 0, title: "", message: "Something went wrong", tag: nil))
+                
+                            completionHandler(nil,StatusList(status: 0, title: "", message: "Something went wrong", tag: dataRes?.statusCode == 200 ? 1 : 0))
                         }
                         return
                     }

@@ -40,7 +40,7 @@ class TransactionHistoryCell: UICollectionViewCell {
                 }
 
                 if let walletTransfer = d.walletTransfer {
-                    self.titleLbl.text = "Wallet Transfer"
+                    self.titleLbl.text = "Send Money"
                     self.nameLbl.text =  walletTransfer.customerName
                     self.descLbl.text = "+63\(walletTransfer.recipientPhone ?? "")"
                     self.bankLbl.text = "Ref No. \(walletTransfer.referenceNo ?? "")"

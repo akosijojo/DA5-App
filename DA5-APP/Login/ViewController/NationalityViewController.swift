@@ -34,6 +34,9 @@ class NationalityViewController: BaseViewControler, UICollectionViewDelegateFlow
         if let vc = self.parentView as? SignUpViewController {
             vc.nationalitySelected = self.data?.nationals[indexPath.item] ?? ""
         }
+        if let vc = self.parentView as? ProfileViewController {
+            vc.nationalitySelected = self.data?.nationals[indexPath.item] ?? ""
+        }
         self.dismiss(animated: false) {
             self.hideModal()
         }

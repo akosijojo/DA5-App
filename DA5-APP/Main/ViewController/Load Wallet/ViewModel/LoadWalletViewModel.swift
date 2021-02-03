@@ -10,11 +10,29 @@ import UIKit
 
 class LoadWalletViewModel: NSObject {
     var model : LoadWalletModel?
+    var onSuccessPartnerList: ((PartnerList?) -> Void)?
     var onSuccessWalletDetailsData: ((WalletDetailsData?) -> Void)?
     var onSuccessDataRequest: ((SubmitCashInOutData?) -> Void)?
     var onSuccessRequest : ((StatusList?) -> Void)?
     var onErrorHandling : ((StatusList?) -> Void)?
 
+    func getList() {
+        guard let dataModel = model else { return }
+                
+         let completionHandler = { (data : PartnerList?,status: StatusList?) in
+            
+            if let dataReceived = data {
+                self.onSuccessPartnerList?(dataReceived)
+                return
+            }
+            
+            self.onErrorHandling?(status)
+         }
+            
+     
+        dataModel.getList(param: [:], completionHandler: completionHandler)
+    }
+    
     func cashIn(amount: String, customerId: Int, partnerId: String) {
         guard let dataModel = model else { return }
                 

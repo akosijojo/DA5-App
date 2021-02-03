@@ -14,7 +14,7 @@ class WalletTransferViewController: BaseHomeViewControler {
     
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
-        v.title.text = "Wallet transfer"
+        v.title.text = "Send Money"
         v.desc.text = "Enter recipient's phone number and amount"
         return v
     }()
@@ -219,7 +219,7 @@ class WalletTransferViewController: BaseHomeViewControler {
 
             self.data = WalletTransferData(senderNum: UserLoginData.shared.phoneNumber ?? "", senderName: "\(UserLoginData.shared.firstName ?? "") \(UserLoginData.shared.lastName ?? "")", recipientNum: number, recipientName: "", amount: amount)
             
-            self.viewModel?.sendMoneyDetails(amount: amount, customerId: UserLoginData.shared.id ?? 0, phone: number)
+            self.viewModel?.sendMoneyDetails(amount:"\(amount.returnAmount())", customerId: UserLoginData.shared.id ?? 0, phone: number)
             
         }else {
             let phone = self.phoneNumber.FieldView.TextField.text

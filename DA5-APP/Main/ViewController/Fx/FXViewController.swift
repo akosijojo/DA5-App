@@ -202,7 +202,7 @@ class FXViewController: BaseHomeViewControler {
     }
     
     @objc func showCurrencyList() {
-        let vc = DropDownViewController<String>()
+        let vc = DropDownViewController<String>(width: 80, height: view.frame.height * 0.8)
         var data : [String] = []
         if let d = self.currencyList?.rates  {
             for x in d{

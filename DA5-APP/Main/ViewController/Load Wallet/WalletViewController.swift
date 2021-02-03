@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct CashInData {
+struct CashInData: Decodable {
     var id : Int
     var name : String
     var image : String
@@ -86,7 +86,7 @@ class WalletViewController: BaseHomeViewControler {
        return v
     }()
     
-    var data : CashInData?
+    var data : PartnerListItem?
     
     var type : Int?
     
@@ -106,11 +106,11 @@ class WalletViewController: BaseHomeViewControler {
         setUpNavigationBar()
     }
     
-    init(data: CashInData?,type: Int?) {
+    init(data: PartnerListItem?,type: Int?) {
         super.init(nibName: nil, bundle: nil)
         self.data = data
         self.type = type
-        self.cashInImageView.image = UIImage(named: data?.image ?? "")
+        self.cashInImageView.downloaded(from: data?.image ?? "", contentMode: .scaleAspectFill)
         self.cashInLbl.text = data?.name
         print("DATA GET \(data)")
     }
@@ -133,7 +133,7 @@ class WalletViewController: BaseHomeViewControler {
     func getData() {
         self.viewModel?.onSuccessDataRequest = { [weak self] status in
             DispatchQueue.main.async {
-                self?.showAlert(buttonOK: "Ok", message: "Transaction Successful!", actionOk: { (action) in
+                self?.showAlert(buttonOK: "Ok",title: "Transaction Successful!", message: "Please proceed to any \(self?.data?.name ?? "") branches \n Ref no. \(status?.referenceNo ?? "")", actionOk: { (action) in
                     self?.coordinator?.showParentView()
                 }, completionHandler: nil)
             }

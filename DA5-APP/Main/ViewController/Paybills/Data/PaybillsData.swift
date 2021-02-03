@@ -11,6 +11,8 @@ import Foundation
 // MARK: - Welcome
 struct PaybillsData: Decodable {
     let billers: [BillerData]
+    let message : String?
+    
 }
 
 // MARK: - Biller
@@ -48,6 +50,7 @@ struct MetaData: Decodable {
     let format: String?
     let value: Int?
     let isReadonly: Bool?
+    
 
     enum CodingKeys: String, CodingKey {
         case label, field, type
@@ -74,7 +77,7 @@ struct TypeClass: Codable {
     }
 }
 
-enum IsRequired: Codable {
+enum IsRequired: Codable, Equatable {
     case bool(Bool)
     case string(String)
 
@@ -103,11 +106,12 @@ enum IsRequired: Codable {
 }
 
 // MARK: - Option
-struct Option: Codable {
+struct Option: Decodable {
     let key: String
     let value: Value?
     let valueLAO, valueSAN, valueSAO, overrideField: String?
     let overrideValue: Int?
+    var isSelected : Bool?
 
     enum CodingKeys: String, CodingKey {
         case key, value, valueLAO, valueSAN, valueSAO
@@ -116,32 +120,22 @@ struct Option: Codable {
     }
 }
 
-enum Value: Codable {
-    case integer(Int)
-    case string(String)
+struct Value: Codable {
+    let string : String?
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let x = try? container.decode(Int.self) {
-            self = .integer(x)
+            self.string = String(describing: x)
             return
         }
         if let x = try? container.decode(String.self) {
-            self = .string(x)
+            self.string = x
             return
         }
         throw DecodingError.typeMismatch(Value.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for Value"))
     }
 
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        switch self {
-        case .integer(let x):
-            try container.encode(x)
-        case .string(let x):
-            try container.encode(x)
-        }
-    }
 }
 
 enum TypeEnum: String, Codable {

@@ -146,7 +146,7 @@ extension TransactionsFullViewController: UICollectionViewDelegateFlowLayout, UI
          guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerCell, for: indexPath) as? HeaderCell else {
              return UICollectionReusableView()
          }
-        header.headerView.title.text = "Transaction History"
+        header.headerView.title.text = "Transaction Successful"
 
          return header
     }

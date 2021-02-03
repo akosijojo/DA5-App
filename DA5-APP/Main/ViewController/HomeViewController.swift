@@ -132,22 +132,21 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                 
             self?.homeData = data
             self?.homeData?.news = [
-                 NewsData(id: 1, name: "Western", image: "western"),
-                 NewsData(id: 2, name: "City", image: "app_logo"),
-                 NewsData(id: 3, name: "Western", image: "western"),
-                 NewsData(id: 4, name: "Western", image: "western"),
+                NewsData(id: 1, name: "RDS signs with Direct Agent 5, Inc.", image: "https://da5.com.ph/h/wp-content/uploads/2020/09/RDS-DA5005transparent-400x250-1.png" ,desc: "Robinsons Department Store (RDS) gives shoppers the value of utmost convenience by letting them complete multiple transactions in a safe, secure and comfortable environment. Customers enjoy a more practical and multi-tasking visit to the Robinsons Business Center, which offers bills payment, foreign exchange, show and concert tickets, airline bookings and payments, and telco prepaid products.\n\nThe latest company to sign up with Robinsons Department Store is Direct Agent 5, Inc. (DA5), an authorized direct agent of Western Union Money Transfer. DA5 started as a money remittance agent with a handful of locations, which has grown to over 1,000 company-owned and partner locations nationwide.\n\n“This partnership will strategically bring the Western Union services to all business centers of Robinsons Department Stores nationwide. Both companies are looking into not just servicing mall-goers, but more so, Filipino families who are recipients of OFW remittances.” DA5 CEO & President Raymond A. Babst notes the ultimate goal of their partnership. The DA5 family continues to strive in delivering worthwhile services to empower Filipino communities, both locally and abroad."),
+                NewsData(id: 2, name: "Direct Agent 5, Inc.", image: "https://da5.com.ph/h/wp-content/uploads/2020/07/DA5-400x250transparent.png", desc: "Direct Agent 5, Inc. (DA5) is one of the leading authorized direct agents of Western Union in the Philippines. Since its birth in 2006 with only a handful of staff, DA5 has grown to accommodate a family of services including bills payment and prepaid card retailing.\n\nWhile DA5’s efforts have been honored by Western Union since its first year of operation, the company recognizes that its laurels are not the plaques and certificates it has received, rather it is the countless dreams of fellow Filipinos they helped realize over the years."),
+                NewsData(id: 3, name: "RD Pawnshop signs with DA5", image: "https://da5.com.ph/h/wp-content/uploads/2020/09/RD-DA5.png", desc: "From left RDPI Chief Operation Officer, Helen Nograles, RD Corporation Vice Chairman Ritche Rivera, DA5 CEO & President Raymond Babst, DA5 Vice President for Business Development Edward Estacion, DA5 Compliance Manager, Atty. Mary Rose Rebadulla.\n\nDirect Agent 5, Inc. (DA5), an authorized agent of Western Union®, is proud to announce its collaboration with RD Pawnshop Inc., a company engaged in pawning, cash padala, e-loading, NSO/PSA payments, insurance and bills payment.\n\n“DA5 is proud to collaborate with RD Pawnshop in expanding the Western Union service network to around one thousand five hundred RD Pawnshop branches nationwide by year end. Both companies are excited to offer this service to more Filipino families who are recipients of OFW remittances. Our goal is to provide fast, reliable and convenient money transfer service to meet the needs of people across the country.” DA5 CEO & President Raymond A. Babst notes the main goal of their partnership. With this collaboration, DA5 will have a combined network of more than two thousand five hundred company-owned and partner locations servicing the Filipino OFWs nationwide.\n\n In adherence to a paramount core value of providing outstanding service guided by Christian principles, President of RDPI Mr. Ritche C. Rivera has this message for both RDPI and DA5, “Brethren we are just stewards of all the material gain and wealth, let us give to God all the credits”.\n\nThe earth is the LORD‘s, and the fullness thereof; the world, and they that dwell therein.–\n\nPsalm 24:1 KJV"),
             ]
                 
             self?.servicesData = [
                 ServicesData(id: 1, name: "Load Wallet", image: "digital-wallet"),
                 ServicesData(id: 2, name: "Cash Out", image: "atm"),
                 ServicesData(id: 3, name: "Bank Transfer", image: "bank-transfer"),
-                ServicesData(id: 4, name: "Wallet transfer", image: "money"),
+                ServicesData(id: 4, name: "Send Money", image: "money"),
                 ServicesData(id: 5, name: "FX", image: "exchange"),
                 ServicesData(id: 6, name: "Pay Bills", image: "bill"),
                 ServicesData(id: 7, name: "Buy Load", image: "smartphone"),
                 ServicesData(id: 8, name: "Crypto", image: "crypto"),
-                ServicesData(id: 9, name: "Loans", image: "communication"),
+                ServicesData(id: 9, name: "Loans", image: "loan"),
             ]
             //MARK: - REMOVE EMPTY VIEW
             if self?.isEmpty ?? false {
@@ -241,7 +240,7 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as? HeaderCollectionViewCell else {
                  return UICollectionReusableView()
              }
-        header.label.text = section == 1 ? "Services Available" : section == 2 ?  "News" : section == 3 ?  "Pending Transactions" : "Transaction History"
+        header.label.text = section == 1 ? "Services Available" : section == 2 ?  "News" : section == 3 ?  "Pending Transactions" : "Transaction Successful"
         
         header.index = section
         if section != 0 && section != 1{
@@ -397,7 +396,7 @@ extension HomeViewController : CollectionViewCellDelegate {
             
         }else if let itemCell = cell as? NewsCell {
 //            print("NEWS : \(self.homeData?.news?[index])")
-            self.coordinator?.showNewsItem()
+            self.coordinator?.showNewsItem(data: self.homeData?.news?[index])
         }else if let itemCell = cell as? PendingTransactionCell {
 //            print("PENDING TRANSACTIONS : \(self.homeData?.pendingTransaction?[index])")
 //            self.coordinator?.showBase2ndViewController()

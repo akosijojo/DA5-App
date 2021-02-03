@@ -73,6 +73,13 @@ class PaybillsViewController: BaseHomeViewControler {
             }
         }
     
+         self.viewModel?.onErrorHandling = { [weak self] status in
+            DispatchQueue.main.async {
+                self?.stopAnimating()
+                self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
+            }
+        }
+        
         self.setAnimate(msg: "Please wait...")
         self.viewModel?.getBillers(token: self.coordinator?.token)
     }
