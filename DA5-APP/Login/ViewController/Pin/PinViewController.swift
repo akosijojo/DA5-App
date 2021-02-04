@@ -79,6 +79,7 @@ class PinViewController: BaseViewControler {
         v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)!
         v.setTitle("Forgot MPIN?", for: .normal)
         v.addTarget(self, action: #selector(forgotMpinClick), for: .touchUpInside)
+        v.isHidden = true
        return v
     }()
     

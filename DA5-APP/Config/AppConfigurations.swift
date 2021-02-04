@@ -17,7 +17,7 @@ class AppConfig {
 //MARK:- API CONFIGURATIONS
 class ApiConfig {
     
-    var env : String = "dev" //live or dev
+    var env : String = "live" //live or dev
     var url = "https";
     
     var apiUsername : String = "da5"
@@ -26,11 +26,9 @@ class ApiConfig {
     var currencyApi : String = "https://api.exchangeratesapi.io/latest"
     var liveUrl : String = "https://daps.com.ph/api"
     
-    
-
     func getUrl() -> String {
         if env == "live" {
-           url = "https"
+           url = "https://daps.com.ph/api"
         }else {
            url = "https://da5app.orangeapps.ph/api"
         }

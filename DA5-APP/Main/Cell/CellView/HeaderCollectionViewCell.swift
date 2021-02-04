@@ -21,8 +21,9 @@ class HeaderCollectionViewCell: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        label.font = UIFont(name: Fonts.regular, size: 12)
-        rightBtn.font = UIFont(name: Fonts.regular, size: 10)
+        label.font = UIFont(name: Fonts.bold, size: 14)
+        rightBtn.font = UIFont(name: Fonts.regular, size: 12)
+        rightBtn.textAlignment = .right
         rightBtn.textColor = ColorConfig().lightBlue
         rightBtn.isHidden = true
         setUpView()
@@ -47,7 +48,7 @@ class HeaderCollectionViewCell: UICollectionReusableView {
         rightBtn.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.trailing.equalTo(self).offset(-20)
-            make.width.equalTo(40)
+            make.leading.equalTo(label.snp.trailing).offset(10)
             make.bottom.equalTo(self)
         }
     }

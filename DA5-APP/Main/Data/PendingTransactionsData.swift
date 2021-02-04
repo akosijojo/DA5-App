@@ -51,7 +51,7 @@ struct PendingTransactionsData: Decodable {
     }
     
     func convertToHistory() -> TransactionHistoryData {
-        return TransactionHistoryData(id: self.id, customerID: self.customerID, referenceNo: self.referenceNo, status: 2, type: self.type, createdAt: self.createdAt, updatedAt: self.updatedAt, cashInOut: self.cashInOut, eload: self.eload, walletTransfer: self.walletTransfer, fx: self.fx,instapay: self.instapay)
+        return TransactionHistoryData(id: self.id, customerID: self.customerID, referenceNo: self.referenceNo, status: self.status, type: self.type, createdAt: self.createdAt, updatedAt: self.updatedAt, cashInOut: self.cashInOut, eload: self.eload, walletTransfer: self.walletTransfer, fx: self.fx,instapay: self.instapay)
     }
 }
 

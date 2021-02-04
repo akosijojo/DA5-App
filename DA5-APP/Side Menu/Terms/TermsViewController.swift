@@ -127,7 +127,8 @@ class TermsViewController: BaseViewControler {
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { (make) in
             make.top.equalTo(view.layoutMarginsGuide.snp.top)
-            make.leading.trailing.bottom.equalTo(view)
+            make.leading.trailing.equalTo(view)
+            make.bottom.equalTo(view).offset(self.forViewing == true ?  0 : -70) // + 10 offset
         }
         
         let txtHeight = terms.heightForView(font:UIFont(name: Fonts.regular, size: 14)!, width: view.frame.width - 40)
@@ -140,15 +141,15 @@ class TermsViewController: BaseViewControler {
             make.leading.equalTo(view)
             make.trailing.equalTo(view)
             make.height.equalTo(txtComputedHeight)
+            make.bottom.equalTo(scrollView)
         }
         
-        scrollView.addSubview(btnContainer)
+        view.addSubview(btnContainer)
         btnContainer.snp.makeConstraints { (make) in
-            make.top.equalTo(termsLabel.snp.bottom).offset(10)
+            make.top.equalTo(scrollView.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(self.forViewing == true ?  0 : 60)
-            make.bottom.equalTo(scrollView)
         }
         
         if self.forViewing == nil {
@@ -168,19 +169,10 @@ class TermsViewController: BaseViewControler {
                 make.height.equalTo(40)
             }
         }
-        
-        
-        
-        
-//        scrollView.addSubview(btnView)
-//        btnView.snp.makeConstraints { (make) in
-//            make.top.equalTo(termsLabel.snp.bottom).offset(10)
-//            make.leading.equalTo(view).offset(20)
-//            make.trailing.equalTo(view).offset(-20)
-//            make.height.equalTo(40)
-//            make.bottom.equalTo(scrollView)
-//        }
+    
     }
+    
+    
 }
 
 class TermsButtonView : UIView {

@@ -206,6 +206,8 @@
 		EB6824F225B3149700C5BC11 /* FxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FxViewModel.swift; sourceTree = "<group>"; };
 		EB6824F525B314B100C5BC11 /* FxData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FxData.swift; sourceTree = "<group>"; };
 		EB6824F725B5612A00C5BC11 /* DropDownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownViewController.swift; sourceTree = "<group>"; };
+		EB68F70B25CBCCA90093AA72 /* DA5Release.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DA5Release.entitlements; sourceTree = "<group>"; };
+		EB68F70C25CBE05B0093AA72 /* DA5Debug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DA5Debug.entitlements; sourceTree = "<group>"; };
 		EB77E6352565776B000479CF /* HomeHeaderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderCollectionViewCell.swift; sourceTree = "<group>"; };
 		EB77E63825663F1F000479CF /* PinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinViewController.swift; sourceTree = "<group>"; };
 		EB77E63A2566464E000479CF /* CustomPinTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPinTextField.swift; sourceTree = "<group>"; };
@@ -907,6 +909,8 @@
 		EBA973A224EBB342001C09DB /* DA5-APP */ = {
 			isa = PBXGroup;
 			children = (
+				EB68F70C25CBE05B0093AA72 /* DA5Debug.entitlements */,
+				EB68F70B25CBCCA90093AA72 /* DA5Release.entitlements */,
 				EB77ED08257FCF5100D99528 /* UserDefaults */,
 				EB607FF024ECEFEB008ECF4F /* Custom */,
 				EBA973E624EC10C5001C09DB /* Extension */,
@@ -1551,7 +1555,8 @@
 			baseConfigurationReference = 9B5EC25FAE5766187ADEBF50 /* Pods-DA5-APP.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = "DA5-APP/DA5Debug.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = 3RDF37LU5D;
@@ -1561,8 +1566,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.da5.DA5-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.da5.da5App;
 				PRODUCT_NAME = DA5;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1573,7 +1579,8 @@
 			baseConfigurationReference = 3C275E078581678EB57718C9 /* Pods-DA5-APP.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_ENTITLEMENTS = "DA5-APP/DA5Release.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = 3RDF37LU5D;
@@ -1583,8 +1590,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.da5.DA5-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.da5.da5App;
 				PRODUCT_NAME = DA5;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1617,8 +1625,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9X2593SH8B;
+				DEVELOPMENT_TEAM = 3RDF37LU5D;
 				INFOPLIST_FILE = "DA5-APPTests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1659,7 +1668,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9X2593SH8B;
+				DEVELOPMENT_TEAM = 3RDF37LU5D;
 				INFOPLIST_FILE = "DA5-APPUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

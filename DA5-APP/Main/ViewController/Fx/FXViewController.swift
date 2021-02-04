@@ -122,7 +122,7 @@ class FXViewController: BaseHomeViewControler {
             DispatchQueue.main.async {
                 self?.stopAnimating()
                 if data?.tag == 1 {
-                    self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong", actionOk: { (action) in
+                    self?.showAlert(buttonOK: "Ok",title: data?.title ?? "", message:"Please proceed to any DA5 branches \n Ref no. \(data?.message ?? "")", actionOk: { (action) in
                         self?.coordinator?.showParentView()
                     }, completionHandler: nil)
                 }

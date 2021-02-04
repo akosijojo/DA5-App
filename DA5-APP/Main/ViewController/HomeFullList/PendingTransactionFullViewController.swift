@@ -191,7 +191,9 @@ extension PendingTransactionFullViewController: UICollectionViewDelegateFlowLayo
             if !isRefreshing {
                 print("REFRESHING BOTTOM")
                 isRefreshing = true
-                self.requestNewData()
+                  DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                      self.requestNewData()
+                  }
             }
         }
     }

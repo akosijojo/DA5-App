@@ -217,6 +217,9 @@ class SideMenuView : UIView {
     }
     
     @objc func showProfileView() {
+        if vc?.customerData?.kycStatus == nil {
+            vc?.customerData?.kycStatus = 0
+        }
         vc?.coordinator?.showProfileViewController(data: vc?.customerData)
     }
 }

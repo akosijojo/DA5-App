@@ -106,9 +106,10 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
                 print("REMOVING 3: \(index)")
                 if pTransaction[index].referenceNo == refNo {
                     print("REMOVING 4: \(pTransaction[index].referenceNo)")
-                    if let item = self.homeData?.pendingTransaction?[index].convertToHistory(){
-                          self.homeData?.transactionHistory?.insert(item, at: index)
-                    }
+//                    if let item = self.homeData?.pendingTransaction?[index].convertToHistory(){
+//
+//                          self.homeData?.transactionHistory?.insert(item, at: 0)
+//                    }
                     self.homeData?.pendingTransaction?.remove(at: index)
                     self.collectionView.reloadData()
                 }
@@ -240,10 +241,10 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as? HeaderCollectionViewCell else {
                  return UICollectionReusableView()
              }
-        header.label.text = section == 1 ? "Services Available" : section == 2 ?  "News" : section == 3 ?  "Pending Transactions" : "Transaction Successful"
+        header.label.text = section == 1 ? "Services Available" : section == 2 ?  "News" : section == 3 ?  "Pending Transactions" : "Successful Transactions"
         
         header.index = section
-        if section != 0 && section != 1{
+        if section != 0 && section != 1 && section != 2{
             header.addAction()
             header.rightBtn.text = "View All"
         }else {

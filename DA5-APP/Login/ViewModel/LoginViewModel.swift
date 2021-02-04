@@ -12,6 +12,7 @@ class LoginViewModel : NSObject {
     var model : LoginModel?
     var onSuccessRegistrationData: ((LoginData?) -> Void)?
     var onErrorFbLoginData: ((LoginFb?) -> Void)?
+    var onErrorAppleLoginData: ((LoginApple?) -> Void)?
     var onSuccessGettingList : ((Customer?,String?) -> Void)?
     var returnNationalityList : ((Nationality?) -> Void)?
     var onSuccessGenerateToken : ((APIToken?) -> Void)?
@@ -78,8 +79,33 @@ class LoginViewModel : NSObject {
         ]
         dataModel.loginByFb(param: param, completionHandler: completionHandler)
     }
-    
-    
+
+    func loginByApple(id: String?) {
+        guard let dataModel = model else { return }
+               
+        let completionHandler = { (data : LoginApple?,status: StatusList?) in
+           
+           if let dataReceived = data {
+               print("DATA RECIEVED : \(dataReceived.status)")
+               if data?.status == 2 {
+                   self.onErrorAppleLoginData?(dataReceived)
+               }else {
+                   self.onSuccessGettingList?(dataReceived.customer, dataReceived.refreshToken)
+               }
+               print("DATA RECIEVED")
+               return
+           }
+           
+           self.onErrorHandling?(status)
+        }
+       
+       let param : [String:String] = [
+           "apple_id" : id ?? "",
+       ]
+        
+       dataModel.loginByApple(param: param, completionHandler: completionHandler)
+    }
+       
     func getNationality() {
          guard let dataModel = model else { return }
                 
@@ -136,6 +162,10 @@ class LoginViewModel : NSObject {
         if let fbId = registrationForm?.fbId , fbId != ""{
             param["facebook_id"] = fbId
         }
+        
+        if let appleId = registrationForm?.appleId , appleId != ""{
+            param["apple_id"] = appleId
+        }
     
         dataModel.createAccount(param: param, completionHandler: completionHandler)
     }
@@ -178,6 +208,10 @@ class LoginViewModel : NSObject {
         if let fbId = registrationForm?.fbId , fbId != ""{
             param["facebook_id"] = fbId
         }
+        
+       if let appleId = registrationForm?.appleId , appleId != ""{
+           param["apple_id"] = appleId
+       }
         
         dataModel.updatekycAccount(param: param ,token: token, completionHandler: completionHandler)
     }

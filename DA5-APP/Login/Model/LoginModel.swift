@@ -12,6 +12,8 @@ class LoginModel {
      let jsonUrlString = "\(ApiConfig().getUrl())"
 
      let logIn = "/auth/login"
+     let appleLogin = "/auth/appleLogin"
+     let fbLogin = "/auth/facebookLogin"
      let nationality = "/auth/getNationals"
      let register = "/auth/register"
      let uploadImage = "/upload/image"
@@ -20,7 +22,6 @@ class LoginModel {
      let saveMpin = "/customer/saveMPIN"
      let checkMpinOtp = "/customer/checkMPINOTP"
      let apiToken = "/auth/generateAPIToken"
-     let fbLogin = "/auth/facebookLogin"
      let resubmitKYC = "/customer/resubmitKYC"
      
      func login(param: [String:Any],completionHandler: @escaping (LoginData?,StatusList?) -> ()) {
@@ -35,6 +36,17 @@ class LoginModel {
 
     func loginByFb(param: [String:Any],completionHandler: @escaping (LoginFb?,StatusList?) -> ()) {
         NetworkService<LoginFb>().networkRequest(param, jsonUrlString: jsonUrlString + fbLogin) { (data,status) in
+            if let dataReceived = data {
+                    completionHandler(dataReceived,nil)
+                    return
+            }
+            completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
+        }
+    }
+    
+    
+    func loginByApple(param: [String:Any],completionHandler: @escaping (LoginApple?,StatusList?) -> ()) {
+        NetworkService<LoginApple>().networkRequest(param, jsonUrlString: jsonUrlString + appleLogin) { (data,status) in
             if let dataReceived = data {
                     completionHandler(dataReceived,nil)
                     return

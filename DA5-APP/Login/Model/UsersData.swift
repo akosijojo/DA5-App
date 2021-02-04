@@ -27,6 +27,7 @@ struct RegistrationForm {
     var selfieId : String?
     var code : String?
     var fbId : String?
+    var appleId : String?
 //     'first_name'        => $request->first_name,
 //     'middle_name'       => $request->middle_name,
 //     'last_name'         => $request->last_name,
@@ -71,6 +72,7 @@ struct RegistrationForm {
         print("SELFIE ID URL ",selfieId ?? "")
         print("CODE ",code ?? "")
         print("FBID ",fbId ?? "")
+        print("APPLE ",appleId ?? "")
     }
 }
 
@@ -318,4 +320,35 @@ struct LoginFb: Decodable {
        case refreshToken = "refresh_token"
        case customer
     }
+}
+
+
+// MARK: - APPLE LOGIN DATA
+struct LoginApple: Decodable {
+    var status: Int?
+    var message: String?
+    
+    var accessToken, tokenType: String?
+    var expiresIn: Int?
+    var refreshToken: String?
+    var customer: Customer?
+//    var nationals: [String]?
+//
+//    var accessToken, tokenType: String?
+//    var expiresIn: Int?
+//    var refreshToken: String?
+//    var customer: Customer?
+
+//    enum CodingKeys: String, CodingKey {
+//      //MARK: Not Registered
+//       case status = "status"
+//       case message = "message"
+//       case nationals = "nationals"
+//        //MARK: Already Registered
+//       case accessToken = "access_token"
+//       case tokenType = "token_type"
+//       case expiresIn = "expires_in"
+//       case refreshToken = "refresh_token"
+//       case customer
+//    }
 }

@@ -19,7 +19,7 @@ struct WalletDetailsData: Decodable {
     let lastName, birthDate, mpin, gender: String
     let image: String
     let address, city, province, zipCode: String
-    let nationality, facebookID: String
+    let nationality, facebookID: String?
     let appleID: String?
     let phone, email: String
     let idPicture, idPicture2: String

@@ -8,6 +8,7 @@
 
 import UIKit
 import FBSDKLoginKit
+import AuthenticationServices
 
 class LoginViewController: BaseViewControler {
 
@@ -78,6 +79,21 @@ class LoginViewController: BaseViewControler {
         return btn
     }()
     
+    lazy var appleButton : UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "applelogo")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.tintColor = ColorConfig().white
+        btn.setTitle("Sign in with Apple", for: .normal)
+        btn.setTitleColor(ColorConfig().white, for: .normal)
+        btn.layer.borderWidth = 1
+        btn.layer.borderColor = ColorConfig().darkBlue?.cgColor
+        btn.layer.cornerRadius = 5
+        btn.backgroundColor = ColorConfig().black
+        btn.titleLabel?.font = UIFont(name: Fonts.regular, size: 12)
+        btn.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
+        return btn
+    }()
+    
     lazy var fbButton : UIButton = {
         let btn = UIButton()
         btn.setImage(UIImage(named: "fb_logo")?.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -117,11 +133,18 @@ class LoginViewController: BaseViewControler {
     override func getData() {
         self.viewModel?.onErrorFbLoginData = { [weak self] data in
             DispatchQueue.main.async {
-                self?.coordinator?.signUpCoordinator(fbData: self?.viewModel?.registrationForm)
+                self?.coordinator?.signUpCoordinator(UserData: self?.viewModel?.registrationForm)
                 self?.stopAnimating()
             }
         }
              
+        self.viewModel?.onErrorAppleLoginData = { [weak self] data in
+            DispatchQueue.main.async {
+                self?.coordinator?.signUpCoordinator(UserData: self?.viewModel?.registrationForm)
+                self?.stopAnimating()
+            }
+        }
+        
         self.viewModel?.onSuccessGettingList = { [weak self] data, rtoken in
             DispatchQueue.main.async {
                 
@@ -183,13 +206,35 @@ class LoginViewController: BaseViewControler {
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
         }
-        view.addSubview(fbButton)
-        fbButton.snp.makeConstraints { (make) in
-            make.top.equalTo(loginBtn.snp.bottom).offset(10)
-            make.height.equalTo(40)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+        
+        if #available(iOS 13.0, *) {
+//            setUpSignInAppleButton()
+            view.addSubview(appleButton)
+            appleButton.snp.makeConstraints { (make) in
+                make.top.equalTo(loginBtn.snp.bottom).offset(10)
+                make.height.equalTo(40)
+                make.leading.equalTo(view).offset(20)
+                make.trailing.equalTo(view).offset(-20)
+            }
+            
+            view.addSubview(fbButton)
+            fbButton.snp.makeConstraints { (make) in
+               make.top.equalTo(appleButton.snp.bottom).offset(10)
+               make.height.equalTo(40)
+               make.leading.equalTo(view).offset(20)
+               make.trailing.equalTo(view).offset(-20)
+            }
+            
+        }else {
+            view.addSubview(fbButton)
+            fbButton.snp.makeConstraints { (make) in
+               make.top.equalTo(loginBtn.snp.bottom).offset(10)
+               make.height.equalTo(40)
+               make.leading.equalTo(view).offset(20)
+               make.trailing.equalTo(view).offset(-20)
+            }
         }
+        
         view.addSubview(signupBtn)
         signupBtn.snp.makeConstraints { (make) in
             make.top.equalTo(fbButton.snp.bottom).offset(10)
@@ -198,6 +243,36 @@ class LoginViewController: BaseViewControler {
             make.trailing.equalTo(view).offset(-20)
         }
     }
+    
+//    func setUpSignInAppleButton() {
+//        if #available(iOS 13.0, *) {
+//            let authorizationButton = ASAuthorizationAppleIDButton()
+//            authorizationButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
+//             authorizationButton.cornerRadius = 5
+//             //Add button on some view or stack
+//
+//
+//            view.addSubview(authorizationButton)
+//            authorizationButton.snp.makeConstraints { (make) in
+//                make.top.equalTo(loginBtn.snp.bottom).offset(10)
+//                make.height.equalTo(40)
+//                make.leading.equalTo(view).offset(20)
+//                make.trailing.equalTo(view).offset(-20)
+//            }
+//
+//            view.addSubview(fbButton)
+//            fbButton.snp.makeConstraints { (make) in
+//                make.top.equalTo(authorizationButton.snp.bottom).offset(10)
+//                make.height.equalTo(40)
+//                make.leading.equalTo(view).offset(20)
+//                make.trailing.equalTo(view).offset(-20)
+//            }
+//
+//        } else {
+//            // Fallback on earlier versions
+//        }
+//
+//    }
  
     deinit {
         print("deinit : \(self)")
@@ -250,23 +325,77 @@ class LoginViewController: BaseViewControler {
                if (err == nil) {
                    let faceDic = result as! [String:AnyObject]
                    if let email = faceDic["email"] as? String ,let firstName = faceDic["first_name"] as? String, let lastName = faceDic["last_name"] as? String , let fid = faceDic["id"] as? String {
-                    print("HAHAHAHHA   : \(email)  == \(firstName) === \(lastName) === \(fid)")
-//                       let param = ["firstname": firstName ,"lastname": lastName , "email": email ,"facebook_id": fid]
-
                     self.setAnimate(msg: "Please wait")
                     self.viewModel?.loginByFb(id: fid)
                     let regForm = RegistrationForm(fname: firstName,  lname:
                         lastName, email: email, fbId: fid)
                     self.viewModel?.registrationForm = regForm
-                    
-//                    self.fbButton.setTitle("Log out ", for: .normal)
-                    // LOADING AND REQUESR
-//                    self.loginAction()
-                    
                    }
                }
            }
        }
    }
     
+}
+
+
+extension LoginViewController : ASAuthorizationControllerDelegate {
+    @objc func handleAppleIdRequest() {
+        print("APPLE SIGN IN ")
+        if #available(iOS 13.0, *) {
+            let appleIDProvider = ASAuthorizationAppleIDProvider()
+            let request = appleIDProvider.createRequest()
+            request.requestedScopes = [.fullName, .email ]
+            let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+            authorizationController.delegate = self
+            authorizationController.performRequests()
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        print("CALLING THIS")
+        if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
+        let userIdentifier = appleIDCredential.user
+            let fullName = appleIDCredential.fullName
+        let email = appleIDCredential.email
+            
+//        print("User id is \(userIdentifier) \n Full Name is \(String(describing: fullName)) \n Email id is \(String(describing: email))”) ")
+            
+            self.setAnimate(msg: "Please wait")
+            self.viewModel?.loginByApple(id: userIdentifier)
+            let regForm = RegistrationForm(fname: fullName?.givenName,  lname:
+                fullName?.familyName, email: email, appleId: userIdentifier)
+            self.viewModel?.registrationForm = regForm
+//
+//        let appleIDProvider = ASAuthorizationAppleIDProvider()
+//        appleIDProvider.getCredentialState(forUserID: userIdentifier) {  (credentialState, error) in
+//             switch credentialState {
+//                case .authorized:
+//                    // The Apple ID credential is valid.
+//                    print("// The Apple ID credential is valid.")
+//                    break
+//                case .revoked:
+//                    // The Apple ID credential is revoked.
+//                     print("// The Apple ID credential is revoked.")
+//                    break
+//                case .notFound:
+//                    break
+//                    // No credential was found, so show the sign-in UI.
+//                    print(" // No credential was found, so show the sign-in UI.")
+//                default:
+//                    break
+//             }
+//        }
+    }
+  }
+        
+    @available(iOS 13.0, *)
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("CALLING THIS ERROR : \(error)")
+    // Handle error.
+    }
+        
 }

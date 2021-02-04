@@ -19,7 +19,7 @@ class TransactionHistoryCell: UICollectionViewCell {
              if let d = data {
                 if let cashInOut = d.cashInOut {
                     let titleText = NSMutableAttributedString(string: cashInOut.type == 0 ? "CASH IN" : "CASH OUT", attributes: nil)
-                    let statusText = NSAttributedString(string: cashInOut.status == 2 ? " (Rejected)" : " (Accepted)", attributes: [NSAttributedString.Key.foregroundColor: ColorConfig().red!])
+                    let statusText = NSAttributedString(string: cashInOut.status == 2 ? " (Rejected)" : (cashInOut.status == 0 ?  " (Canceled)":" (Accepted)"), attributes: [NSAttributedString.Key.foregroundColor: ColorConfig().red!])
                     titleText.append(statusText)
                     
                     self.titleLbl.attributedText = titleText

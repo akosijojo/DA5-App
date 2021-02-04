@@ -287,7 +287,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     }
     
     func removePassword() {
-        if data?.fbId != nil {
+        if data?.fbId != nil || data?.appleId != nil {
             //MARK: hide show password and confirm password
              password.snp.remakeConstraints { (make) in
                  make.top.equalTo(emailAddress.snp.bottom).offset(5)
@@ -391,7 +391,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     @objc func submitAction() {
         //MARK: Added checking if login from Facebook
         let passChecker = data?.fbId != nil ? password.TextField.text != confirmPassword.TextField.text : false
-        let fields = data?.fbId != nil ? [phoneNumber.FieldView.TextField,
+        let fields = data?.fbId != nil  || data?.appleId != nil ? [phoneNumber.FieldView.TextField,
                                           emailAddress.TextField] : textFields
         self.delegate?.submitAction(cell: self, index: 2, fields: fields,passChecker: passChecker, form: setUpFormData())
     }

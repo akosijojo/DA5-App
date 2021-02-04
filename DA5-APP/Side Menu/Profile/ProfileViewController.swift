@@ -335,7 +335,7 @@ class ProfileViewController: BaseHomeViewControler{
            make.height.equalTo(data?.kycStatus != 1 ? 40 : 0)
         }
         
-        let height = data?.kycNotice?.heightForView(font: statusDescLbl.font, width: self.view.frame.width - 20) ?? 0
+        let height = data?.kycNotice?.heightForView(font: statusDescLbl.font, width: self.view.frame.width - 40) ?? 0
         scrollView.addSubview(statusDescLbl)
         statusDescLbl.snp.makeConstraints { (make) in make.top.equalTo(statusLbl.snp.bottom).offset(data?.kycStatus == 2 ? 20 : 0)
             make.leading.equalTo(view).offset(20)
@@ -736,7 +736,32 @@ extension ProfileViewController {
         self.validIdPreview.isUserInteractionEnabled = editing
         self.selfieIdPreview.isUserInteractionEnabled = editing
         self.gender.isUserInteractionEnabled = editing
+        
+        self.setUpContraintsUpdate(editing: editing)
+        
+        print("GENDER EDITING : \(self.gender.isUserInteractionEnabled)")
+    }
     
+    func setUpContraintsUpdate(editing: Bool) {
+        let statusHeight = editing ? 0 : (data?.kycStatus != 1 ? 40 : 0)
+        let statusOffset = editing ? 0 : (data?.kycStatus != 1 ? 25 : 0)
+        let height =  editing ? 0  : (data?.kycNotice?.heightForView(font: statusDescLbl.font, width: self.view.frame.width - 40) ?? 0)
+        
+        let offset = editing ? 0 : (data?.kycStatus == 2 ? 20 : 0)
+        
+        statusLbl.snp.remakeConstraints { (make) in
+           make.top.equalTo(scrollView).offset(statusOffset)
+           make.leading.equalTo(view).offset(20)
+           make.trailing.equalTo(view).offset(-20)
+           make.height.equalTo(statusHeight)
+        }
+        
+        statusDescLbl.snp.remakeConstraints { (make) in make.top.equalTo(statusLbl.snp.bottom).offset(offset)
+            make.leading.equalTo(view).offset(20)
+            make.trailing.equalTo(view).offset(-20)
+            make.height.equalTo(data?.kycStatus == 2 ? height : 0)
+        }
+        
         submitBtn.snp.remakeConstraints { (make) in
             make.top.equalTo(selfieIdPreview.snp.bottom).offset(20)
             make.leading.equalTo(view).offset(20)
@@ -745,7 +770,6 @@ extension ProfileViewController {
             make.bottom.equalTo(scrollView).offset(-20)
         }
         
-        print("GENDER EDITING : \(self.gender.isUserInteractionEnabled)")
     }
     
     func setUpEditingActions() {

@@ -113,11 +113,11 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
       
-    func signUpCoordinator(fbData: RegistrationForm? = nil) {
+    func signUpCoordinator(UserData: RegistrationForm? = nil) {
        let vc = SignUpViewController()
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
-        if let data = fbData {
+        if let data = UserData {
             print("FBID : \(data.fbId)")
             vc.viewModel?.registrationForm = data
         }

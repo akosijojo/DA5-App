@@ -146,7 +146,7 @@ extension TransactionsFullViewController: UICollectionViewDelegateFlowLayout, UI
          guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerCell, for: indexPath) as? HeaderCell else {
              return UICollectionReusableView()
          }
-        header.headerView.title.text = "Transaction Successful"
+        header.headerView.title.text = "Successful Transactions"
 
          return header
     }
@@ -174,7 +174,6 @@ extension TransactionsFullViewController: UICollectionViewDelegateFlowLayout, UI
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let height : CGFloat = 80 + checkIfBankTransferOrWalletTransfer(index: indexPath.item)
-        print(" HEIGHT : \(height)")
         return CGSize(width: collectionView.frame.width - 40, height: height)
     }
 
@@ -186,9 +185,10 @@ extension TransactionsFullViewController: UICollectionViewDelegateFlowLayout, UI
         if indexPath.item == ((self.data?.count ?? 0) - 1) {
             // loadMoreData()
             if !isRefreshing {
-                print("REFRESHING BOTTOM")
                 isRefreshing = true
-                self.requestNewData()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.requestNewData()
+                }
             }
         }
     }
