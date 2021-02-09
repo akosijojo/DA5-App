@@ -20,7 +20,6 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
     
     var data : RegistrationForm? {
         didSet {
-            print("DID GET DATA")
             if data?.fname != nil && data?.lname != nil {
                 self.fname.TextField.text = data?.fname
                 self.lname.TextField.text = data?.lname

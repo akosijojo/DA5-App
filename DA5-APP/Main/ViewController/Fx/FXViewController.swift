@@ -11,7 +11,6 @@ import UIKit
 class FXViewController: BaseHomeViewControler {
     var selectedCurrency : String = "USD" {
         didSet {
-            print("Selected ON Drop")
             self.convertInput.dropView.text = selectedCurrency
             self.viewModel?.getCurrency(base: selectedCurrency)
         }
@@ -314,7 +313,6 @@ class ConversionField: UIView {
     
     func setUpView() {
         let width = (self.conversionRate.text?.widthForView(font: self.conversionRate.font, width: ColorConfig().screenWidth - 160) ?? 0 ) + 80 // 180 = 60 width 20 offset 80 offset outside
-        print("WIDTH : \(width) == \(ColorConfig().screenWidth - 180) == \(self.conversionRate.text) == \(self.conversionRate.font)")
         addSubview(container)
         container.snp.makeConstraints { (make) in
             make.top.equalTo(self)

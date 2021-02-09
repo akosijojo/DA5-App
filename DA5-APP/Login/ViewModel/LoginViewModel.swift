@@ -34,14 +34,10 @@ class LoginViewModel : NSObject {
             let completionHandler = { (data : LoginData?,status: StatusList?) in
                 
                 if status == nil {
-                    print("DATA : \(data)")
                     if let dataRecieved = data, dataRecieved.customer != nil {
-                        print("DATA GET LOGIN : \(dataRecieved)")
-                        
                         self.onSuccessGettingList?(dataRecieved.customer,data?.refreshToken)
                         return
                     }else {
-                         print("NO DATA")
                         self.onErrorHandling?(StatusList(status: 0, title: "", message: status?.message ?? "", tag: 0))
                          return
                     }
@@ -61,13 +57,11 @@ class LoginViewModel : NSObject {
          let completionHandler = { (data : LoginFb?,status: StatusList?) in
             
             if let dataReceived = data {
-                print("DATA RECIEVED : \(dataReceived.status)")
                 if data?.status == 2 {
                     self.onErrorFbLoginData?(dataReceived)
                 }else {
                     self.onSuccessGettingList?(dataReceived.customer, dataReceived.refreshToken)
                 }
-                print("DATA RECIEVED")
                 return
             }
             
@@ -86,13 +80,11 @@ class LoginViewModel : NSObject {
         let completionHandler = { (data : LoginApple?,status: StatusList?) in
            
            if let dataReceived = data {
-               print("DATA RECIEVED : \(dataReceived.status)")
                if data?.status == 2 {
                    self.onErrorAppleLoginData?(dataReceived)
                }else {
                    self.onSuccessGettingList?(dataReceived.customer, dataReceived.refreshToken)
                }
-               print("DATA RECIEVED")
                return
            }
            
@@ -127,7 +119,6 @@ class LoginViewModel : NSObject {
          let completionHandler = { (data : LoginData?,status: StatusList?) in
             
             if let dataReceived = data {
-                print("REGISTRATION DATA : ", dataReceived)
                 if data?.customer != nil {
                     self.onSuccessRegistrationData?(dataReceived)
                 }else {
@@ -177,7 +168,6 @@ class LoginViewModel : NSObject {
          let completionHandler = { (data : LoginData?,status: StatusList?) in
             
             if let dataReceived = data {
-                print("REGISTRATION DATA : ", dataReceived)
                 if data?.customer != nil {
                     self.onSuccessRegistrationData?(dataReceived)
                 }else {
@@ -222,7 +212,6 @@ class LoginViewModel : NSObject {
         let completionHandler = { (data : ImageUploadData?,status: StatusList?) in
             
             if let dataReceived = data {
-                print("DATA UPLOADED ", dataReceived)
                 if type == 0 {
                     self.registrationForm?.validId = dataReceived.imagePath
                     self.onSuccessRequest?(StatusList(status: 1, title: status?.title ?? "", message: status?.message ?? "", tag: 10))
@@ -319,12 +308,10 @@ class LoginViewModel : NSObject {
     }
     
     func checkMpinOtp(code: Int,phone: String?, email: String?,token: String?,type: Int? = nil) {
-        print("CHECKING ")
        guard let dataModel = model else { return }
              
        let completionHandler = { (status : StatusList) in
         
-        print("STATUS : \(status)")
         //MARK: - 2 if phone to email / 3 if email to pin code
           if status.status == 1 {
             if let _ = phone {
@@ -332,7 +319,6 @@ class LoginViewModel : NSObject {
             }else if let _ = email {
                 self.onSuccessRequest?(StatusList(status: status.status, title: status.title, message: status.message, tag: 3))
             }else {
-                print("NOT AVAILABLE CHECK TYPE")
                 self.onSuccessRequest?(status)
             }
           }else {

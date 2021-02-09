@@ -112,7 +112,6 @@ class CollectionViewCell: UICollectionViewCell, UICollectionViewDelegateFlowLayo
     }
     var tHistoryData : [TransactionHistoryData]?{
         didSet {
-            print("RELOAD")
             self.collectionView.reloadData()
         }
     }
@@ -192,7 +191,6 @@ extension CollectionViewCell: NewsCellDelegate ,ServicesDelegate, PendingTransac
     func removeItem(cell: PendingTransactionCell, index: Int?) {
         if let item = index {
             //MARK: - show alert
-            print("REMOVING TRANSACTION AT \(item)")
             self.delegate?.removeItem(cell: self, index: item)
         }
     }

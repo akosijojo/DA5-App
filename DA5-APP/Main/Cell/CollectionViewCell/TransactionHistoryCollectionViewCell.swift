@@ -26,7 +26,6 @@ class TransactionHistoryCollectionViewCell : CollectionViewBorderedCell {
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width - 40
         let addedHeight : CGFloat = self.tHistoryData?[indexPath.item].instapay != nil || self.tHistoryData?[indexPath.item].walletTransfer != nil ? 20 : 0
-        print("Height CELL TRANSACTION : \(addedHeight)")
         return CGSize(width: width, height: 100 + addedHeight)
     }
         

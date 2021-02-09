@@ -34,9 +34,9 @@ class ProfileViewController: BaseHomeViewControler{
             self.phoneNumber.FieldView.TextField.text = data?.phone
             self.emailAddress.TextField.text = data?.email
             
-            self.validIdPreview.downloaded(from: data?.idPicture ?? "", contentMode: .scaleAspectFill)
+            self.validIdPreview.downloaded(from: data?.idPictureThumbnail1 ?? "", contentMode: .scaleAspectFill)
             
-            self.selfieIdPreview.downloaded(from: data?.idPicture2 ?? "", contentMode: .scaleAspectFill)
+            self.selfieIdPreview.downloaded(from: data?.idPictureThumbnail2 ?? "", contentMode: .scaleAspectFill)
         }
     }
     
@@ -52,7 +52,6 @@ class ProfileViewController: BaseHomeViewControler{
       didSet {
             self.validIdPreview.image = validId
           if self.viewModel?.registrationForm?.validId != nil {
-              print("NOT NILL VALID ID")
               self.viewModel?.registrationForm?.validId = nil
           }
       }
@@ -62,7 +61,6 @@ class ProfileViewController: BaseHomeViewControler{
       didSet {
             self.selfieIdPreview.image = selfieId
             if self.viewModel?.registrationForm?.selfieId != nil {
-                print("NOT NILL SELFIE ID")
                  self.viewModel?.registrationForm?.selfieId = nil
             }
       }
@@ -234,7 +232,7 @@ class ProfileViewController: BaseHomeViewControler{
     
     lazy var submitBtn : UIButton = {
         let v = UIButton()
-        v.setTitle("Next", for: .normal)
+        v.setTitle("Save", for: .normal)
         v.titleLabel?.font = UIFont(name: Fonts.bold, size: 12)
         v.tintColor = ColorConfig().white
         v.backgroundColor = ColorConfig().black
@@ -315,7 +313,6 @@ class ProfileViewController: BaseHomeViewControler{
    }
     
     func stopAnimationBlocker() {
-        print("STOP ANIMATION")
         self.stopAnimating()
         self.beginAnimation(animate: false)
     }
@@ -566,7 +563,6 @@ class ProfileViewController: BaseHomeViewControler{
     func checkFieldsChanges(fields: [UITextField]) -> Bool {
         //MARK: CHECKING FOR CHANGES IN INFO
          for x in 0...fields.count - 1 {
-             print("CHECK : ",fields[x].text)
              if (fields[x].text ?? "") == "" {
                  return true
              }
@@ -702,7 +698,6 @@ extension ProfileViewController {
         // 0 ok // 1 under 18 but > 10 // 2 under Age
         let userAge = Calendar.current.dateComponents([.year], from: bDay, to: Date())
         var haveError : Bool = false
-        print("DATE : \(userAge.year)")
         if let age = userAge.year {
             if age >= 18 {
               haveError = false
@@ -723,7 +718,6 @@ extension ProfileViewController {
     }
 
     func setUpTextFieldEditing(editing: Bool) {
-        print("IS EDITING : \(editing)")
         self.fname.TextField.isEnabled = editing
         self.mname.TextField.isEnabled = editing
         self.lname.TextField.isEnabled = editing
@@ -739,7 +733,6 @@ extension ProfileViewController {
         
         self.setUpContraintsUpdate(editing: editing)
         
-        print("GENDER EDITING : \(self.gender.isUserInteractionEnabled)")
     }
     
     func setUpContraintsUpdate(editing: Bool) {

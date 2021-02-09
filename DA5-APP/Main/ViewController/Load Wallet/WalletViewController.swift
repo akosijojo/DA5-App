@@ -112,7 +112,6 @@ class WalletViewController: BaseHomeViewControler {
         self.type = type
         self.cashInImageView.downloaded(from: data?.image ?? "", contentMode: .scaleAspectFill)
         self.cashInLbl.text = data?.name
-        print("DATA GET \(data)")
     }
     
     required init?(coder: NSCoder) {

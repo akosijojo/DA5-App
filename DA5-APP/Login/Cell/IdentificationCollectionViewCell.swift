@@ -26,7 +26,6 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     
     var data : RegistrationForm? {
        didSet {
-        print("DID GET DATA : \(data?.email) : \(data?.fbId)")
             if data?.email != nil {
                 self.emailAddress.TextField.text = data?.email
             }

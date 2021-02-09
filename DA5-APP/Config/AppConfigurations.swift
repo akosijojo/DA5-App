@@ -16,12 +16,13 @@ class AppConfig {
 }
 //MARK:- API CONFIGURATIONS
 class ApiConfig {
-    
+    //MARK: - CHANGE ENV AND API PASSWORD IF DEV OR LIVE
     var env : String = "live" //live or dev
     var url = "https";
     
+    
     var apiUsername : String = "da5"
-    var apiPassword : String = "da5password" //5zYw9h3aMifV7da
+    var apiPassword : String = "5zYw9h3aMifV7da" //LIVE : "5zYw9h3aMifV7da" DEV : "da5password"
     
     var currencyApi : String = "https://api.exchangeratesapi.io/latest"
     var liveUrl : String = "https://daps.com.ph/api"

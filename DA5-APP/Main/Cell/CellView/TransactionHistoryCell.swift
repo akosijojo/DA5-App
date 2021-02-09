@@ -234,7 +234,6 @@ class TransactionHistoryCell: UICollectionViewCell {
     }
     
     @objc func onClick() {
-        print("CLICKING : \(index)")
         self.delegate?.onClickItem(cell: self, index: index)
     }
     

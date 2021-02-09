@@ -29,7 +29,7 @@ class SignUpViewController: BaseViewControler {
         didSet {
             self.collectionView.reloadData()
             if self.viewModel?.registrationForm?.validId != nil {
-                print("NOT NILL VALID ID")
+//                print("NOT NILL VALID ID")
                 self.viewModel?.registrationForm?.validId = nil
             }
         }
@@ -38,7 +38,7 @@ class SignUpViewController: BaseViewControler {
         didSet {
           self.collectionView.reloadData()
           if self.viewModel?.registrationForm?.selfieId != nil {
-              print("NOT NILL SELFIE ID")
+//              print("NOT NILL SELFIE ID")
                self.viewModel?.registrationForm?.selfieId = nil
           }
         }
@@ -153,7 +153,6 @@ class SignUpViewController: BaseViewControler {
                             if data?.customer != nil {
                                 self?.coordinator?.pinCodeCoordinator(isChecking: true, customerData:result.customer,refreshToken: data?.refreshToken)
                             }
-                            print("NO DATA GET")
                         }
                     }, completionHandler: nil)
                 }
@@ -305,7 +304,6 @@ class SignUpViewController: BaseViewControler {
     }
     
     func showDatePicker(){
-        print("SELECT DATE")
        //Formate Date
         datePicker?.datePickerMode = .date
 
@@ -356,7 +354,6 @@ class SignUpViewController: BaseViewControler {
         // 0 ok // 1 under 18 but > 10 // 2 under Age
         let userAge = Calendar.current.dateComponents([.year], from: bDay, to: Date())
         var haveError : Bool = false
-        print("DATE : \(userAge.year)")
         if let age = userAge.year {
             if age >= 18 {
               haveError = false
@@ -428,7 +425,6 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
     }
     
     func showFormError(fields: [UITextField],image: [UIImage?]? = nil) -> Bool{
-        print("CHECK : \(formChecker(fields: fields)) --",formImageChecker(image: image))
         if formChecker(fields: fields) || formImageChecker(image: image){
             let alert = self.alert("Ok", "", "Please fill out the following required fields to proceed.") { (act) in
                 
@@ -449,7 +445,6 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
     
     func formChecker(fields: [UITextField]) -> Bool {
         for x in 0...fields.count - 1 {
-            print("CHECK : ",fields[x].text)
             if (fields[x].text ?? "") == "" {
                 return true
             }
@@ -477,7 +472,6 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
         }
     }
     func stopAnimationBlocker() {
-        print("STOP ANIMATION")
         self.stopAnimating()
         self.beginAnimation(animate: false)
     }
@@ -527,7 +521,6 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
      // show terms and condition
         self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
-        print(" VERIFICATION CODE ",self.viewModel?.registrationForm?.code)
         if !agreeTermsAndCondition {
 //            agreeTermsAndCondition = true
             coordinator?.termsCoordinator(parentView: self)
@@ -569,7 +562,6 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     func asyncAPIRequest(){
         //Add Delay on uploading
         let delay : TimeInterval = 1
-        print(" CHECKING  : \(self.viewModel?.registrationForm?.validId) ==== \(self.viewModel?.registrationForm?.selfieId)")
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             if self.viewModel?.registrationForm?.validId == nil {
                 self.uploadingType = 1
@@ -578,7 +570,6 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
                 self.uploadingType = 2
                 self.viewModel?.uploadFile(image: self.selfieId, type: 1)
             }else {
-                print("REGISTER")
                 self.uploadingType = 2 // set 2 if skipped uploading of selfie ID
                 self.beginAnimation(title:"Saving Personal Information", msg: "Please wait...")
                 self.viewModel?.createAccount()

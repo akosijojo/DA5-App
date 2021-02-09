@@ -32,9 +32,10 @@ class TransactionsFullViewController: BaseHomeViewControler {
 
     var data : [TransactionHistoryData]? {
         didSet {
-            print("RELOADING NEW DATA")
+            data = [TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: nil, walletTransfer: nil, fx: nil, instapay: Instapay(id: 0, customerID: 0, referenceNo: "dwa", status: 0, bankName: "dwad", amount: "dwd", senderRefID: "dwad", uuid: "dwa", ubpTranID: "Dwad", reversalUbpTranID: "dwad", coreRefID: "dawd", traceNo: "dwad", resultStatus: "Dwa", resultCode: "Dwad", resultMessage: "Dwad", tranRequestDate: "Dwawd", createdAt: "Dwad", updatedAt: "dwad")),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: nil, walletTransfer: nil, fx: nil, instapay: Instapay(id: 0, customerID: 0, referenceNo: "dwa", status: 0, bankName: "dwad", amount: "dwd", senderRefID: "dwad", uuid: "dwa", ubpTranID: "Dwad", reversalUbpTranID: "dwad", coreRefID: "dawd", traceNo: "dwad", resultStatus: "Dwa", resultCode: "Dwad", resultMessage: "Dwad", tranRequestDate: "Dwawd", createdAt: "Dwad", updatedAt: "dwad")),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: nil, walletTransfer: nil, fx: nil, instapay: Instapay(id: 0, customerID: 0, referenceNo: "dwa", status: 0, bankName: "dwad", amount: "dwd", senderRefID: "dwad", uuid: "dwa", ubpTranID: "Dwad", reversalUbpTranID: "dwad", coreRefID: "dawd", traceNo: "dwad", resultStatus: "Dwa", resultCode: "Dwad", resultMessage: "Dwad", tranRequestDate: "Dwawd", createdAt: "Dwad", updatedAt: "dwad")),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: Eload(id: 0, customerID: 0, referenceNo: "dwad", status: 0, phone: "Dwad", productAmount: "Dwad", productNetwork: "dwad", productName: "dwa", productCode: "Dwad", resultStatus: "Dawd", resultCode: "Dwad", resultMessage: "Dwad", transStatus: "Dwad", transactionDate: "Dwa", createdAt: "Dwad", updatedAt: "daw"), walletTransfer: nil, fx: nil, instapay:nil),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: Eload(id: 0, customerID: 0, referenceNo: "dwad", status: 0, phone: "Dwad", productAmount: "Dwad", productNetwork: "dwad", productName: "dwa", productCode: "Dwad", resultStatus: "Dawd", resultCode: "Dwad", resultMessage: "Dwad", transStatus: "Dwad", transactionDate: "Dwa", createdAt: "Dwad", updatedAt: "daw"), walletTransfer: nil, fx: nil, instapay:nil),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: Eload(id: 0, customerID: 0, referenceNo: "dwad", status: 0, phone: "Dwad", productAmount: "Dwad", productNetwork: "dwad", productName: "dwa", productCode: "Dwad", resultStatus: "Dawd", resultCode: "Dwad", resultMessage: "Dwad", transStatus: "Dwad", transactionDate: "Dwa", createdAt: "Dwad", updatedAt: "daw"), walletTransfer: nil, fx: nil, instapay:nil),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: nil, walletTransfer: nil, fx: nil, instapay: Instapay(id: 0, customerID: 0, referenceNo: "dwa", status: 0, bankName: "dwad", amount: "dwd", senderRefID: "dwad", uuid: "dwa", ubpTranID: "Dwad", reversalUbpTranID: "dwad", coreRefID: "dawd", traceNo: "dwad", resultStatus: "Dwa", resultCode: "Dwad", resultMessage: "Dwad", tranRequestDate: "Dwawd", createdAt: "Dwad", updatedAt: "dwad")),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: nil, walletTransfer: nil, fx: nil, instapay: Instapay(id: 0, customerID: 0, referenceNo: "dwa", status: 0, bankName: "dwad", amount: "dwd", senderRefID: "dwad", uuid: "dwa", ubpTranID: "Dwad", reversalUbpTranID: "dwad", coreRefID: "dawd", traceNo: "dwad", resultStatus: "Dwa", resultCode: "Dwad", resultMessage: "Dwad", tranRequestDate: "Dwawd", createdAt: "Dwad", updatedAt: "dwad")),TransactionHistoryData(id: 0, customerID: 0, referenceNo: "dawd", status: 0, type: 0, createdAt: "awdaw", updatedAt: "dawdw", cashInOut: nil, eload: nil, walletTransfer: nil, fx: nil, instapay: Instapay(id: 0, customerID: 0, referenceNo: "dwa", status: 0, bankName: "dwad", amount: "dwd", senderRefID: "dwad", uuid: "dwa", ubpTranID: "Dwad", reversalUbpTranID: "dwad", coreRefID: "dawd", traceNo: "dwad", resultStatus: "Dwa", resultCode: "Dwad", resultMessage: "Dwad", tranRequestDate: "Dwawd", createdAt: "Dwad", updatedAt: "dwad"))
+            ]
+                
             self.collectionView.reloadData()
-            
             self.collectionView.emptyView(image: "", text: "You currently have no transactions", dataCount: data?.count ?? 0, emptyViewType: .secondary)
         }
     }
@@ -66,7 +67,6 @@ class TransactionsFullViewController: BaseHomeViewControler {
     }
 
     @objc func refreshData() {
-        print("REFRESHING ? ")
         isRefreshing = true
         isAppend = false
         self.viewModel?.getAllTransactionHistory(page: 0, token: self.coordinator?.token)
@@ -76,14 +76,12 @@ class TransactionsFullViewController: BaseHomeViewControler {
 
     @objc func requestNewData() {
          isAppend = true
-         print("REFRESHING Bottom? ")
          self.viewModel?.getAllTransactionHistory(token: self.coordinator?.token)
          refreshControl?.endRefreshing()
      }
 
     func getData() {
         self.viewModel?.onSuccessTransactionsList = { [weak self] data in
-          print("DATA RECEIVED")
             DispatchQueue.main.async {
                 if self?.isAppend == true {
                     if let response = data {
@@ -106,7 +104,6 @@ class TransactionsFullViewController: BaseHomeViewControler {
         }
         
         self.viewModel?.onSuccessRequest = { [weak self] data in
-           print("DATA RECEIVED")
             DispatchQueue.main.async {
                 //MARK: - stop animation
                 self?.stopAnimating()
@@ -115,7 +112,6 @@ class TransactionsFullViewController: BaseHomeViewControler {
         }
         
         self.viewModel?.onErrorHandling = { [weak self] data in
-           print("ERROR DATA RECEIVED")
              DispatchQueue.main.async {
                 //MARK: - stop animation
                 self?.stopAnimating()

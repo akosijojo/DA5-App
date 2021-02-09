@@ -36,7 +36,7 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
     
     var cellDropSelected : Int? {
         didSet {
-            print("SELECTED ITEM : \(cellDropSelected)")
+//            print("SELECTED ITEM : \(cellDropSelected)")
         }
     }
     
@@ -56,7 +56,7 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
     var data : BillerData? {
         didSet {
 //            self.collectionView.reloadData()
-            print("GET DATA : \(data)")
+//            print("GET DATA : \(data)")
         }
     }
     var viewModel : PaybillsViewModel?
@@ -86,7 +86,7 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
     init(data: BillerData) {
         super.init(nibName: nil, bundle: nil)
         // set up initial data to view
-        print("DATA GET : \(data)")
+//        print("DATA GET : \(data)")
         self.data = data
         collectionView.reloadData()
     }
@@ -189,7 +189,7 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
         if error {
             self.showAlert(buttonOK: "Ok", message: "Please fill up all required fields.", actionOk: nil, completionHandler: nil)
         }else {
-            print("PARAM : \(parameters)")
+//            print("PARAM : \(parameters)")
             self.setAnimate(msg: "Please wait...")
             self.viewModel?.paybillsProcess(token: self.coordinator?.token, param: parameters, billerCode: self.data?.code ?? "")
         }

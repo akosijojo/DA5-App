@@ -74,7 +74,7 @@ class CustomBasicFormInput : UIView {
     }
     
     func updateLabelHeight(height: CGFloat) {
-        print("HEIGHT : \(height)")
+//        print("HEIGHT : \(height)")
         if height > 30 {
             Label.snp.updateConstraints { (make) in
                 make.height.equalTo(height)

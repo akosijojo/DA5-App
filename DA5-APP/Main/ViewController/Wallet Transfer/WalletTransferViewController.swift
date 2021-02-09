@@ -81,7 +81,6 @@ class WalletTransferViewController: BaseHomeViewControler {
         // add request return
         self.viewModel?.onSuccessWalletDetailsData = { [weak self] data in
             DispatchQueue.main.async {
-                 print("GOTO WALLET TRANSFER DETAILS ")
                 self?.data?.recipientName = "\(data?.firstName ?? "") \(data?.lastName ?? "")"
                   self?.coordinator?.showWalletTransferDetailsViewController(data:  self?.data)
             }
@@ -168,7 +167,6 @@ class WalletTransferViewController: BaseHomeViewControler {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print("CHANGING INPUT")
          guard let text = textField.text else { return true }
          if textField.tag == 1 {
             let count = text.count + string.count - range.length
@@ -192,13 +190,10 @@ class WalletTransferViewController: BaseHomeViewControler {
            var decimalCount : Int = 0
            let array = Array(arrayLiteral: textField.text)
              for character in array {
-               print("CHANGING INPUT HEREEEE ARRAY = \(array.count) == \(character)" )
                if character?.contains(".") ??  false{
-                   print("CHANGING INPUT HEREEEE ARRAY INPUT . = \(decimalCount)" )
                      decimalCount += 1
                  }
              }
-             print("CHANGING INPUT HEREEEE = \(decimalCount)" )
 
              if decimalCount >= 1 {
                  return false

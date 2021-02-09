@@ -19,7 +19,7 @@ extension UIViewController : NVActivityIndicatorViewable {
     
     func setAnimate(msg: String) {
         let size = CGSize(width: 30, height: 30)
-        print("MSG: ",msg)
+//        print("MSG: ",msg)
         DispatchQueue.main.async {
             self.startAnimating(size, message: msg,messageFont:UIFont(name: Fonts.regular, size: 12), type: NVActivityIndicatorType.circleStrokeSpin, fadeInAnimation: nil)
         }

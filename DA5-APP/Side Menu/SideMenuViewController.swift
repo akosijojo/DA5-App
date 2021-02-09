@@ -98,7 +98,6 @@ class SideMenuView : UIView {
             make.height.equalTo(menus.count * 50)
         }
         
-        print("DOWNLOADING ==")
         self.profileImg.downloaded(from: userData?.image ?? "")
         
         let screenGesture = UIPanGestureRecognizer(target: self, action: #selector(dismissSelfAnimate(_:)))

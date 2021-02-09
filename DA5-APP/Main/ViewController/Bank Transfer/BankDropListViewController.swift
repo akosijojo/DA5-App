@@ -30,7 +30,6 @@ class BankDropListViewController: BaseViewControler, UICollectionViewDelegateFlo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("INDEX PATH SELECTED \(self.parentView)",indexPath.item)
         if let vc = self.parentView as? BankTransferViewController {
 //            vc.nationalitySelected = self.data.
             vc.bankSelected = self.data?[indexPath.item]
@@ -43,7 +42,7 @@ class BankDropListViewController: BaseViewControler, UICollectionViewDelegateFlo
     let cellId = "Cell ID"
     var data : [BankListData]? {
         didSet {
-            print("DATA RECEIVED :",self.data?.count )
+//            print("DATA RECEIVED :",self.data?.count )
         }
     }
     var parentView : UIViewController?

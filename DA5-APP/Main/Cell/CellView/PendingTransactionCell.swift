@@ -216,12 +216,10 @@ class PendingTransactionCell: UICollectionViewCell {
     }
     
     @objc func onClick() {
-        print("CLICKING : \(index)")
         self.delegate?.onClickItem(cell: self, index: index)
     }
     
     @objc func removeItem() {
-        print("REMOVING : \(index)")
         self.delegate?.removeItem(cell: self, index: index)
     }
 }

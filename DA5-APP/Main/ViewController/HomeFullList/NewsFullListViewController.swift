@@ -31,7 +31,6 @@ class NewsFullListViewController: BaseHomeViewControler {
     
     var data : [PendingTransactionsData]? {
         didSet {
-            print("RELOADING NEW DATA")
             self.collectionView.reloadData()
         }
     }
@@ -63,7 +62,6 @@ class NewsFullListViewController: BaseHomeViewControler {
     }
     
     @objc func refreshData() {
-        print("REFRESHING ? ")
         isRefreshing = true
         isAppend = false
         self.viewModel?.getPendingTransactions(page: 0, token: self.coordinator?.token)
@@ -73,7 +71,6 @@ class NewsFullListViewController: BaseHomeViewControler {
     
     @objc func requestNewData() {
          isAppend = true
-         print("REFRESHING Bottom? ")
          self.viewModel?.getPendingTransactions(token: self.coordinator?.token)
          refreshControl?.endRefreshing()
      }
@@ -182,7 +179,6 @@ extension NewsFullListViewController: UICollectionViewDelegateFlowLayout, UIColl
            
               // loadMoreData()
               if !isRefreshing {
-                print("REFRESHING BOTTOM")
                  isRefreshing = true
                  self.requestNewData()
               }

@@ -70,7 +70,7 @@ class MainCoordinator :  NSObject, Coordinator {
             if let d = data {
                let getData =  d.convertToLocalData()
                getData.saveCustomerToLocal()
-                print("USER SAVE TO COORDINATOR LOCAL")
+//                print("USER SAVE TO COORDINATOR LOCAL")
                 self.usersDataLocal = getData // SAVE TO coordinator local data for checking
            }
         }
@@ -118,7 +118,7 @@ class MainCoordinator :  NSObject, Coordinator {
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
         if let data = UserData {
-            print("FBID : \(data.fbId)")
+//            print("FBID : \(data.fbId)")
             vc.viewModel?.registrationForm = data
         }
        vc.coordinator = self
@@ -128,13 +128,13 @@ class MainCoordinator :  NSObject, Coordinator {
 
     func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false, forgotMpin: Bool? = nil,refreshToken : String? = nil) {
         if !fromBackground {
-            print("!FROM BACKGROUND ")
+//            print("!FROM BACKGROUND ")
             self.setUpUserLogin(user: customerData)
         }
         
         //MARK: - Save Refresh token used in logout
         if let refToken = refreshToken {
-            print("SAVING REFRESH TOKEN ")
+//            print("SAVING REFRESH TOKEN ")
             let rToken = RefreshTokenLocal(refreshToken: refToken)
             rToken.saveRefreshTokenLocal()
         }
@@ -160,7 +160,6 @@ class MainCoordinator :  NSObject, Coordinator {
        let vc = ForgotPinViewController()
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
-        print("TYPE : \(type) = phone :\(usersDataLocal?.phone) == email : \(usersDataLocal?.email)")
         if type == .phone {
             vc.mobileNumber = usersDataLocal?.phone
         }else {
@@ -299,7 +298,6 @@ class MainCoordinator :  NSObject, Coordinator {
     func updateToken(data: APIToken?) {
         DispatchQueue.main.async {
             let interval = TimeInterval(data?.expiresIn ?? 0)
-                print("timer  \(data?.expiresIn) == \(interval)")
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self,   selector: (#selector(self.requestToken)), userInfo: nil, repeats: false)
         }
     }
@@ -329,7 +327,6 @@ extension MainCoordinator : UINavigationControllerDelegate{
         // We’re still here – it means we’re popping the view controller, so we can check whether it’s a buy view controller
         if let homeViewController = fromViewController as? HomeViewController {
             // We're popping a buy view controller; end its coordinator
-            print("HEY POPPING HOME")
             childDidFinish(homeViewController.coordinator)
         }
     }

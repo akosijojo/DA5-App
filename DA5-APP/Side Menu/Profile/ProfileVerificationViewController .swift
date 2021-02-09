@@ -85,7 +85,6 @@ class ProfileVerificationViewController: BaseViewControler {
                  self.uploadingType = 2
                  self.viewModel?.uploadFile(image: self.selfieId, type: 1)
              }else {
-                 print("REGISTER")
                  self.uploadingType = 2 // set 2 if skipped uploading of selfie ID
                  self.beginAnimation(title:"Updating Personal Information", msg: "Please wait...")
                 self.viewModel?.updateKyc(token: self.coordinator?.token)
@@ -187,7 +186,6 @@ class ProfileVerificationViewController: BaseViewControler {
     }
     
     func hidesKeyboard() {
-        print("HEY CLOSING")
         view.endEditing(true)
     }
     
@@ -274,7 +272,6 @@ extension ProfileVerificationViewController : UICollectionViewDelegateFlowLayout
     }
     //MARK:-STOP ALL LOADING ANIMATION
     func stopAnimationBlocker() {
-        print("STOP ANIMATION")
         self.stopAnimating()
         self.beginAnimation(animate: false)
     }

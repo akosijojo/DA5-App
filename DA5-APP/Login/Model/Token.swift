@@ -33,7 +33,6 @@ struct APITokenLocal: Codable {
     func saveAPITokenToLocal() {
        let encoder = JSONEncoder()
        if let encoded = try? encoder.encode(self) {
-            print("Saving TOKEN to local")
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: AppConfig().tokenLocalKey)
        }
@@ -44,7 +43,6 @@ struct APITokenLocal: Codable {
        if let savedCustomer = defaults.object(forKey: AppConfig().tokenLocalKey) as? Data {
            let decoder = JSONDecoder()
            if let customerData = try? decoder.decode(CustomerLocal.self, from: savedCustomer) {
-              print("Get TOKEN from local")
               print(customerData)
               return customerData
            }

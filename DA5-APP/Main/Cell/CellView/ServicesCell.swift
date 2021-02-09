@@ -17,7 +17,6 @@ class ServicesCell: UICollectionViewCell {
     var data : ServicesData? {
         didSet {
             if let d = data {
-                print("NAME : \(d.image)")
                 self.logo.image = UIImage(named: d.image)
                 self.logoLbl.text = d.name
             }
@@ -72,7 +71,6 @@ class ServicesCell: UICollectionViewCell {
     }
     
     @objc func onClick() {
-        print("CLICKING : \(index)")
         self.delegate?.onClickItem(cell: self, index: index)
     }
     

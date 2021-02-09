@@ -74,7 +74,6 @@ class PaybillsItemViewCell: UICollectionViewCell{
               
         let lblAttributes = NSMutableAttributedString(string: data?.label ?? "", attributes: [NSAttributedString.Key.font : UIFont(name: Fonts.bold, size: 12)!])
         
-        print(" IS REQUIRED : \(data?.isRequired)")
         if data?.isRequired == IsRequired.bool(true) {
             lblAttributes.append(asteriskAttributes)
         }
@@ -85,45 +84,26 @@ class PaybillsItemViewCell: UICollectionViewCell{
         
         textField.updateLabelHeight(height: textHeight > 29 ? 60 : 30)
         
-        print("FRAME : \(self.frame.width)")
-        
-//        enum TypeEnum: String, Codable {
-//            case calendar = "Calendar"
-//            case dropdown = "Dropdown"
-//            case mobilenumber = "mobilenumber"
-//            case month = "Month"
-//            case number = "Number"
-//            case text = "Text"
-//            case year = "Year"
-//        }
-        
         //MARK: - add case for action = dropdown, date field , mobile number etc
 
         switch data?.type {
         case .dropdown:
-            print("DROPDOWN")
             let tapDropDown = UITapGestureRecognizer(target: self, action: #selector(dropdownAction))
             self.textField.TextField.addGestureRecognizer(tapDropDown)
         case .number:
-            print("DROPDOWN")
             textField.TextField.keyboardType = .decimalPad
         case .calendar:
-            print("DROPDOWN")
             dateFormat.dateFormat = "MMM dd, yyyy"
             textField.TextField.tag = 1
             setUpDatePicker()
         case .text:
-            print("DROPDOWN")
             textField.TextField.keyboardType = .default
         case .mobilenumber:
-            print("DROPDOWN")
             // setup limit of phone number
             textField.TextField.keyboardType = .numberPad
         case .month:
-            print("DROPDOWN")
             setUpDatePicker()
         case .year:
-            print("DROPDOWN")
             setUpDatePicker()
         default:
             break;
@@ -191,8 +171,7 @@ extension PaybillsItemViewCell : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
        
         guard let charactersCount = textField.text?.count else { return false }
-         print("CHANGING CHARACTERS :\(textField.text) == \(self.data?.maxLength) > \(charactersCount) ")
-        if let maxLength = self.data?.maxLength {
+         if let maxLength = self.data?.maxLength {
             if maxLength > 0{
                 return charactersCount < maxLength || string == ""
             }

@@ -11,7 +11,7 @@ import UIKit
 extension String {
     func trimValuesFromEnum() -> String {
         let word = self.components(separatedBy: .decimalDigits)
-        print("WORD : \(word)")
+//        print("WORD : \(word)")
     
         return word[0].replacingOccurrences(of: ".string(\"\")", with: "")
     }
@@ -186,7 +186,7 @@ extension String {
             return 0
         }
         
-        print("amountWithPrefix : \(amountWithPrefix)")
+//        print("amountWithPrefix : \(amountWithPrefix)")
         return Double(amountWithPrefix) ?? 0
     }
     
@@ -214,7 +214,7 @@ extension String {
             return wDecimal ? "0.00": "0"
         }
         
-        print("amountWithPrefix : \(amountWithPrefix)")
+//        print("amountWithPrefix : \(amountWithPrefix)")
         return formatter.string(from: number) ?? "0"
     }
     

@@ -27,7 +27,6 @@ class HomeFullListViewModel: NSObject {
             if let dataReceived = response {
                 self.onSuccessPendingList?(dataReceived.data)
                 self.vPage += 1
-                print("add page for getting new")
                 return
             }
 
@@ -75,7 +74,6 @@ class HomeFullListViewModel: NSObject {
             if let dataReceived = response {
                 self.onSuccessTransactionsList?(dataReceived.data)
                 self.vPage += 1
-                print("add page for getting new")
                 return
             }
 

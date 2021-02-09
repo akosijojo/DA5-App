@@ -175,8 +175,6 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
             make.height.equalTo(height > 20 ? height : 20)
         }
         
-        print("HEEEE \(width) \(height)  === \(view.frame.width)")
-        
         view.addSubview(productCode)
         productCode.snp.makeConstraints { (make) in
             make.top.equalTo(productName.snp.bottom)
@@ -239,7 +237,6 @@ class ELoadProductDetailsViewController: BaseHomeViewControler {
     }
     
     @objc func onClickSubmit() {
-        print("Submitting")
         if let phone = self.number.text {
             self.setAnimate(msg: "Please wait...")
             self.viewModel?.submitEloadProcess(phoneNumber: phone, data: self.data, token: self.coordinator?.token)

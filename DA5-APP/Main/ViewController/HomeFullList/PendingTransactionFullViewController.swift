@@ -32,7 +32,6 @@ class PendingTransactionFullViewController: BaseHomeViewControler {
     
     var data : [PendingTransactionsData]? {
         didSet {
-            print("RELOADING NEW DATA")
             self.collectionView.reloadData()
         }
     }
@@ -65,7 +64,6 @@ class PendingTransactionFullViewController: BaseHomeViewControler {
     }
     
     @objc func refreshData() {
-        print("REFRESHING ? ")
         isRefreshing = true
         isAppend = false
         self.viewModel?.getPendingTransactions(page: 0, token: self.coordinator?.token)
@@ -75,7 +73,6 @@ class PendingTransactionFullViewController: BaseHomeViewControler {
     
     @objc func requestNewData() {
          isAppend = true
-         print("REFRESHING Bottom? ")
          self.viewModel?.getPendingTransactions(token: self.coordinator?.token)
          refreshControl?.endRefreshing()
      }
@@ -84,7 +81,6 @@ class PendingTransactionFullViewController: BaseHomeViewControler {
     
     func getData() {
         self.viewModel?.onSuccessPendingList = { [weak self] data in
-          print("DATA RECEIVED")
             DispatchQueue.main.async {
                 if self?.isAppend == true {
                     if let response = data {
@@ -107,7 +103,6 @@ class PendingTransactionFullViewController: BaseHomeViewControler {
         }
         
         self.viewModel?.onSuccessRequest = { [weak self] data in
-           print("DATA RECEIVED")
             DispatchQueue.main.async {
                 //MARK: - stop animation
                 if data?.tag == 2 {
@@ -120,7 +115,6 @@ class PendingTransactionFullViewController: BaseHomeViewControler {
         }
         
         self.viewModel?.onErrorHandling = { [weak self] data in
-           print("ERROR DATA RECEIVED")
              DispatchQueue.main.async {
                 //MARK: - stop animation
                 self?.showAlert(buttonOK: "Ok", message: data?.message ?? "Something went wrong", actionOk: nil, completionHandler: nil)
@@ -189,7 +183,6 @@ extension PendingTransactionFullViewController: UICollectionViewDelegateFlowLayo
         if indexPath.item == ((self.data?.count ?? 0) - 1) {
             // loadMoreData()
             if !isRefreshing {
-                print("REFRESHING BOTTOM")
                 isRefreshing = true
                   DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                       self.requestNewData()
@@ -214,7 +207,6 @@ extension PendingTransactionFullViewController : PendingListCellDelegate {
            
                      
           }, actionCancel: nil, completionHandler: nil)
-        print("REFERENCE NO. \(data?.referenceNo)")
     }
 }
 

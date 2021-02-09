@@ -208,7 +208,6 @@ extension ForgotPinViewController : UICollectionViewDelegateFlowLayout, UICollec
     }
     //MARK:-STOP ALL LOADING ANIMATION
     func stopAnimationBlocker() {
-        print("STOP ANIMATION")
         self.stopAnimating()
         self.beginAnimation(animate: false)
     }

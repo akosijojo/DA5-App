@@ -28,7 +28,7 @@ struct Media {
 //        self.data = data
         self.key = key
         self.mimeType = "image/jpeg"
-        print("DATA IMAGE : \(image.jpegData(compressionQuality: 0.7))")
+//        print("DATA IMAGE : \(image.jpegData(compressionQuality: 0.7))")
         guard let data = image.jpegData(compressionQuality: 0.7) else { return nil }
         self.data = data
     }

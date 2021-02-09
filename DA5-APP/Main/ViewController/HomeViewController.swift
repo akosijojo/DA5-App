@@ -99,13 +99,9 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     func removeTransaction(refNo: String) {
-        print("REMOVING : \(refNo)")
         if let pTransaction = self.homeData?.pendingTransaction {
-            print("REMOVING 2: \(pTransaction)")
             for index in 0...pTransaction.count - 1  {
-                print("REMOVING 3: \(index)")
                 if pTransaction[index].referenceNo == refNo {
-                    print("REMOVING 4: \(pTransaction[index].referenceNo)")
 //                    if let item = self.homeData?.pendingTransaction?[index].convertToHistory(){
 //
 //                          self.homeData?.transactionHistory?.insert(item, at: 0)
@@ -118,7 +114,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     @objc func refreshData() {
-        print("REFRESHING ? ")
         isRefreshing = true
         self.viewModel?.getHomeData(id: self.customerData?.id ?? 0)
        
@@ -151,7 +146,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
             ]
             //MARK: - REMOVE EMPTY VIEW
             if self?.isEmpty ?? false {
-                print("REMOVE EMPTY VIEW")
                 self?.collectionView.emptyView(image: "", text: "", dataCount: 1, emptyViewType: .main)
             }
             self?.loaded = true
@@ -185,7 +179,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         self.viewModel?.onSuccessRequest = { [weak self] status in
            DispatchQueue.main.async {
             //MARK: - 1 = DECLINE TRANSACTION
-            print("REMOVING MODEL : \(self?.referenceNo) == \(status?.tag)")
                if status?.tag == 2 {
                     if let ref = self?.referenceNo {
                          self?.removeTransaction(refNo: ref)
@@ -270,7 +263,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print(" INDEX : \(indexPath.section)")
 //        let refresh = isRefreshing ? 1 : 0
         switch indexPath.section{
         case 1 :
@@ -370,7 +362,6 @@ extension HomeViewController : CollectionViewCellDelegate {
     
     func onClickShowView(cell: UICollectionViewCell, type: Int, index: Int) {
         if let itemCell = cell as? ServicesCell {
-            print("SERVICES : \(servicesData[index])")
             switch servicesData[index].id {
             case 1:
                 self.coordinator?.showLoadWalletViewController()

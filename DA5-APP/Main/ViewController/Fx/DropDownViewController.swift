@@ -72,7 +72,6 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("INDEX PATH SELECTED \(self.parentView)",indexPath.item)
         if let vc = self.parentView as? FXViewController {
     //            vc.nationalitySelected = self.data.
             if let d = self.data?[indexPath.item] as? String {
@@ -82,7 +81,6 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
         if let vc = self.parentView as? PaybillsSelectedItemViewController {
             //RETURN SELECTED ITEM
             if let item = self.data?[indexPath.item] as? DropItem {
-                print("ITEM SELECTED : \(item.key) == \(item.value)")
                  vc.dropItemSelected = item
             }
         }
@@ -96,7 +94,7 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
     
     var data : [T]? {
         didSet {
-            print("DATA RECEIVED :",self.data?.count )
+//            print("DATA RECEIVED :",self.data?.count )
         }
     }
     
@@ -193,7 +191,7 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
     }
     
     @objc func hideModalOnClick() {
-        print("Dismiss Drop")
+//        print("Dismiss Drop")
         self.dismiss(animated: false) {
            self.hideModal()
         }
