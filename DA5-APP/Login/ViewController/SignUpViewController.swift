@@ -520,8 +520,13 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     //MARK: -form 3
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
      // show terms and condition
-        if cell.verificationCode.text?.replacingOccurrences(of: " ", with: "") != "" {
-            self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
+        if cell.verificationCode.text == "" {
+            self.showAlert(buttonOK: "Ok", message: "Verification code is required", actionOk: { (action) in
+                // action
+            }, completionHandler: nil)
+         }else {
+            guard let code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "") else { return }
+             self.viewModel?.registrationForm?.code = code
             if !agreeTermsAndCondition {
     //            agreeTermsAndCondition = true
                 coordinator?.termsCoordinator(parentView: self)

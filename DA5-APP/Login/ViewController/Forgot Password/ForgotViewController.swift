@@ -239,8 +239,6 @@ extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCel
     }
     
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
-        print("Submit")
-        //lagay mo din sa signup 
         if cell.verificationCode.text == "" {
            self.showAlert(buttonOK: "Ok", message: "Verification code is required", actionOk: { (action) in
                // action
