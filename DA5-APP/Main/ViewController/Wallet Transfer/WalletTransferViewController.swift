@@ -139,8 +139,6 @@ class WalletTransferViewController: BaseHomeViewControler{
         dropTableView.delegate = self
         dropTableView.register(ContactTableViewCell.self, forCellReuseIdentifier: dropCell)
         dropTableView.estimatedRowHeight = 40
-        ContactsLocal.shared.saveToLocal(number: "new")
-        contacts = ContactsLocal.shared.getLocal()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -162,7 +160,8 @@ class WalletTransferViewController: BaseHomeViewControler{
                 self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong.", actionOk: nil, completionHandler: nil)
             }
         }
-        
+        // get saved contacts
+        contacts = ContactsLocal.shared.getLocal()
         
     }
     
