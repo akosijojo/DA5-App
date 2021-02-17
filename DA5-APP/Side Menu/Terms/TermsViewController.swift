@@ -116,8 +116,8 @@ class TermsViewController: BaseViewControler {
         // after uploading and saving data show success then show mpin creation and saving
         if let vc = parentView as? SignUpViewController {
             self.navigationController?.popViewController(animated: true)
-            
-            vc.agreeTermsAndCondition = true //agreeOnTermsAndCondition()
+            vc.agreeOnTermsAndCondition()
+            vc.agreeTermsAndCondition = true
         }else {
             self.navBackAction()
         }

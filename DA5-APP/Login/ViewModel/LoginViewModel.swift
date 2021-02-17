@@ -97,6 +97,31 @@ class LoginViewModel : NSObject {
         
        dataModel.loginByApple(param: param, completionHandler: completionHandler)
     }
+    
+    func changePassword(password: String, phone: String, token: String?) {
+        guard let dataModel = model else { return }
+               
+        let completionHandler = { (data : StatusList?) in
+           
+           if let dataReceived = data {
+                if data?.tag == 1 {
+                    self.onSuccessRequest?(StatusList(status: dataReceived.status, title: dataReceived.title, message: dataReceived.message, tag: 10))
+                }else {
+                    self.onErrorHandling?(dataReceived)
+                }
+               return
+           }
+           
+        }
+        
+        let param : [String:String] = [
+            "phone": phone,
+            "password" : password
+        ]
+        
+        dataModel.changePassword(param: param, token: token,completionHandler: completionHandler)
+   }
+       
        
     func getNationality() {
          guard let dataModel = model else { return }

@@ -39,18 +39,12 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.foregroundColor: UIColor.black,
          NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 16)!]
-//        if user {
-//            homeCoordinator()
-//        }else {
-//            logInCoordinator() // no account
-//            pinCodeCoordinator(isChecking: true) // have account not logged in
-//        }
+        
         if let customerLocalData = usersDataLocal{
             pinCodeCoordinator(customerData: customerLocalData.convertData()) // have account not logged in
         }else {
              logInCoordinator()
         }
-        
     }
     
     func setUpUserLogin(user: Customer?) {
@@ -91,6 +85,10 @@ class MainCoordinator :  NSObject, Coordinator {
         self.usersDataLocal = nil
     }
     
+    func removeContactsLocalData() {
+        UserDefaults.standard.removeObject(forKey: AppConfig().contactLocalKey)
+    }
+    
     func removeRefreshTokenLocalData() {
         UserDefaults.standard.removeObject(forKey: AppConfig().refreshTokenLocalKey)
     }
@@ -100,6 +98,7 @@ class MainCoordinator :  NSObject, Coordinator {
             self.removeCustomerLocalData()
             self.removeUserLogin()
             self.removeRefreshTokenLocalData()
+            self.removeContactsLocalData()
         }
         
         if self.navigationController.viewControllers.count > 0 {
@@ -113,6 +112,15 @@ class MainCoordinator :  NSObject, Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
       
+    func showForgotViewController(){
+        let vc = ForgotViewController()
+        vc.viewModel = LoginViewModel()
+        vc.viewModel?.model = LoginModel()
+        vc.coordinator = self
+        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
+    
     func signUpCoordinator(UserData: RegistrationForm? = nil) {
        let vc = SignUpViewController()
        vc.viewModel = LoginViewModel()
@@ -219,6 +227,9 @@ class MainCoordinator :  NSObject, Coordinator {
 //
     func dismissViewController() {
 //        navigationController.navigationBar.isHidden = true
+        if let _ = navigationController.presentedViewController as? LoginViewController {
+            self.navigationController.setNavigationBarHidden(true, animated: true)
+        }
     }
     
     func homeCoordinator(setAsRoot: Bool = false) {
@@ -515,8 +526,16 @@ extension MainCoordinator {
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }
-    
-    
+}
+
+
+//MARK: - SHOW CONTACTS
+extension MainCoordinator {
+    func showContacts() {
+        let vc = ContactViewController()
+//        navigationController.setNavigationBarHidden(false, animated: false)
+        navigationController.pushViewController(vc, animated: false)
+    }
 }
 
 

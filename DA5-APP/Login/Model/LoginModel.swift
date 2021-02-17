@@ -23,6 +23,7 @@ class LoginModel {
      let checkMpinOtp = "/customer/checkMPINOTP"
      let apiToken = "/auth/generateAPIToken"
      let resubmitKYC = "/customer/resubmitKYC"
+     let changePass = "/customer/changePassword"
      
      func login(param: [String:Any],completionHandler: @escaping (LoginData?,StatusList?) -> ()) {
          NetworkService<LoginData>().networkRequest(param, jsonUrlString: jsonUrlString + logIn) { (data,status) in
@@ -55,8 +56,18 @@ class LoginModel {
         }
     }
     
-     func getNationality(param: [String:Any],completionHandler: @escaping (Nationality?,StatusList?) -> ()) {
-         NetworkService<Nationality>().networkRequest(param, jsonUrlString: jsonUrlString + nationality) { (data,status) in
+    func changePassword(param: [String:Any],token: String? ,completionHandler: @escaping (StatusList?) -> ()) {
+        NetworkService<StatusMessage>().networkRequest(param, token: token, jsonUrlString: jsonUrlString + changePass) { (data,status) in
+               if let res = data {
+                   completionHandler(StatusList(status: 1, title: "",message: res.message ,tag: 1))
+                   return
+               }
+            completionHandler(StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong", tag: 0))
+        }
+    }
+    
+    func getNationality(param: [String:Any],completionHandler: @escaping (Nationality?,StatusList?) -> ()) {
+         NetworkService<Nationality>().networkRequest(param,jsonUrlString: jsonUrlString + nationality) { (data,status) in
              if let dataReceived = data {
 //                 if let dataList = dataReceived.data {
                      completionHandler(dataReceived,nil)

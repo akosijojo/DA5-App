@@ -14,11 +14,17 @@ class LoginViewController: BaseViewControler {
 
     var customerData : Customer? {
         didSet{
-            print("Customer ", customerData?.firstName ?? "")
+//            print("Customer ", customerData?.firstName ?? "")
         }
     }
     
     var viewModel : LoginViewModel?
+    
+    // add this
+    lazy var scrollView : UIScrollView = {
+       let v = UIScrollView()
+       return v
+    }()
     
     lazy var logoImg : UIImageView = {
         let img = UIImageView()
@@ -108,6 +114,15 @@ class LoginViewController: BaseViewControler {
         btn.addTarget(self, action: #selector(loginOnFbAction), for: .touchUpInside)
         return btn
     }()
+    
+    lazy var lblForgot : UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Forgot Password?"
+        lbl.textColor = ColorConfig().lightGray
+        lbl.font = UIFont(name: Fonts.regular, size: 14)
+        lbl.textAlignment = .center
+        return lbl
+    }()
        
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -164,42 +179,47 @@ class LoginViewController: BaseViewControler {
     }
 
     override func setUpView() {
-        view.addSubview(logoImg)
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { (make) in
+            make.top.leading.trailing.bottom.equalTo(view)
+        }
+        
+        scrollView.addSubview(logoImg)
         logoImg.snp.makeConstraints { (make) in
             make.width.equalTo(150)
             make.height.equalTo(80)
             make.centerX.equalTo(view)
-            make.centerY.equalTo(view).offset(-220)
+            make.centerY.equalTo(scrollView).offset(-220)
         }
-        view.addSubview(lblEmail)
+        scrollView.addSubview(lblEmail)
         lblEmail.snp.makeConstraints { (make) in
             make.top.equalTo(logoImg.snp.bottom).offset(40)
             make.height.equalTo(40)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
         }
-        view.addSubview(unameTextfield)
+        scrollView.addSubview(unameTextfield)
         unameTextfield.snp.makeConstraints { (make) in
             make.top.equalTo(lblEmail.snp.bottom)
             make.height.equalTo(40)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
         }
-        view.addSubview(lblPassword)
+        scrollView.addSubview(lblPassword)
         lblPassword.snp.makeConstraints { (make) in
             make.top.equalTo(unameTextfield.snp.bottom).offset(10)
             make.height.equalTo(40)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
         }
-        view.addSubview(passTextfield)
+        scrollView.addSubview(passTextfield)
         passTextfield.snp.makeConstraints { (make) in
             make.top.equalTo(lblPassword.snp.bottom)
             make.height.equalTo(40)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
         }
-        view.addSubview(loginBtn)
+        scrollView.addSubview(loginBtn)
         loginBtn.snp.makeConstraints { (make) in
             make.top.equalTo(passTextfield.snp.bottom).offset(20)
             make.height.equalTo(40)
@@ -209,7 +229,7 @@ class LoginViewController: BaseViewControler {
         
         if #available(iOS 13.0, *) {
 //            setUpSignInAppleButton()
-            view.addSubview(appleButton)
+            scrollView.addSubview(appleButton)
             appleButton.snp.makeConstraints { (make) in
                 make.top.equalTo(loginBtn.snp.bottom).offset(10)
                 make.height.equalTo(40)
@@ -217,7 +237,7 @@ class LoginViewController: BaseViewControler {
                 make.trailing.equalTo(view).offset(-20)
             }
             
-            view.addSubview(fbButton)
+            scrollView.addSubview(fbButton)
             fbButton.snp.makeConstraints { (make) in
                make.top.equalTo(appleButton.snp.bottom).offset(10)
                make.height.equalTo(40)
@@ -226,7 +246,7 @@ class LoginViewController: BaseViewControler {
             }
             
         }else {
-            view.addSubview(fbButton)
+            scrollView.addSubview(fbButton)
             fbButton.snp.makeConstraints { (make) in
                make.top.equalTo(loginBtn.snp.bottom).offset(10)
                make.height.equalTo(40)
@@ -235,13 +255,26 @@ class LoginViewController: BaseViewControler {
             }
         }
         
-        view.addSubview(signupBtn)
+        scrollView.addSubview(signupBtn)
         signupBtn.snp.makeConstraints { (make) in
             make.top.equalTo(fbButton.snp.bottom).offset(10)
             make.height.equalTo(40)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
         }
+        
+        scrollView.addSubview(lblForgot)
+        lblForgot.snp.makeConstraints { (make) in
+            make.top.equalTo(signupBtn.snp.bottom).offset(40)
+            make.height.equalTo(20)
+            make.leading.equalTo(view).offset(20)
+            make.trailing.equalTo(view).offset(-20)
+            make.bottom.equalTo(scrollView).offset(-20)
+        }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showForgotView))
+        lblForgot.isUserInteractionEnabled = true
+        lblForgot.addGestureRecognizer(tap)
     }
     
 //    func setUpSignInAppleButton() {
@@ -320,7 +353,7 @@ class LoginViewController: BaseViewControler {
    }
    
    func getFbData() {
-    if AccessToken.current != nil {
+        if AccessToken.current != nil {
            GraphRequest(graphPath: "me", parameters: ["fields" : "id, name, first_name,last_name,picture.type(large),email"]).start { (connection, result, err) in
                if (err == nil) {
                    let faceDic = result as! [String:AnyObject]
@@ -333,7 +366,11 @@ class LoginViewController: BaseViewControler {
                    }
                }
            }
-       }
+        }
+   }
+    
+   @objc func showForgotView() {
+        self.coordinator?.showForgotViewController()
    }
     
 }
@@ -341,7 +378,6 @@ class LoginViewController: BaseViewControler {
 
 extension LoginViewController : ASAuthorizationControllerDelegate {
     @objc func handleAppleIdRequest() {
-        print("APPLE SIGN IN ")
         if #available(iOS 13.0, *) {
             let appleIDProvider = ASAuthorizationAppleIDProvider()
             let request = appleIDProvider.createRequest()
@@ -356,7 +392,6 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
     
     @available(iOS 13.0, *)
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        print("CALLING THIS")
         if let appleIDCredential = authorization.credential as?  ASAuthorizationAppleIDCredential {
         let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName

@@ -68,6 +68,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app needs permission to access camera to take photos.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app needs permission to  access your contacts  to  select phone numbers.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>montserrat_regular.ttf</string>

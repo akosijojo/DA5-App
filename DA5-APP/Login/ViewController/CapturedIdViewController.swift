@@ -91,10 +91,10 @@ class CapturedIdViewController: BaseViewControler, UIImagePickerControllerDelega
     }
     
     @objc func selectImage() {
-        if UIImagePickerController.isSourceTypeAvailable(.camera){//.camera //.photoLibrary
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){//.camera //.photoLibrary
             let vc = UIImagePickerController()
-            vc.sourceType = .camera
-//            vc.sourceType = .photoLibrary
+//            vc.sourceType = .camera
+            vc.sourceType = .photoLibrary
 //            vc.allowsEditing = true
             vc.delegate = self
 //            vc.showsCameraControls = true

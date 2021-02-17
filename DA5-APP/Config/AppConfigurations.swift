@@ -13,16 +13,17 @@ class AppConfig {
     var customerLocalKey : String = "CustomerLocalData"
     var tokenLocalKey : String = "CustomerTokenKey"
     var refreshTokenLocalKey : String = "CustomerRefreshToken"
+    var contactLocalKey : String = "ContactLocalKey"
 }
 //MARK:- API CONFIGURATIONS
 class ApiConfig {
     //MARK: - CHANGE ENV AND API PASSWORD IF DEV OR LIVE
-    var env : String = "live" //live or dev
+    var env : String = "dev" //live or dev
     var url = "https";
     
     
     var apiUsername : String = "da5"
-    var apiPassword : String = "5zYw9h3aMifV7da" //LIVE : "5zYw9h3aMifV7da" DEV : "da5password"
+    var apiPassword : String = "da5password" //LIVE : "5zYw9h3aMifV7da" DEV : "da5password"
     
     var currencyApi : String = "https://api.exchangeratesapi.io/latest"
     var liveUrl : String = "https://daps.com.ph/api"

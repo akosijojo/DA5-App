@@ -337,6 +337,7 @@ extension HomeViewController : HomeHeaderCollectionViewCellDelegate, HeaderColle
     }
     
     func onClickMenu(cell: HomeHeaderCollectionViewCell) {
+        print("DATA : \(self.homeData?.customer)")
         sideMenuView.userData = self.homeData?.customer
         sideMenuView.updateSideMenu(width: sideMenuView.isShowMenu ? 0 : 250)
     }

@@ -70,13 +70,13 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
                 
             }
 
-//           print("REQUEST : \(request) \n PARAMETERS : \(param)")
+           print("REQUEST : \(request) \n PARAMETERS : \(param)")
             
             URLSession.shared.dataTask(with: request) { (data, response, error) in
             //MARK: - FOR TESTING
-//                print("\n===============================================================\n")
-//                self.testJsonResponse(response: response, data: data, error: error)
-//                print("\n===============================================================\n")
+                print("\n===============================================================\n")
+                self.testJsonResponse(response: response, data: data, error: error)
+                print("\n===============================================================\n")
             //MARK: - END
                 if error == nil {
                     let dataRes = response as? HTTPURLResponse
@@ -84,7 +84,7 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
                         do {
                         //MARK: - CHECK STATUS IF NO ERROR
                             if let res = dataRes {
-//                                print("DECODING :",T.self, "RESPONSE ",res.statusCode)
+                                print("DECODING :",T.self, "RESPONSE ",res.statusCode)
                                 if res.statusCode != 200 {
                                     let data = try JSONDecoder().decode(StatusMessage.self, from: receivedData)
                                     completionHandler(nil,StatusList(status: 0, title: "", message: data.message, tag: 0))
@@ -95,7 +95,7 @@ class NetworkService<T:Decodable> : NSObject { // URLSessionTaskDelegate{
                             let data = try JSONDecoder().decode(T.self, from: receivedData)
                             completionHandler(data,nil)
                         } catch let jsonErr {
-//                            print("Error serializing json:", jsonErr)
+                            print("Error serializing json:", jsonErr)
                 
                             completionHandler(nil,StatusList(status: 0, title: "", message: "Something went wrong", tag: dataRes?.statusCode == 200 ? 1 : 0))
                         }

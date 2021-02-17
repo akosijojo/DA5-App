@@ -18,7 +18,13 @@ class SideMenuView : UIView {
     var widthMultiplier : CGFloat = 0.6 // percentage
     var userData : Customer? {
         didSet {
-            self.profileImg.downloaded(from: userData?.image ?? "")
+          if let profile = userData?.image,profile != "" {
+               self.profileImg.downloaded(from: profile)
+          }else {
+              if let gender = userData?.gender {
+                self.profileImg.image = gender == "male" ?  UIImage(named: "prof-man") : UIImage(named: "prof-woman")
+              }
+          }
         }
     }
     
@@ -31,7 +37,7 @@ class SideMenuView : UIView {
     
     let profileImg : UIImageView = {
        let v = UIImageView()
-        v.image = UIImage(named: "user")
+//        v.image = UIImage(named: "prof-man")
         v.clipsToBounds = true
         v.backgroundColor = ColorConfig().white
        return v
@@ -97,8 +103,6 @@ class SideMenuView : UIView {
             make.trailing.equalTo(containerView).offset(-20)
             make.height.equalTo(menus.count * 50)
         }
-        
-        self.profileImg.downloaded(from: userData?.image ?? "")
         
         let screenGesture = UIPanGestureRecognizer(target: self, action: #selector(dismissSelfAnimate(_:)))
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissSelf))

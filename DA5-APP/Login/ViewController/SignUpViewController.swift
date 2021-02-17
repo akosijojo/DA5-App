@@ -192,8 +192,8 @@ class SignUpViewController: BaseViewControler {
         self.pager.collectionView.reloadData()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
         coordinator?.dismissViewController()
     }
     
@@ -520,12 +520,14 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     //MARK: -form 3
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
      // show terms and condition
-        self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
-        if !agreeTermsAndCondition {
-//            agreeTermsAndCondition = true
-            coordinator?.termsCoordinator(parentView: self)
-        }else {
-            self.agreeOnTermsAndCondition()
+        if cell.verificationCode.text?.replacingOccurrences(of: " ", with: "") != "" {
+            self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
+            if !agreeTermsAndCondition {
+    //            agreeTermsAndCondition = true
+                coordinator?.termsCoordinator(parentView: self)
+            }else {
+                self.agreeOnTermsAndCondition()
+            }
         }
     }
     
