@@ -14,24 +14,26 @@ struct ContactsLocal : Codable {
     
     var number : [String]?
 
-    mutating func saveToLocal(number: String) {
+    mutating func saveToLocal() {
         let key = AppConfig().contactLocalKey
         let defaults = UserDefaults.standard
         if let savedData = defaults.object(forKey: key) as? Data {
             let decoder = JSONDecoder()
             if let contacts = try? decoder.decode(ContactsLocal.self, from: savedData) {
-               var data : ContactsLocal = contacts
-                var error : Bool = false
-                for x in 0...(data.number?.count ?? 0) - 1 {
-                    print("SAME? :\(data.number?[x]) == \(number)")
-                    if data.number?[x] == number {
-                        error = true
+                if contacts.number?.count ?? 0 > 0 {
+                    var contactsOnLocal : ContactsLocal = contacts
+                    for x in contacts.number ?? [] {
+                        for xx in self.number ?? [] {
+                            if x != xx {
+                                if xx != "" {
+                                    contactsOnLocal.number?.insert(xx, at: 0)
+                                }
+                            }
+                        }
                     }
+                    self = contactsOnLocal
                 }
-                if !error {
-                    data.number?.insert(number, at: 0)
-                }
-                self = data
+                
             }
         }
         let encoder = JSONEncoder()
@@ -122,7 +124,11 @@ class WalletTransferViewController: BaseHomeViewControler{
     
     var viewModel : LoadWalletViewModel?
     
-    var contacts : ContactsLocal?
+    var contacts : ContactsLocal? {
+        didSet {
+            print("DATA GET :\(contacts)")
+        }
+    }
     
     var contactFiltered : [String] = [] {
         didSet {
@@ -241,7 +247,6 @@ class WalletTransferViewController: BaseHomeViewControler{
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        print("SEARCHING : \(textField.text)")
         self.filterContact(text: textField.text ?? "")
         //MARK:- can add search to stored numbers and filter drop content
     }
@@ -275,23 +280,25 @@ class WalletTransferViewController: BaseHomeViewControler{
     }
     
     func filterContact(text: String) {
-        var data : [String] = []
-        print("SEARCHING TEXT : \(text)")
-        if text == "" {
-            data = self.contacts?.number ?? []
-        }else {
-            var dataFiltered : [String] = []
-            for item in contacts?.number ?? [] {
-                print("SEARCHING TEXT FILTERING: \(item.hasPrefix(text)) - \(item.hasSuffix(text))")
-            
-                if item.hasPrefix(text) == true || item.hasSuffix(text) == true {
-                    dataFiltered.append(item)
-                }
-            }
-            data = dataFiltered.count > 0 ? dataFiltered : []
+        if self.contacts?.number?.count ?? 0 > 0 {
+           var data : [String] = []
+           print("SEARCHING TEXT : \(text)")
+           if text == "" {
+               data = self.contacts?.number ?? []
+           }else {
+               var dataFiltered : [String] = []
+               for item in contacts?.number ?? [] {
+                   print("SEARCHING TEXT FILTERING: \(item.hasPrefix(text)) - \(item.hasSuffix(text))")
+               
+                   if item.hasPrefix(text) == true || item.hasSuffix(text) == true {
+                       dataFiltered.append(item)
+                   }
+               }
+               data = dataFiltered.count > 0 ? dataFiltered : []
+           }
+           self.contactFiltered = data
+           self.showDropView(bool: data.count > 0 ? true : false)
         }
-        self.contactFiltered = data
-        self.showDropView(bool: data.count > 0 ? true : false)
     }
     
     //MARK:- RESTRICTIONS

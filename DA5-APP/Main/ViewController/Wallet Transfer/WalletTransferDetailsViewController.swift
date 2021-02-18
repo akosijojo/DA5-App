@@ -139,7 +139,9 @@ class WalletTransferDetailsViewController: BaseHomeViewControler {
             DispatchQueue.main.async {
                 self?.stopAnimating()
                 self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong.", actionOk: { (action) in
-                    ContactsLocal.shared.saveToLocal(number: self?.data?.recipientNum ?? "")
+                    //MARK: saving new contact
+                    var cc = ContactsLocal(number: [self?.data?.recipientNum ?? ""])
+                    cc.saveToLocal()
                     self?.coordinator?.showParentView()
                 }, completionHandler: nil)
             }

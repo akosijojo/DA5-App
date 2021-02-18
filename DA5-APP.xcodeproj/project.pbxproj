@@ -35,6 +35,11 @@
 		EB3DD6B124F774A100BDBE0C /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6B024F774A100BDBE0C /* AppConfigurations.swift */; };
 		EB3DD6B524F774E500BDBE0C /* BasicInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6B424F774E500BDBE0C /* BasicInfoCell.swift */; };
 		EB3DD6B724F7752400BDBE0C /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB3DD6B624F7752400BDBE0C /* BaseCollectionViewCell.swift */; };
+		EB5374F425D2BC0000DAD8DF /* CustomTextfieldContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5374F325D2BC0000DAD8DF /* CustomTextfieldContact.swift */; };
+		EB5374F725D2BCA700DAD8DF /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5374F625D2BCA700DAD8DF /* ContactViewController.swift */; };
+		EB5374F925D3C8AD00DAD8DF /* ForgotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5374F825D3C8AD00DAD8DF /* ForgotViewController.swift */; };
+		EB5374FC25DAB89A00DAD8DF /* PhoneNumberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5374FB25DAB89A00DAD8DF /* PhoneNumberCell.swift */; };
+		EB5374FE25DD19D000DAD8DF /* ChangePasswordFormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5374FD25DD19D000DAD8DF /* ChangePasswordFormCell.swift */; };
 		EB55D52D24F778E70094DB60 /* UsersData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB55D52C24F778E70094DB60 /* UsersData.swift */; };
 		EB55D52F24F78A3E0094DB60 /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB55D52E24F78A3E0094DB60 /* CustomHeaderView.swift */; };
 		EB55D53124F78A660094DB60 /* CustomBasicFormInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB55D53024F78A660094DB60 /* CustomBasicFormInput.swift */; };
@@ -190,6 +195,11 @@
 		EB3DD6B024F774A100BDBE0C /* AppConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
 		EB3DD6B424F774E500BDBE0C /* BasicInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicInfoCell.swift; sourceTree = "<group>"; };
 		EB3DD6B624F7752400BDBE0C /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
+		EB5374F325D2BC0000DAD8DF /* CustomTextfieldContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextfieldContact.swift; sourceTree = "<group>"; };
+		EB5374F625D2BCA700DAD8DF /* ContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
+		EB5374F825D3C8AD00DAD8DF /* ForgotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotViewController.swift; sourceTree = "<group>"; };
+		EB5374FB25DAB89A00DAD8DF /* PhoneNumberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberCell.swift; sourceTree = "<group>"; };
+		EB5374FD25DD19D000DAD8DF /* ChangePasswordFormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordFormCell.swift; sourceTree = "<group>"; };
 		EB55D52C24F778E70094DB60 /* UsersData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersData.swift; sourceTree = "<group>"; };
 		EB55D52E24F78A3E0094DB60 /* CustomHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderView.swift; sourceTree = "<group>"; };
 		EB55D53024F78A660094DB60 /* CustomBasicFormInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBasicFormInput.swift; sourceTree = "<group>"; };
@@ -525,6 +535,7 @@
 		EB3DD6AE24F7746700BDBE0C /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				EB5374FA25DAB88300DAD8DF /* Forgot Password */,
 				EB77E63725663EF3000479CF /* Pin */,
 				EBFB983E2507E7480057FA79 /* Pager */,
 				EBA973E224EBC36E001C09DB /* LoginViewController.swift */,
@@ -541,6 +552,7 @@
 		EB3DD6AF24F7747600BDBE0C /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				EB5374F525D2BC9200DAD8DF /* ContactView */,
 				EB92961925C1C5A000287B60 /* Paybills */,
 				EB9295FE25BB29F400287B60 /* HomeFullList */,
 				EB6824EB25B3144400C5BC11 /* Fx */,
@@ -573,6 +585,24 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		EB5374F525D2BC9200DAD8DF /* ContactView */ = {
+			isa = PBXGroup;
+			children = (
+				EB5374F625D2BCA700DAD8DF /* ContactViewController.swift */,
+			);
+			path = ContactView;
+			sourceTree = "<group>";
+		};
+		EB5374FA25DAB88300DAD8DF /* Forgot Password */ = {
+			isa = PBXGroup;
+			children = (
+				EB5374F825D3C8AD00DAD8DF /* ForgotViewController.swift */,
+				EB5374FB25DAB89A00DAD8DF /* PhoneNumberCell.swift */,
+				EB5374FD25DD19D000DAD8DF /* ChangePasswordFormCell.swift */,
+			);
+			path = "Forgot Password";
+			sourceTree = "<group>";
+		};
 		EB55D52B24F778B60094DB60 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -592,6 +622,7 @@
 				EB55D53024F78A660094DB60 /* CustomBasicFormInput.swift */,
 				EB77E63A2566464E000479CF /* CustomPinTextField.swift */,
 				EB77E63C25669757000479CF /* CustomNumPad.swift */,
+				EB5374F325D2BC0000DAD8DF /* CustomTextfieldContact.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -1295,6 +1326,7 @@
 				EB6824E525AF3AFE00C5BC11 /* BankDropListViewController.swift in Sources */,
 				EB0F43AF25A2B663008858B1 /* WalletViewController.swift in Sources */,
 				EB77E63925663F1F000479CF /* PinViewController.swift in Sources */,
+				EB5374FE25DD19D000DAD8DF /* ChangePasswordFormCell.swift in Sources */,
 				EB7A2940257DD6A500482CDC /* CustomProgressView.swift in Sources */,
 				EB78E4E9256E0F8600754B2E /* AccountData.swift in Sources */,
 				EB78E50425793A3B00754B2E /* CapturedIdViewController.swift in Sources */,
@@ -1318,10 +1350,12 @@
 				EB6824F125B3148C00C5BC11 /* FxModel.swift in Sources */,
 				EB8850E1256BE06100B0B4CC /* PendingTransactionCell.swift in Sources */,
 				EB77E63B2566464E000479CF /* CustomPinTextField.swift in Sources */,
+				EB5374F725D2BCA700DAD8DF /* ContactViewController.swift in Sources */,
 				EB6824F325B3149700C5BC11 /* FxViewModel.swift in Sources */,
 				EBFB98422507E7800057FA79 /* VerifyCollectionViewCell.swift in Sources */,
 				EBA973E124EBB4A6001C09DB /* MainCoordinator.swift in Sources */,
 				EB0F43AD258B482B008858B1 /* LoadWalletCell.swift in Sources */,
+				EB5374F425D2BC0000DAD8DF /* CustomTextfieldContact.swift in Sources */,
 				EB78E4FD25790B0000754B2E /* UIImageViewExtension .swift in Sources */,
 				EB78E4E7256E08DC00754B2E /* TransactionHistoryData.swift in Sources */,
 				EB0F43C125A4CA91008858B1 /* ELoadProductDetailsViewController.swift in Sources */,
@@ -1357,7 +1391,9 @@
 				EB0F43B125A43164008858B1 /* ELoadViewController.swift in Sources */,
 				EB77ED0C25831B8200D99528 /* Token.swift in Sources */,
 				EB78E5022579346900754B2E /* Helper.swift in Sources */,
+				EB5374FC25DAB89A00DAD8DF /* PhoneNumberCell.swift in Sources */,
 				EB78E4F1256FFC6D00754B2E /* NationalityCell.swift in Sources */,
+				EB5374F925D3C8AD00DAD8DF /* ForgotViewController.swift in Sources */,
 				EB0F439A2589AEF0008858B1 /* CollectionViewExtension.swift in Sources */,
 				EB8850DF256BDD8300B0B4CC /* NewsCell.swift in Sources */,
 				EB92961725BEBA5400287B60 /* NewsItemViewController.swift in Sources */,
