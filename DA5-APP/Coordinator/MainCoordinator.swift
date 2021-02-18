@@ -86,7 +86,7 @@ class MainCoordinator :  NSObject, Coordinator {
     }
     
     func removeContactsLocalData() {
-        UserDefaults.standard.removeObject(forKey: AppConfig().contactLocalKey)
+        UserDefaults.standard.removeObject(forKey: AppConfig().walletTransferContactLocalKey)
     }
     
     func removeRefreshTokenLocalData() {
@@ -531,8 +531,9 @@ extension MainCoordinator {
 
 //MARK: - SHOW CONTACTS
 extension MainCoordinator {
-    func showContacts() {
+    func showContacts(parent: UIViewController?) {
         let vc = ContactViewController()
+        vc.parentView = parent
 //        navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.pushViewController(vc, animated: false)
     }

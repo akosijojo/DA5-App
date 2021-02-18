@@ -13,7 +13,7 @@ class AppConfig {
     var customerLocalKey : String = "CustomerLocalData"
     var tokenLocalKey : String = "CustomerTokenKey"
     var refreshTokenLocalKey : String = "CustomerRefreshToken"
-    var contactLocalKey : String = "ContactLocalKey"
+    var walletTransferContactLocalKey : String = "WalletTransferContacts"
 }
 //MARK:- API CONFIGURATIONS
 class ApiConfig {

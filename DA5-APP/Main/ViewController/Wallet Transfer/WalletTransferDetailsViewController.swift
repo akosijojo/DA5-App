@@ -140,7 +140,7 @@ class WalletTransferDetailsViewController: BaseHomeViewControler {
                 self?.stopAnimating()
                 self?.showAlert(buttonOK: "Ok", message: data?.title ?? "Something went wrong.", actionOk: { (action) in
                     //MARK: saving new contact
-                    var cc = ContactsLocal(number: [self?.data?.recipientNum ?? ""])
+                    var cc = WalletContactsLocal(number: [self?.data?.recipientNum ?? ""])
                     cc.saveToLocal()
                     self?.coordinator?.showParentView()
                 }, completionHandler: nil)

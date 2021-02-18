@@ -59,3 +59,51 @@ struct WalletDetailsData: Decodable {
         case idPictureThumbnail2 = "id_picture_thumbnail2"
     }
 }
+
+struct WalletContactsLocal : Codable {
+    
+    static var shared = WalletContactsLocal()
+    
+    var number : [String]?
+
+    mutating func saveToLocal() {
+        let key = AppConfig().walletTransferContactLocalKey
+        let defaults = UserDefaults.standard
+        if let savedData = defaults.object(forKey: key) as? Data {
+            let decoder = JSONDecoder()
+            if let contacts = try? decoder.decode(WalletContactsLocal.self, from: savedData) {
+                if contacts.number?.count ?? 0 > 0 {
+                    var contactsOnLocal : WalletContactsLocal = contacts
+                    for x in contacts.number ?? [] {
+                        for xx in self.number ?? [] {
+                            if x != xx {
+                                if xx != "" {
+                                    contactsOnLocal.number?.insert(xx, at: 0)
+                                }
+                            }
+                        }
+                    }
+                    self = contactsOnLocal
+                }
+                
+            }
+        }
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(self) {
+            defaults.set(encoded, forKey: key)
+        }
+    }
+    
+    func getLocal() -> WalletContactsLocal? {
+        print("DATA GETTING")
+       let defaults = UserDefaults.standard
+       if let savedData = defaults.object(forKey: AppConfig().walletTransferContactLocalKey) as? Data {
+           let decoder = JSONDecoder()
+           if let data = try? decoder.decode(WalletContactsLocal.self, from: savedData) {
+            print("CONTACT LOCAL \(data)")
+              return data
+           }
+       }
+       return nil
+    }
+}

@@ -23,6 +23,7 @@ class ELoadViewController: BaseHomeViewControler {
        v.FieldView.TextField.tag = 1
        v.FieldView.TextField.delegate = self
        v.FieldView.TextField.placeholder = "Phone number"
+       v.FieldView.imageViewR.image = UIImage(named: "contacts")
        return v
     }()
     
@@ -90,6 +91,11 @@ class ELoadViewController: BaseHomeViewControler {
           make.height.equalTo(70)
         }
         
+        phoneNumber.FieldView.showRightImageView()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showContactList))
+        phoneNumber.FieldView.imageViewR.isUserInteractionEnabled = true
+        phoneNumber.FieldView.imageViewR.addGestureRecognizer(tap)
+        
         view.addSubview(submitBtn)
         submitBtn.snp.makeConstraints { (make) in
             make.bottom.equalTo(view.layoutMarginsGuide.snp.bottom).offset(-20)
@@ -107,6 +113,10 @@ class ELoadViewController: BaseHomeViewControler {
             return count <= 10
          }
         return true
+    }
+    
+    @objc func showContactList() {
+        self.coordinator?.showContacts(parent: self)
     }
     
     @objc func submitAction() {

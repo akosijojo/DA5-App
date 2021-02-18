@@ -281,4 +281,34 @@ extension String {
 
         return formatter.string(from: number)!
     }
+    
 }
+//MARK: - Phone numbers
+extension String {
+    //MARK:- RETURN NUMBERS ONLY
+    var digits: String {
+       return components(separatedBy: CharacterSet.decimalDigits.inverted)
+           .joined()
+    }
+    
+    //MARK: - DEFAULT
+    // No country code with no leading zero
+    // Return Numbers only
+    func convertPhoneNumber(withCountryCode: Bool? = false, withLeadingZero: Bool? = false,onlyNumbers: Bool? = true) -> String {
+        var stringToReturn = self
+        if withCountryCode == false {
+            // MARK: ADD CHECKING HERE
+            if self.hasPrefix("+63") {
+               stringToReturn = stringToReturn.replacingOccurrences(of: "+63", with: "")
+            }
+           //FOR PH
+            if stringToReturn.hasPrefix("09") && !(withLeadingZero ?? false) {
+                stringToReturn =  stringToReturn.replacingOccurrences(of: "0", with: "", options: .anchored)
+             }
+        }
+
+        return onlyNumbers ?? true ? stringToReturn.digits : stringToReturn
+    }
+}
+
+

@@ -7,55 +7,6 @@
 //
 
 import UIKit
-
-struct ContactsLocal : Codable {
-    
-    static var shared = ContactsLocal()
-    
-    var number : [String]?
-
-    mutating func saveToLocal() {
-        let key = AppConfig().contactLocalKey
-        let defaults = UserDefaults.standard
-        if let savedData = defaults.object(forKey: key) as? Data {
-            let decoder = JSONDecoder()
-            if let contacts = try? decoder.decode(ContactsLocal.self, from: savedData) {
-                if contacts.number?.count ?? 0 > 0 {
-                    var contactsOnLocal : ContactsLocal = contacts
-                    for x in contacts.number ?? [] {
-                        for xx in self.number ?? [] {
-                            if x != xx {
-                                if xx != "" {
-                                    contactsOnLocal.number?.insert(xx, at: 0)
-                                }
-                            }
-                        }
-                    }
-                    self = contactsOnLocal
-                }
-                
-            }
-        }
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(self) {
-            defaults.set(encoded, forKey: key)
-        }
-    }
-    
-    func getLocal() -> ContactsLocal? {
-        print("DATA GETTING")
-       let defaults = UserDefaults.standard
-       if let savedData = defaults.object(forKey: AppConfig().contactLocalKey) as? Data {
-           let decoder = JSONDecoder()
-           if let data = try? decoder.decode(ContactsLocal.self, from: savedData) {
-            print("CONTACT LOCAL \(data)")
-              return data
-           }
-       }
-       return nil
-    }
-}
-
 class WalletTransferViewController: BaseHomeViewControler{
     
     var data : WalletTransferData?
@@ -124,7 +75,7 @@ class WalletTransferViewController: BaseHomeViewControler{
     
     var viewModel : LoadWalletViewModel?
     
-    var contacts : ContactsLocal? {
+    var contacts : WalletContactsLocal? {
         didSet {
             print("DATA GET :\(contacts)")
         }
@@ -167,7 +118,7 @@ class WalletTransferViewController: BaseHomeViewControler{
             }
         }
         // get saved contacts
-        contacts = ContactsLocal.shared.getLocal()
+        contacts = WalletContactsLocal.shared.getLocal()
         
     }
     

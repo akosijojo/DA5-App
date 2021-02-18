@@ -218,6 +218,7 @@ class CustomBasicFormInputNumber : UIView {
             make.height.equalTo(0)
         }
     }
+    
 }
 
 
@@ -291,7 +292,13 @@ class CustomMobileNumberField : UIView {
         v.layer.cornerRadius = 5
         return v
     }()
-   
+    
+    lazy var imageViewR : UIImageView = {
+        let i = UIImageView()
+        i.isUserInteractionEnabled = true
+        return i
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
@@ -319,6 +326,17 @@ class CustomMobileNumberField : UIView {
              make.bottom.equalTo(self)
          }
     }
+    
+    func showRightImageView() {
+         TextField.clearButtonMode = .never
+         TextField.addSubview(imageViewR)
+         imageViewR.snp.makeConstraints { (make) in
+             make.trailing.equalTo(TextField).offset(-10)
+             make.centerY.equalTo(TextField)
+             make.width.height.equalTo(20)
+         }
+         TextField.padding = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 30)
+     }
     
     func removeBorder() {
         self.Label.addBorders(edges: .right, color: ColorConfig().innerbgColor!)
