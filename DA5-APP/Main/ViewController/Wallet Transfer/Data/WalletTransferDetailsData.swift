@@ -74,12 +74,17 @@ struct WalletContactsLocal : Codable {
             if let contacts = try? decoder.decode(WalletContactsLocal.self, from: savedData) {
                 if contacts.number?.count ?? 0 > 0 {
                     var contactsOnLocal : WalletContactsLocal = contacts
-                    for x in contacts.number ?? [] {
-                        for xx in self.number ?? [] {
-                            if x != xx {
-                                if xx != "" {
-                                    contactsOnLocal.number?.insert(xx, at: 0)
-                                }
+                    for xx in self.number ?? [] {
+                        var error : Bool = false
+                        for x in contacts.number ?? [] {
+                            if x == xx {
+                                error = true
+                                return
+                            }
+                        }
+                        if !error {
+                            if xx != "" {
+                              contactsOnLocal.number?.insert(xx, at: 0)
                             }
                         }
                     }

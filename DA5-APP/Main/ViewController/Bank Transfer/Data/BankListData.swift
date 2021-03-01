@@ -60,3 +60,61 @@ struct TransStatus: Codable {
         case traceNo, tranRequestDate
     }
 }
+
+//MARK: - LOCAL DATA
+struct BankLocalData: Codable {
+    static let shared = BankLocalData()
+    var data : [BankAccountLocalData]?
+    mutating func saveToLocal() {
+        let key = AppConfig().bankAccountLocalKey
+        let defaults = UserDefaults.standard
+        if let savedData = defaults.object(forKey: key) as? Data {
+            let decoder = JSONDecoder()
+            if let banks = try? decoder.decode(BankLocalData.self, from: savedData) {
+                if banks.data?.count ?? 0 > 0 {
+                    var banksLocal : BankLocalData = banks
+                    for xx in self.data ?? [] {
+                        var error : Bool = false
+                        for x in banks.data ?? [] {
+                            if x.accountName == xx.accountName && x.accountNumber == xx.accountNumber {
+                                error = true
+                                return
+                            }
+                        }
+                        if !error{
+                            if xx.accountNumber != "" {
+                                banksLocal.data?.insert(xx, at: 0)
+                            }
+                        }
+                    }
+                    self = banksLocal
+                }
+                
+            }
+        }
+        
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(self) {
+            defaults.set(encoded, forKey: key)
+        }
+    }
+    
+    func getLocal() -> BankLocalData? {
+        print("DATA GETTING")
+       let defaults = UserDefaults.standard
+       if let savedData = defaults.object(forKey: AppConfig().bankAccountLocalKey) as? Data {
+           let decoder = JSONDecoder()
+           if let data = try? decoder.decode(BankLocalData.self, from: savedData) {
+            print("BANKS LOCAL \(data)")
+              return data
+           }
+       }
+       return nil
+    }
+}
+
+struct BankAccountLocalData: Codable {
+    var accountNumber : String?
+    var accountName : String?
+    var code, bank, brstn: String?
+}

@@ -10,7 +10,7 @@ import UIKit
 
 class SideMenuView : UIView {
 
-    var menus : [String]  = ["Home", "Privacy", "Terms", "Logout"]
+    var menus : [String]  = ["Home", "Privacy", "Terms", "Share App","Logout"]
 
     private var menuViewLbl = [UILabel()]
     weak var vc : HomeViewController?
@@ -146,6 +146,8 @@ class SideMenuView : UIView {
         case 2:
             vc?.coordinator?.termsCoordinator(parentView: nil, forViewing: true)
         case 3:
+            self.shareApp()
+        case 4:
             let rToken = RefreshTokenLocal().getRefreshTokenLocal()
             vc?.viewModel?.logout(rToken: rToken?.refreshToken)
             //MARK: show this and remove checking on vc to logout even without internet or error occured
@@ -154,6 +156,14 @@ class SideMenuView : UIView {
             break
         }
         
+    }
+    
+    func shareApp() {
+         let text = AppConfig().appLink
+         let textShare = [ text ]
+         let activityViewController = UIActivityViewController(activityItems: textShare , applicationActivities: nil)
+         activityViewController.popoverPresentationController?.sourceView = vc?.view
+         vc?.present(activityViewController, animated: true, completion: nil)
     }
     
     func updateSideMenu(width: CGFloat){

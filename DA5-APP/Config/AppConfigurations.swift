@@ -13,14 +13,16 @@ class AppConfig {
     var customerLocalKey : String = "CustomerLocalData"
     var tokenLocalKey : String = "CustomerTokenKey"
     var refreshTokenLocalKey : String = "CustomerRefreshToken"
-    var walletTransferContactLocalKey : String = "WalletTransferContacts"
+    var walletTransferContactLocalKey : String = "WalletTransferContactsKey"
+    var bankAccountLocalKey : String = "BankAccountLocalKey"
+    
+    var appLink : String = "https://apps.apple.com/us/app/da5-app/id1552222369"
 }
 //MARK:- API CONFIGURATIONS
 class ApiConfig {
     //MARK: - CHANGE ENV AND API PASSWORD IF DEV OR LIVE
     var env : String = "dev" //live or dev
     var url = "https";
-    
     
     var apiUsername : String = "da5"
     var apiPassword : String = "da5password" //LIVE : "5zYw9h3aMifV7da" DEV : "da5password"

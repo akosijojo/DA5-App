@@ -89,6 +89,10 @@ class MainCoordinator :  NSObject, Coordinator {
         UserDefaults.standard.removeObject(forKey: AppConfig().walletTransferContactLocalKey)
     }
     
+    func removeBanksLocalData() {
+         UserDefaults.standard.removeObject(forKey: AppConfig().bankAccountLocalKey)
+    }
+    
     func removeRefreshTokenLocalData() {
         UserDefaults.standard.removeObject(forKey: AppConfig().refreshTokenLocalKey)
     }
@@ -99,6 +103,7 @@ class MainCoordinator :  NSObject, Coordinator {
             self.removeUserLogin()
             self.removeRefreshTokenLocalData()
             self.removeContactsLocalData()
+            self.removeBanksLocalData()
         }
         
         if self.navigationController.viewControllers.count > 0 {

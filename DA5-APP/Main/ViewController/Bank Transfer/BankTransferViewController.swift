@@ -9,6 +9,8 @@
 import UIKit
 
 class BankTransferViewController: BaseHomeViewControler {
+    var rightBarButton : UIBarButtonItem?
+    
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
         v.title.text = "Bank transfer"
@@ -46,25 +48,6 @@ class BankTransferViewController: BaseHomeViewControler {
         return v
     }()
     
-    
-//    lazy var emailInfo: UILabel = {
-//       let v = UILabel()
-//       v.text = "To notify the recipient, please enter their email to send the receipt."
-//       v.font = UIFont(name: Fonts.regular, size: 12)
-//       v.numberOfLines = 2
-//       return v
-//    }()
-//
-//    lazy var emailAddress: CustomBasicFormInput = {
-//        let v = CustomBasicFormInput()
-//        v.TextField.keyboardType = .emailAddress
-//        v.TextField.tag = 4
-//        v.TextField.placeholder = "Email Address"
-//        v.TextField.delegate = self
-//        v.TextField.font = UIFont(name: Fonts.regular, size: 12)
-//        return v
-//    }()
-    
     lazy var bankTransferInfo: UILabel = {
        let v = UILabel()
        v.text = "+ Php 50,000.00 daily transaction limit per source \n + Php 25.00 bank transfer fee per transaction"
@@ -93,16 +76,55 @@ class BankTransferViewController: BaseHomeViewControler {
         }
     }
     
+    var accountSelected : BankAccountLocalData? {
+        didSet {
+            self.bankList.TextField.text = accountSelected?.bank
+            self.accountName.TextField.text = accountSelected?.accountName
+            self.accountNumber.TextField.text = accountSelected?.accountNumber
+         }
+    }
+    
+    var bankListLocal : BankLocalData? {
+        didSet {
+            print("DATA BANKS : \(bankListLocal)")
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         hidesKeyboardOnTapArround()
         setUpView()
         setUpData()
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         setUpNavigationBar()
+        setUpRightBarButton()
+    }
+    
+    func setUpRightBarButton() {
+        let rightButton = UIButton(type: .system)
+        rightButton.setImage(UIImage(named: "bank-reciept"), for: .normal)
+        rightButton.tintColor = ColorConfig().black
+        rightButton.addTarget(self, action: #selector(showPreviousBankList), for: .touchUpInside)
+        rightBarButton = UIBarButtonItem(customView: rightButton)
+        self.navigationItem.rightBarButtonItem = rightBarButton
+    }
+
+    @objc func showPreviousBankList() {
+//        var bankLocal = BankLocalData(data: [BankAccountLocalData(accountNumber: "123123123", accountName: "HEY", code: "Code", bank: "Bank", brstn: "brstn")])
+//        bankLocal.saveToLocal()
+        let height = CGFloat((bankListLocal?.data?.count ?? 0) * 100)
+        let vc = BankDropListViewController<BankAccountLocalData>(height: height > 0 ? height : 200, width: view.frame.width * 0.8)
+       vc.modalPresentationStyle = .overCurrentContext
+       vc.parentView = self
+       vc.data = bankListLocal?.data
+       self.present(vc, animated: false) {
+            vc.showModal()
+       }
     }
     
     override func setUpData() {
@@ -129,6 +151,8 @@ class BankTransferViewController: BaseHomeViewControler {
         
         self.setAnimate(msg: "Please wait...")
         self.viewModel?.getBankList(token: self.coordinator?.token)
+        
+        bankListLocal = BankLocalData.shared.getLocal()
     }
     
     override func setUpView() {
@@ -164,25 +188,8 @@ class BankTransferViewController: BaseHomeViewControler {
             make.height.equalTo(40)
         }
         
-//        view.addSubview(emailInfo)
-//        emailInfo.snp.makeConstraints { (make) in
-//            make.top.equalTo(accountName.snp.bottom).offset(20)
-//            make.leading.equalTo(view).offset(20)
-//            make.trailing.equalTo(view).offset(-20)
-//            make.height.equalTo(40)
-//        }
-//
-//        view.addSubview(emailAddress)
-//        emailAddress.snp.makeConstraints { (make) in
-//            make.top.equalTo(emailInfo.snp.bottom).offset(10)
-//            make.leading.equalTo(view).offset(20)
-//            make.trailing.equalTo(view).offset(-20)
-//            make.height.equalTo(40)
-//        }
-//
         view.addSubview(bankTransferInfo)
         bankTransferInfo.snp.makeConstraints { (make) in
-//            make.top.equalTo(emailAddress.snp.bottom).offset(10)
             make.top.equalTo(accountName.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(20)
             make.trailing.equalTo(view).offset(-20)
@@ -218,7 +225,7 @@ class BankTransferViewController: BaseHomeViewControler {
     }
     
     @objc func showBankList() {
-       let vc = BankDropListViewController()
+        let vc = BankDropListViewController<BankListData>(height: view.frame.height * 0.8, width: 250)
        vc.modalPresentationStyle = .overCurrentContext
        vc.parentView = self
        vc.data = self.banksListData?.collection

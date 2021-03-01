@@ -19,7 +19,7 @@ class TransactionHistoryCell: UICollectionViewCell {
              if let d = data {
                 if let cashInOut = d.cashInOut {
                     let titleText = NSMutableAttributedString(string: cashInOut.type == 0 ? "CASH IN" : "CASH OUT", attributes: nil)
-                    let statusText = NSAttributedString(string: cashInOut.status == 2 ? " (Rejected)" : (cashInOut.status == 0 ?  " (Canceled)":" (Accepted)"), attributes: [NSAttributedString.Key.foregroundColor: ColorConfig().red!])
+                    let statusText = NSAttributedString(string: cashInOut.status == 2 ? " (Rejected)" : (cashInOut.status == 0 ?  " (Canceled)":" (Successful)"), attributes: [NSAttributedString.Key.foregroundColor: ColorConfig().red!])
                     titleText.append(statusText)
                     
                     self.titleLbl.attributedText = titleText
@@ -52,7 +52,7 @@ class TransactionHistoryCell: UICollectionViewCell {
 
                 if let fx = d.fx {
                     let titleText = NSMutableAttributedString(string: "FX Trade", attributes: nil)
-                    let statusText = NSAttributedString(string: fx.status == 2 ? " (Rejected)" : " (Accepted)", attributes: [NSAttributedString.Key.foregroundColor: ColorConfig().red!])
+                    let statusText = NSAttributedString(string: fx.status == 2 ? " (Rejected)" : " (Successful)", attributes: [NSAttributedString.Key.foregroundColor: ColorConfig().red!])
                     titleText.append(statusText)
                     self.titleLbl.attributedText = titleText
                     self.nameLbl.text = fx.customerName
@@ -70,7 +70,7 @@ class TransactionHistoryCell: UICollectionViewCell {
                     self.timeLbl.text = instapay.tranRequestDate?.formatDate(format: "hh:mm:ss a")
                     self.dateLbl.text = instapay.tranRequestDate?.formatDate()
                     self.bankFee.text = "PHP 25.00"
-                    self.bankLbl.text = "Bank Convenience Fee"
+                    self.bankLbl.text = "Transfer Fee"
                 }
             }
             //MARK: - Check if instapay or wallet transfer
@@ -103,7 +103,7 @@ class TransactionHistoryCell: UICollectionViewCell {
     
     lazy var bankLbl : UILabel = {
         let v = UILabel()
-        v.text = "Bank Convenience Fee"
+        v.text = "Transfer Fee"
         v.font = UIFont(name: Fonts.medium, size: 12)
         return v
     }()

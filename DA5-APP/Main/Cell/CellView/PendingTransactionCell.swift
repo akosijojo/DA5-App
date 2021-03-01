@@ -88,14 +88,27 @@ class PendingTransactionCell: UICollectionViewCell {
         return v
     }()
     
-    lazy var removeIcon : UIButton = {
+//    lazy var removeIcon : UIButton = {
+//        let v = UIButton()
+//        v.layer.cornerRadius = 10
+//        v.layer.masksToBounds = true
+//        v.clipsToBounds = true
+//        v.contentMode = .scaleAspectFit
+//        v.setImage(UIImage(named: "times"), for: .normal)
+//        v.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.8)
+//        return v
+//    }()
+    
+    lazy var cancelButton : UIButton = {
         let v = UIButton()
-        v.layer.cornerRadius = 10
+        v.layer.cornerRadius = 5
         v.layer.masksToBounds = true
         v.clipsToBounds = true
         v.contentMode = .scaleAspectFit
-        v.setImage(UIImage(named: "times"), for: .normal)
-        v.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.8)
+        v.setTitle("Cancel", for: .normal)
+        v.backgroundColor = ColorConfig().red
+        v.setTitleColor(ColorConfig().white, for: .normal)
+        v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)
         return v
     }()
 
@@ -155,24 +168,24 @@ class PendingTransactionCell: UICollectionViewCell {
             make.top.equalTo(mainView)
             make.leading.equalTo(mainView)
             make.trailing.equalTo(mainView)
-            make.height.equalTo(mainView).multipliedBy(0.5)
+            make.height.equalTo(mainView).multipliedBy(0.4)
         }
         
-        mainView.addSubview(removeIcon)
-        removeIcon.snp.makeConstraints { (make) in
-            make.top.equalTo(mainView).offset(5)
-            make.width.equalTo(20)
-            make.trailing.equalTo(mainView).offset(-5)
-            make.height.equalTo(20)
-        }
-        mainView.bringSubviewToFront(removeIcon)
+//        mainView.addSubview(removeIcon)
+//        removeIcon.snp.makeConstraints { (make) in
+//            make.top.equalTo(mainView).offset(5)
+//            make.width.equalTo(20)
+//            make.trailing.equalTo(mainView).offset(-5)
+//            make.height.equalTo(20)
+//        }
+//        mainView.bringSubviewToFront(removeIcon)
         
         mainView.addSubview(containerView)
         containerView.snp.makeConstraints { (make) in
             make.top.equalTo(imageView.snp.bottom).offset(5)
             make.leading.equalTo(mainView).offset(15)
             make.trailing.equalTo(mainView).offset(-15)
-            make.height.equalTo(mainView).multipliedBy(0.5)
+            make.height.equalTo(mainView).multipliedBy(0.6)
         }
         
         containerView.addSubview(titleLbl)
@@ -180,7 +193,7 @@ class PendingTransactionCell: UICollectionViewCell {
             make.top.equalTo(containerView).offset(5)
             make.leading.equalTo(containerView)
             make.trailing.equalTo(containerView)
-            make.height.equalTo(containerView).multipliedBy(0.2)
+            make.height.equalTo(20)
         }
         
         containerView.addSubview(priceLbl)
@@ -188,7 +201,7 @@ class PendingTransactionCell: UICollectionViewCell {
             make.top.equalTo(titleLbl.snp.bottom)
             make.leading.equalTo(containerView)
             make.trailing.equalTo(containerView)
-            make.height.equalTo(containerView).multipliedBy(0.2)
+            make.height.equalTo(20)
         }
         
         containerView.addSubview(dateLbl)
@@ -196,7 +209,7 @@ class PendingTransactionCell: UICollectionViewCell {
            make.top.equalTo(priceLbl.snp.bottom)
            make.leading.equalTo(containerView)
            make.trailing.equalTo(containerView)
-           make.height.equalTo(containerView).multipliedBy(0.2)
+           make.height.equalTo(20)
         }
         
         containerView.addSubview(refNoLbl)
@@ -204,15 +217,23 @@ class PendingTransactionCell: UICollectionViewCell {
            make.top.equalTo(dateLbl.snp.bottom)
            make.leading.equalTo(containerView)
            make.trailing.equalTo(containerView)
-           make.height.equalTo(containerView).multipliedBy(0.2)
+           make.height.equalTo(20)
         }
         
+        containerView.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { (make) in
+            make.top.equalTo(refNoLbl.snp.bottom).offset(5)
+            make.width.equalTo(100)
+            make.centerX.equalTo(containerView)
+            make.height.equalTo(20)
+        }
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(onClick))
         mainView.isUserInteractionEnabled = true
         mainView.addGestureRecognizer(tap)
         
-        removeIcon.addTarget(self, action: #selector(removeItem), for: .touchUpInside)
-        removeIcon.isUserInteractionEnabled = true
+        cancelButton.addTarget(self, action: #selector(removeItem), for: .touchUpInside)
+        cancelButton.isUserInteractionEnabled = true
     }
     
     @objc func onClick() {

@@ -159,6 +159,8 @@ class BankTransferDetailsViewController : BaseHomeViewControler {
            DispatchQueue.main.async {
             self?.stopAnimating()
             self?.showAlert(buttonOK: "Ok", message:  data?.message ?? "Something went wrong", actionOk: { (action) in
+                var bankLocal = BankLocalData(data: [BankAccountLocalData(accountNumber: self?.data?.accountNumber, accountName: self?.data?.accountName, code: self?.data?.bank?.code, bank: self?.data?.bank?.bank, brstn: self?.data?.bank?.brstn)])
+                bankLocal.saveToLocal()
                 self?.coordinator?.showParentView()
             }, completionHandler: nil)
            
