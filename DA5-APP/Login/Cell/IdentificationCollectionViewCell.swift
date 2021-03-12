@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import ADCountryPicker
+
 protocol IdentificationCollectionViewCellDelegate {
     func submitAction(cell: IdentificationCollectionViewCell,index: Int, fields: [UITextField],passChecker: Bool, form: RegistrationForm?)
     func selectValidId(cell: IdentificationCollectionViewCell,index: Int)
+    func selectCountryCode(cell: IdentificationCollectionViewCell,index: Int)
     func selectSelfieId(cell: IdentificationCollectionViewCell,index: Int)
 }
 class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDelegate {
@@ -23,13 +26,23 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     var show : Bool = false
     
     var textFields : [UITextField] = []
-    
+
     var data : RegistrationForm? {
        didSet {
             if data?.email != nil {
                 self.emailAddress.TextField.text = data?.email
             }
        }
+    }
+    
+    var phoneNumberCode : PhoneNumberCountryCode? {
+        didSet {
+            if let item = phoneNumberCode , item.code != nil {
+                self.phoneNumber.FieldView.phoneViewLabel.flag.image = phoneNumberCode?.image
+                self.phoneNumber.FieldView.phoneViewLabel.country.text = phoneNumberCode?.code
+                self.phoneNumber.FieldView.phoneViewLabel.Label.text = phoneNumberCode?.dialCode
+            }
+        }
     }
     
     lazy var scrollView : UIScrollView = {
@@ -49,6 +62,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         v.FieldView.TextField.keyboardType = .numberPad
         v.FieldView.TextField.tag = 1
         v.FieldView.TextField.delegate = self
+        v.FieldView.phoneViewLabel.Label.font = UIFont(name: Fonts.medium, size: 12)
         return v
     }()
     
@@ -175,6 +189,9 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
             make.trailing.equalTo(self).offset(-20)
             make.height.equalTo(70)
         }
+        
+        let selectPhoneCode = UITapGestureRecognizer(target: self, action: #selector(selectPhoneNumberCode))
+        phoneNumber.FieldView.phoneViewLabel.addGestureRecognizer(selectPhoneCode)
         
         scrollView.addSubview(emailAddress)
         emailAddress.snp.makeConstraints { (make) in
@@ -387,6 +404,10 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         }
     }
     
+    @objc func selectPhoneNumberCode() {
+        self.delegate?.selectCountryCode(cell: self, index: 2)
+    }
+    
     @objc func submitAction() {
         //MARK: Added checking if login from Facebook
         let passChecker = data?.fbId != nil ? password.TextField.text != confirmPassword.TextField.text : false
@@ -398,7 +419,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     func setUpFormData() -> RegistrationForm {
         
 //        make checking here of images before force unwrapping
-        return RegistrationForm(phoneNumber: phoneNumber.FieldView.TextField.text, email: emailAddress.TextField.text, password: data?.fbId != nil ? nil : password.TextField.text)
+        return RegistrationForm(phoneNumber: phoneNumber.FieldView.TextField.text ,countryCode: self.phoneNumberCode?.dialCode, email: emailAddress.TextField.text, password: data?.fbId != nil ? nil : password.TextField.text)
     }
     
     @objc func onClickValidId(){
@@ -436,7 +457,7 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
          guard let text = textField.text else { return true }
-         if textField.tag == 1 {
+         if textField.tag == 1 && self.phoneNumberCode?.code == "PH"{
             let count = text.count + string.count - range.length
             return count <= 10
          }
@@ -466,3 +487,5 @@ class IdentificationCollectionViewCell: BaseCollectionViewCell, UITextFieldDeleg
         animatePrevIcon()
     }
 }
+
+

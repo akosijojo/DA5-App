@@ -45,6 +45,8 @@ class MainCoordinator :  NSObject, Coordinator {
         }else {
              logInCoordinator()
         }
+//        let vc = ViewController()
+//        navigationController.pushViewController(vc, animated: true)
     }
     
     func setUpUserLogin(user: Customer?) {
@@ -55,6 +57,8 @@ class MainCoordinator :  NSObject, Coordinator {
             UserLoginData.shared.lastName = data.lastName
             UserLoginData.shared.image = data.image
             UserLoginData.shared.phoneNumber = data.phone
+            UserLoginData.shared.phoneVerifiedAt = data.phoneVerifiedAt
+            UserLoginData.shared.emailVerifiedAt = data.emailVerifiedAt
             saveCustomerToLocal(data: user)
         }
     }
@@ -78,6 +82,8 @@ class MainCoordinator :  NSObject, Coordinator {
         UserLoginData.shared.lastName = nil
         UserLoginData.shared.image = nil
         UserLoginData.shared.phoneNumber = nil
+        UserLoginData.shared.emailVerifiedAt = nil
+        UserLoginData.shared.phoneVerifiedAt = nil
     }
     
     func removeCustomerLocalData() {
@@ -173,12 +179,19 @@ class MainCoordinator :  NSObject, Coordinator {
        let vc = ForgotPinViewController()
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
-        if type == .phone {
-            vc.mobileNumber = usersDataLocal?.phone
+        //MARK: - CHECKING IF FOREIGN OR LOCAL
+        if type == .phone && UserLoginData.shared.phoneVerifiedAt == nil && UserLoginData.shared.emailVerifiedAt != nil {
+           vc.emailAddress = usersDataLocal?.email
+           vc.type = .email
         }else {
-            vc.emailAddress = usersDataLocal?.email
+            if type == .phone {
+                vc.mobileNumber = usersDataLocal?.phone
+            }else {
+                vc.emailAddress = usersDataLocal?.email
+            }
+
+            vc.type = type ?? .phone
         }
-       vc.type = type ?? .phone
        vc.coordinator = self
        navigationController.setNavigationBarHidden(false, animated: false)
        navigationController.pushViewController(vc, animated: false)
@@ -208,7 +221,11 @@ class MainCoordinator :  NSObject, Coordinator {
         vc.selfieId = view?.selfieId
         vc.viewModel = vM
         vc.viewModel?.model = vM?.model
-        vc.mobileNumber = vM?.registrationForm?.phoneNumber
+//        if view?.phoneNumberCode?.code == "PH" {
+//            vc.mobileNumber = vM?.registrationForm?.phoneNumber
+//        }else {
+//            vc.emailAddress = vM?.registrationForm?.email
+//        }
         vc.vc = view
 //        vc.data = data
         vc.coordinator = self

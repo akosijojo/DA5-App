@@ -9,6 +9,14 @@
 import UIKit
 import AVFoundation
 import NVActivityIndicatorView
+import ADCountryPicker
+
+struct PhoneNumberCountryCode {
+    var image : UIImage?
+    var code : String?
+    var name : String?
+    var dialCode : String?
+}
 
 class SignUpViewController: BaseViewControler {
     var timer : Timer?
@@ -34,6 +42,7 @@ class SignUpViewController: BaseViewControler {
             }
         }
     }
+    
     var selfieId : UIImage? {
         didSet {
           self.collectionView.reloadData()
@@ -41,6 +50,12 @@ class SignUpViewController: BaseViewControler {
 //              print("NOT NILL SELFIE ID")
                self.viewModel?.registrationForm?.selfieId = nil
           }
+        }
+    }
+    
+    var phoneNumberCode : PhoneNumberCountryCode? {
+        didSet {
+            self.collectionView.reloadData()
         }
     }
     
@@ -108,6 +123,10 @@ class SignUpViewController: BaseViewControler {
         notification.addObserver(self, selector: #selector(self.whenShowKeyboard(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         notification.addObserver(self, selector: #selector(self.whenHideKeyboard(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         self.hidesKeyboardOnTapArround()
+        
+        
+        //MARK: - DEFAULT PHONE NUMBER FORMAT ADDED FOR CHECKING IF HAS LIMIT ON INPUT FOR PHONE NUMBER AND TO BE USED TO DISPLAY DEFAULT COUNTRY CODE
+        phoneNumberCode = PhoneNumberCountryCode(image: ADCountryPicker().getFlag(countryCode: "PH"), code: "PH", name: "Philippines", dialCode: "+63")
     }
     
     override func getData() {
@@ -400,6 +419,7 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
             if let sImg = selfieId {
                 cell.selfieIdPreview.image = sImg
             }
+            cell.phoneNumberCode = self.phoneNumberCode
             cell.data = self.viewModel?.registrationForm
             cell.removePassword()
             return cell
@@ -408,7 +428,7 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
                 return UICollectionViewCell()
             }
             cell.delegate = self
-            cell.data = self.mobileNumber
+            cell.data = AuthData(phone: self.phoneNumberCode?.code == "PH" ? self.mobileNumber : nil , email: self.viewModel?.registrationForm?.email)
 //            print("CELLPHONE NUMBER :",self.viewModel?.registrationForm?.phoneNumber ?? "")
 //            if let mobileNum = self.viewModel?.registrationForm?.phoneNumber {
 //                cell.headerView.desc.text = "+63"+mobileNum
@@ -481,6 +501,8 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
     //MARK: - form 1
     func submitAction(cell: BasicInfoCell, index: Int,fields: [UITextField],form: RegistrationForm?) {
         self.view.endEditing(true)
+
+        //MARK: --- SHOW THIS CHECKING
         if showFormError(fields: fields){
 //            self.view.endEditing(true)
             self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
@@ -496,18 +518,38 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
         if passChecker {
             self.showAlert(buttonOK: "Ok", message: "Password does not match.", actionOk: nil, completionHandler: nil)
         }else {
+            //MARK: --- SHOW THIS CHECKING
             if showFormError(fields: fields, image: [validId,selfieId]){
                  self.setAnimate(msg: "Please wait..")
                  self.viewModel?.registrationForm?.setUpIdentification(form: form)
-                 self.viewModel?.getOtp(number: form?.phoneNumber ?? "", email: form?.email ?? "", isResend: 0)
+                
+                //MARK: - CHECK IF PH FOR OTP
+                if phoneNumberCode?.code == "PH" {
+                     self.viewModel?.getOtp(number: form?.phoneNumber ?? "", email: form?.email ?? "", isResend: 0)
+                }else {
+                     self.viewModel?.getOtp(number:  nil, email: form?.email ?? "", isResend: 0,type: 4)
+                }
+                   
             }
         }
     }
     
+    func selectCountryCode(cell: IdentificationCollectionViewCell, index: Int){
+       //OPEN PHONE NUMBER CODE PICKER
+        self.openPickerAction()
+    }
+    
     func resendCode(cell: VerifyCollectionViewCell) {
         self.setAnimate(msg: "Please wait..")
-        self.viewModel?.getOtp(number: self.viewModel?.registrationForm?.phoneNumber ?? "", email: self.viewModel?.registrationForm?.email ?? "", isResend: 1)
+
+        //MARK: - CHECK IF PH FOR OTP
+        if phoneNumberCode?.code == "PH" {
+           self.viewModel?.getOtp(number: phoneNumberCode?.code == "PH" ? self.viewModel?.registrationForm?.phoneNumber ?? "" : nil, email: self.viewModel?.registrationForm?.email ?? "", isResend: 1)
+        }else {
+           self.viewModel?.getOtp(number: nil, email: self.viewModel?.registrationForm?.email ?? "", isResend: 1,type: 4)
+        }
     }
+    
     func gotoPage3(index: Int) {
         self.viewModel?.registrationForm?.showValues()
         self.mobileNumber = self.viewModel?.registrationForm?.phoneNumber
@@ -584,4 +626,45 @@ extension SignUpViewController : BasicInfoCellDelegate, IdentificationCollection
         }
     }
     
+    @objc func openPickerAction() {
+            
+        let picker = ADCountryPicker(style: .grouped)
+        // delegate
+        picker.delegate = self
+        picker.searchBarBackgroundColor = UIColor.white
+//        picker.defaultCountryCode = "PH"
+//        picker.forceDefaultCountryCode = true
+        
+        // Display calling codes
+        picker.showCallingCodes = true
+
+        // or closure
+        picker.didSelectCountryClosure = { name, code in
+            _ = picker.navigationController?.popToRootViewController(animated: true)
+            print(code)
+        }
+        let pickerNavigationController = UINavigationController(rootViewController: picker)
+        self.present(pickerNavigationController, animated: true, completion: nil)
+    }
+
 }
+
+extension SignUpViewController: ADCountryPickerDelegate {
+    
+    func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
+        _ = picker.navigationController?.popToRootViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+//        countryNameLabel.text = name
+//        countryCodeLabel.text = code
+//        countryCallingCodeLabel.text = dialCode
+//        code == "US"
+        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+        let xx =  picker.getCountryName(countryCode: code)
+        let xxx =  picker.getDialCode(countryCode: code)
+        
+        print("DATA : \(img) == \(xx) == \(xxx)")
+        self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
+       
+    }
+}
+

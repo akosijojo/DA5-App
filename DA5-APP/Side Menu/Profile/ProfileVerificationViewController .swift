@@ -21,6 +21,8 @@ class ProfileVerificationViewController: BaseViewControler {
     
     var mobileNumber: String? = nil
     
+    var emailAddress: String? = nil
+    
     var uploadingType : Int = 0
 
     var validId : UIImage? = nil
@@ -251,7 +253,7 @@ extension ProfileVerificationViewController : UICollectionViewDelegateFlowLayout
             return UICollectionViewCell()
         }
         cell.delegate = self
-        cell.data = AuthData(phone: self.mobileNumber, email: nil)
+        cell.data = AuthData(phone: self.mobileNumber, email: self.emailAddress)
         return cell
     }
     

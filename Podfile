@@ -13,6 +13,7 @@ target 'DA5-APP' do
   pod 'PKHUD', '~> 5.0'
   pod 'NVActivityIndicatorView'
   pod 'NVActivityIndicatorView/Extended'
+  pod 'ADCountryPicker'
 #  pod 'Alamofire', '~> 5.2'
   
   #target 'DA5-APPTests' do

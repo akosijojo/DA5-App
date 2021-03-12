@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ADCountryPicker
 
 class CustomBasicFormInput : UIView {
     lazy var Label : UILabel = {
@@ -181,7 +182,7 @@ class CustomBasicFormInputNumber : UIView {
    
     lazy var FieldView : CustomMobileNumberField = {
         let v = CustomMobileNumberField()
-        v.Label.font = UIFont(name: Fonts.regular, size: 12)
+        v.phoneViewLabel.Label.font = UIFont(name: Fonts.regular, size: 12)
         v.TextField.font = UIFont(name: Fonts.regular, size: 12)
         v.layer.cornerRadius = 5
         return v
@@ -279,13 +280,13 @@ class CustomBasicAmountInput : UIView , UITextFieldDelegate{
 }
 
 class CustomMobileNumberField : UIView {
-    lazy var Label : UILabel = {
-       let v = UILabel()
-        v.text = "+63"
-        v.textAlignment = .center
+    lazy var phoneViewLabel : phoneFlagView = {
+       let v = phoneFlagView()
+        v.Label.font = UIFont(name: Fonts.medium, size: 12)
+        v.country.font = UIFont(name: Fonts.medium, size: 12)
        return v
     }()
-  
+    
     lazy var TextField : CustomTextField = {
         let v = CustomTextField()
         v.font = UIFont(name: Fonts.regular, size: 12)
@@ -303,7 +304,7 @@ class CustomMobileNumberField : UIView {
         super.init(frame: frame)
         setUpView()
         self.backgroundColor = ColorConfig().innerbgColor
-        self.Label.addBorders(edges: .right, color: ColorConfig().lightGray!)
+        self.phoneViewLabel.Label.addBorders(edges: .right, color: ColorConfig().lightGray!)
     }
    
     required init?(coder: NSCoder) {
@@ -311,17 +312,17 @@ class CustomMobileNumberField : UIView {
     }
    
     func setUpView() {
-        addSubview(Label)
-        Label.snp.makeConstraints { (make) in
-             make.top.equalTo(self).offset(10)
+        addSubview(phoneViewLabel)
+        phoneViewLabel.snp.makeConstraints { (make) in
+             make.top.equalTo(self)
              make.leading.equalTo(self)
-             make.width.equalTo(70)
-             make.bottom.equalTo(self).offset(-10)
+             make.width.equalTo(140)  //WIDTH OF ITEMS 30 + 30 + 50  plus offset 10 + 5 + 5 + 10
+             make.bottom.equalTo(self)
          }
          addSubview(TextField)
          TextField.snp.makeConstraints { (make) in
              make.top.equalTo(self)
-             make.leading.equalTo(Label.snp.trailing)
+             make.leading.equalTo(phoneViewLabel.snp.trailing)
              make.trailing.equalTo(self)
              make.bottom.equalTo(self)
          }
@@ -339,18 +340,107 @@ class CustomMobileNumberField : UIView {
      }
     
     func removeBorder() {
-        self.Label.addBorders(edges: .right, color: ColorConfig().innerbgColor!)
+        self.phoneViewLabel.Label.addBorders(edges: .right, color: ColorConfig().innerbgColor!)
+    }
+    
+    func hideFlagAndCountry() {
+        self.phoneViewLabel.hideFlagAndCountry()
+        phoneViewLabel.snp.remakeConstraints { (make) in
+             make.top.equalTo(self)
+             make.leading.equalTo(self)
+             make.width.equalTo(70) // width 50  plus offset 10 + 10
+             make.bottom.equalTo(self)
+         }
     }
 }
 
+class phoneFlagView: UIView {
+    lazy var flag : UIImageView = {
+        let v = UIImageView()
+        v.backgroundColor = .white
+        return v
+     }()
+     
+     lazy var country : UILabel = {
+        let v = UILabel()
+         v.text = "PH"
+         v.textAlignment = .center
+        return v
+     }()
+     
+     lazy var Label : UILabel = {
+        let v = UILabel()
+         v.text = "+63"
+         v.textAlignment = .left
+        return v
+     }()
+    
+    override init(frame: CGRect) {
+       super.init(frame: frame)
+       setUpView()
+        flag.image = ADCountryPicker().getFlag(countryCode: "PH")
+    }
+
+    required init?(coder: NSCoder) {
+       fatalError("init(coder:) has not been implemented")
+    }
+
+    func setUpView() {
+       addSubview(flag)
+       flag.snp.makeConstraints { (make) in
+           make.top.equalTo(self).offset(10)
+           make.leading.equalTo(self).offset(10)
+           make.width.equalTo(30)
+           make.bottom.equalTo(self).offset(-10)
+       }
+       addSubview(country)
+       country.snp.makeConstraints { (make) in
+           make.top.equalTo(self).offset(10)
+           make.leading.equalTo(flag.snp.trailing).offset(5)
+           make.width.equalTo(30)
+           make.bottom.equalTo(self).offset(-10)
+       }
+       addSubview(Label)
+       Label.snp.makeConstraints { (make) in
+            make.top.equalTo(self).offset(10)
+            make.leading.equalTo(country.snp.trailing).offset(5)
+            make.width.equalTo(50)
+            make.bottom.equalTo(self).offset(-10)
+        }
+    }
+    
+    func hideFlagAndCountry() {
+        flag.snp.remakeConstraints { (make) in
+            make.top.equalTo(self).offset(10)
+            make.leading.equalTo(self).offset(0)
+            make.width.equalTo(0)
+            make.bottom.equalTo(self).offset(-10)
+        }
+        country.snp.remakeConstraints { (make) in
+            make.top.equalTo(self).offset(10)
+            make.leading.equalTo(flag.snp.trailing).offset(0)
+            make.width.equalTo(0)
+            make.bottom.equalTo(self).offset(-10)
+        }
+        Label.snp.remakeConstraints { (make) in
+            make.top.equalTo(self).offset(10)
+            make.leading.equalTo(country.snp.trailing).offset(10)
+            make.width.equalTo(50)
+            make.bottom.equalTo(self).offset(-10)
+        }
+        Label.textAlignment = .center
+    }
+    
+}
+
 extension UIView {
-   func addBorders(edges: UIRectEdge,
-                    color: UIColor,
-                    inset: CGFloat = 0.0,
-                    thickness: CGFloat = 1.0) -> [UIView] {
-        
+    func addBorders(edges: UIRectEdge,
+                color: UIColor,
+                inset: CGFloat = 0.0,
+                thickness: CGFloat = 1.0) -> [UIView] {
+
         var borders = [UIView]()
-        
+
         @discardableResult
         func addBorder(formats: String...) -> UIView {
             let border = UIView(frame: .zero)
@@ -365,24 +455,24 @@ extension UIView {
             borders.append(border)
             return border
         }
-        
-        
+
+
         if edges.contains(.top) || edges.contains(.all) {
             addBorder(formats: "V:|-0-[border(==thickness)]", "H:|-inset-[border]-inset-|")
         }
-        
+
         if edges.contains(.bottom) || edges.contains(.all) {
             addBorder(formats: "V:[border(==thickness)]-0-|", "H:|-inset-[border]-inset-|")
         }
-        
+
         if edges.contains(.left) || edges.contains(.all) {
             addBorder(formats: "V:|-inset-[border]-inset-|", "H:|-0-[border(==thickness)]")
         }
-        
+
         if edges.contains(.right) || edges.contains(.all) {
             addBorder(formats: "V:|-inset-[border]-inset-|", "H:[border(==thickness)]-0-|")
         }
-        
+
         return borders
     }
     

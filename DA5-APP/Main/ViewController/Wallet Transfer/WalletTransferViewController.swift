@@ -7,11 +7,27 @@
 //
 
 import UIKit
+import ADCountryPicker
+
 class WalletTransferViewController: BaseHomeViewControler{
     
     var data : WalletTransferData?
     
     var dropCell : String = "Cell ID"
+    
+    var phoneNumberCode : PhoneNumberCountryCode? {
+          didSet {
+             if let item = phoneNumberCode , item.code != nil {
+                  self.phoneNumber.FieldView.phoneViewLabel.flag.image = phoneNumberCode?.image
+                  self.phoneNumber.FieldView.phoneViewLabel.country.text = phoneNumberCode?.code
+                  self.phoneNumber.FieldView.phoneViewLabel.Label.text = phoneNumberCode?.dialCode
+                
+                 
+                 
+              }
+          }
+    }
+      
     
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
@@ -34,6 +50,7 @@ class WalletTransferViewController: BaseHomeViewControler{
        v.FieldView.TextField.delegate = self
         v.FieldView.TextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
        v.FieldView.TextField.placeholder = "Phone Number"
+        v.FieldView.phoneViewLabel.isUserInteractionEnabled = true
        return v
     }()
     
@@ -57,7 +74,7 @@ class WalletTransferViewController: BaseHomeViewControler{
        v.FieldView.TextField.keyboardType = .decimalPad
        v.FieldView.TextField.tag = 2
        v.FieldView.TextField.delegate = self
-       v.FieldView.Label.text = "PHP"
+       v.FieldView.phoneViewLabel.Label.text = "PHP"
        v.FieldView.TextField.placeholder = "Amount"
        v.FieldView.TextField.addTarget(self, action: #selector(amountChanged), for: .editingDidEnd)
        return v
@@ -96,6 +113,9 @@ class WalletTransferViewController: BaseHomeViewControler{
         dropTableView.delegate = self
         dropTableView.register(ContactTableViewCell.self, forCellReuseIdentifier: dropCell)
         dropTableView.estimatedRowHeight = 40
+        
+        //DEFAULT VALUE
+        phoneNumberCode = PhoneNumberCountryCode(image: ADCountryPicker().getFlag(countryCode: "PH"), code: "PH", name: "Philippines", dialCode: "+63")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -117,6 +137,9 @@ class WalletTransferViewController: BaseHomeViewControler{
                 self?.showAlert(buttonOK: "Ok", message: status?.message ?? "Something went wrong.", actionOk: nil, completionHandler: nil)
             }
         }
+        
+//        var dataLocal = WalletContactsLocal(number: ["912361782637812"])
+//        dataLocal.saveToLocal()
         // get saved contacts
         contacts = WalletContactsLocal.shared.getLocal()
         
@@ -147,10 +170,13 @@ class WalletTransferViewController: BaseHomeViewControler{
           make.height.equalTo(40)
         }
     
+        let selectPhoneCode = UITapGestureRecognizer(target: self, action: #selector(openPickerAction))
+        phoneNumber.FieldView.phoneViewLabel.addGestureRecognizer(selectPhoneCode)
+        
         view.addSubview(dropTableView)
         dropTableView.snp.makeConstraints { (make) in
             make.top.equalTo(phoneNumber.snp.bottom)
-            make.leading.equalTo(view).offset(90)
+            make.leading.equalTo(view).offset(150)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(0)
         }
@@ -164,6 +190,8 @@ class WalletTransferViewController: BaseHomeViewControler{
           make.trailing.equalTo(view).offset(-20)
           make.height.equalTo(20)
         }
+        //MARK: - HIDE FLAG AND COUNTRY
+        amount.FieldView.hideFlagAndCountry()
         
         view.addSubview(amount)
         amount.snp.makeConstraints { (make) in
@@ -220,7 +248,7 @@ class WalletTransferViewController: BaseHomeViewControler{
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
          guard let text = textField.text else { return true }
-         if textField.tag == 1 {
+         if textField.tag == 1 && self.phoneNumberCode?.code == "PH" {
             let count = text.count + string.count - range.length
             return count <= 10
          } else if textField.tag == 2 {
@@ -306,7 +334,7 @@ extension WalletTransferViewController : UITableViewDataSource , UITableViewDele
                dropTableView.isHidden = false
                dropTableView.snp.remakeConstraints { (make) in
                    make.top.equalTo(phoneNumber.snp.bottom)
-                   make.leading.equalTo(view).offset(90)
+                   make.leading.equalTo(view).offset(150)
                    make.trailing.equalTo(view).offset(-20)
                    make.height.equalTo(contactFiltered.count > 3 ? 130 : contactFiltered.count * 43)
                }
@@ -317,7 +345,7 @@ extension WalletTransferViewController : UITableViewDataSource , UITableViewDele
         dropTableView.isHidden = true
         dropTableView.snp.updateConstraints { (make) in
             make.top.equalTo(phoneNumber.snp.bottom)
-            make.leading.equalTo(view).offset(90)
+            make.leading.equalTo(view).offset(150)
             make.trailing.equalTo(view).offset(-20)
             make.height.equalTo(0)
         }
@@ -375,3 +403,48 @@ class ContactTableViewCell : UITableViewCell {
     
 }
 
+
+// MARK: - ADD COUNTRY PICKER FOR PHONE NUMBER and ADJUST DROPDOWN VIEW , ADD DIAL CODE ON THE NUMBERS FOR DROP DOWN
+
+extension WalletTransferViewController {
+    @objc func openPickerAction() {
+            
+        let picker = ADCountryPicker(style: .grouped)
+        // delegate
+        picker.delegate = self
+        picker.searchBarBackgroundColor = UIColor.white
+//        picker.defaultCountryCode = "PH"
+//        picker.forceDefaultCountryCode = true
+        
+        // Display calling codes
+        picker.showCallingCodes = true
+
+        // or closure
+        picker.didSelectCountryClosure = { name, code in
+            _ = picker.navigationController?.popToRootViewController(animated: true)
+            print(code)
+        }
+        let pickerNavigationController = UINavigationController(rootViewController: picker)
+        self.present(pickerNavigationController, animated: true, completion: nil)
+    }
+
+}
+
+extension WalletTransferViewController: ADCountryPickerDelegate {
+    
+    func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
+        _ = picker.navigationController?.popToRootViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+//        countryNameLabel.text = name
+//        countryCodeLabel.text = code
+//        countryCallingCodeLabel.text = dialCode
+//        code == "US"
+        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+        let xx =  picker.getCountryName(countryCode: code)
+        let xxx =  picker.getDialCode(countryCode: code)
+        
+//        print("DATA : \(img) == \(xx) == \(xxx)")
+        self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
+       
+    }
+}

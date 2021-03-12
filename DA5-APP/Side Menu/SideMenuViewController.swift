@@ -159,11 +159,22 @@ class SideMenuView : UIView {
     }
     
     func shareApp() {
-         let text = AppConfig().appLink
-         let textShare = [ text ]
-         let activityViewController = UIActivityViewController(activityItems: textShare , applicationActivities: nil)
-         activityViewController.popoverPresentationController?.sourceView = vc?.view
-         vc?.present(activityViewController, animated: true, completion: nil)
+        let text = "A mobile wallet that lets you send, save and more with your smartphone\n\nEnjoy Fast and easy payment."
+        let img = UIImage(named: "app_logo")
+        let url = AppConfig().appLink
+         
+        let shareAll = [text , img! , url] as [Any]
+        let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        // Anything you want to exclude
+       activityViewController.excludedActivityTypes = [
+           UIActivity.ActivityType.print,
+           UIActivity.ActivityType.assignToContact,
+           UIActivity.ActivityType.saveToCameraRoll,
+           UIActivity.ActivityType.addToReadingList,
+       ]
+           
+        activityViewController.popoverPresentationController?.sourceView = vc?.view
+        vc?.present(activityViewController, animated: true, completion: nil)
     }
     
     func updateSideMenu(width: CGFloat){

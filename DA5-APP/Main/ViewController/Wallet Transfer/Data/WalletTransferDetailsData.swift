@@ -23,7 +23,7 @@ struct WalletDetailsData: Decodable {
     let appleID: String?
     let phone, email: String
     let idPicture, idPicture2: String
-    let phoneVerifiedAt: String
+    let phoneVerifiedAt: String?
     let emailVerifiedAt: String?
     let referenceNo: String
     let kycStatus: Int

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ADCountryPicker
 
 class ProfileViewController: BaseHomeViewControler{
     var data : Customer? {
@@ -31,7 +32,8 @@ class ProfileViewController: BaseHomeViewControler{
             self.gender.TextField.text = data?.gender
             self.nationality.TextField.text = data?.nationality
             self.address.TextField.text = data?.address
-            self.phoneNumber.FieldView.TextField.text = data?.phone
+//            self.phoneNumber.FieldView.TextField.text = data?.phone
+            self.phoneNumber.TextField.text = data?.phone
             self.emailAddress.TextField.text = data?.email
             
             self.validIdPreview.downloaded(from: data?.idPictureThumbnail1 ?? "", contentMode: .scaleAspectFill)
@@ -39,6 +41,14 @@ class ProfileViewController: BaseHomeViewControler{
             self.selfieIdPreview.downloaded(from: data?.idPictureThumbnail2 ?? "", contentMode: .scaleAspectFill)
         }
     }
+    
+//    var phoneNumberCode : PhoneNumberCountryCode? {
+//         didSet {
+//            self.phoneNumber.FieldView.phoneViewLabel.flag.image = self.phoneNumberCode?.image
+//            self.phoneNumber.FieldView.phoneViewLabel.country.text = self.phoneNumberCode?.code
+//            self.phoneNumber.FieldView.phoneViewLabel.Label.text = self.phoneNumberCode?.dialCode
+//         }
+//    }
     
     var nationalityList : Nationality?
     
@@ -178,15 +188,25 @@ class ProfileViewController: BaseHomeViewControler{
         v.title.text = "Identification"
         return v
     }()
+//
+//    lazy var phoneNumber: CustomBasicFormInputNumber = {
+//        let v = CustomBasicFormInputNumber()
+//        v.FieldView.TextField.keyboardType = .numberPad
+//        v.FieldView.TextField.tag = 8
+//        v.FieldView.TextField.delegate = self
+//        v.FieldView.TextField.isEnabled = false
+//        v.FieldView.phoneViewLabel.isUserInteractionEnabled = false
+//        return v
+//    }()
     
-    lazy var phoneNumber: CustomBasicFormInputNumber = {
-        let v = CustomBasicFormInputNumber()
-        v.FieldView.TextField.keyboardType = .numberPad
-        v.FieldView.TextField.tag = 8
-        v.FieldView.TextField.delegate = self
-        v.FieldView.TextField.isEnabled = false
-        return v
-    }()
+    lazy var phoneNumber: CustomBasicFormInput = {
+          let v = CustomBasicFormInput()
+          v.TextField.keyboardType = .numberPad
+          v.TextField.tag = 8
+          v.TextField.delegate = self
+          v.TextField.isEnabled = false
+          return v
+      }()
     
     lazy var emailAddress: CustomBasicFormInput = {
         let v = CustomBasicFormInput()
@@ -254,7 +274,7 @@ class ProfileViewController: BaseHomeViewControler{
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         setUpNavigationBar()
         
-        if data?.kycStatus != 1 { // && data?.kycUpdatedAt == nil
+        if data?.kycStatus == 2 { // && data?.kycUpdatedAt == nil
             setUpEditingActions()
             setUpRightNavigationBar()
             dismissCheckingDate()
@@ -293,7 +313,7 @@ class ProfileViewController: BaseHomeViewControler{
     }
     
     override func setUpData() {
-        if data?.kycStatus != 1 { //&& data?.kycUpdatedAt == nil
+        if data?.kycStatus == 2 { //&& data?.kycUpdatedAt == nil
             self.viewModel?.returnNationalityList = { [weak self] data in
                 DispatchQueue.main.async {
                     self?.nationalityList = data
@@ -532,7 +552,8 @@ class ProfileViewController: BaseHomeViewControler{
         selfieIdAttributes.append(asteriskAttributes)
 
         phoneNumber.Label.attributedText = phoneNumberAttributes
-        phoneNumber.FieldView.TextField.placeholder = "Phone Number"
+//        phoneNumber.FieldView.TextField.placeholder = "Phone Number"
+        phoneNumber.TextField.placeholder = "Phone Number"
         emailAddress.Label.attributedText = emailAddressAttributes
         emailAddress.TextField.placeholder = "Email Address"
         validIdLabel.attributedText = validIdAttributes
@@ -543,9 +564,9 @@ class ProfileViewController: BaseHomeViewControler{
     @objc func submitAction() {
         //MARK: - check Customer data if have any changes and submit if fields change error if no changes
         
-        self.viewModel?.registrationForm = RegistrationForm(fname: self.fname.TextField.text ?? "", mname: self.mname.TextField.text ?? "", lname: self.lname.TextField.text ?? "", bdate: self.bdate.TextField.text?.formatDate(dateFormat: "MMM dd, yyyy", format: "YYYY-MM-DD") ?? "" , gender: self.gender.TextField.text ?? "", nationality: self.nationality.TextField.text ?? "", address: self.address.TextField.text ?? "", city: self.data?.city, province: self.data?.province, zipcode: self.data?.zipCode, phoneNumber: self.phoneNumber.FieldView.TextField.text ?? "", email: self.emailAddress.TextField.text ?? "", password: nil, validId: self.validId != nil ? nil : self.data?.idPicture, selfieId: selfieId != nil ? nil : self.data?.idPicture2, code: nil, fbId: self.data?.facebookID ?? nil)
+        self.viewModel?.registrationForm = RegistrationForm(fname: self.fname.TextField.text ?? "", mname: self.mname.TextField.text ?? "", lname: self.lname.TextField.text ?? "", bdate: self.bdate.TextField.text?.formatDate(dateFormat: "MMM dd, yyyy", format: "YYYY-MM-DD") ?? "" , gender: self.gender.TextField.text ?? "", nationality: self.nationality.TextField.text ?? "", address: self.address.TextField.text ?? "", city: self.data?.city, province: self.data?.province, zipcode: self.data?.zipCode, phoneNumber: self.phoneNumber.TextField.text ?? "", email: self.emailAddress.TextField.text ?? "", password: nil, validId: self.validId != nil ? nil : self.data?.idPicture, selfieId: selfieId != nil ? nil : self.data?.idPicture2, code: nil, fbId: self.data?.facebookID ?? nil)
         
-        let fields = [fname.TextField, lname.TextField,bdate.TextField, gender.TextField, nationality.TextField, address.TextField,phoneNumber.FieldView.TextField,emailAddress.TextField]
+        let fields = [fname.TextField, lname.TextField,bdate.TextField, gender.TextField, nationality.TextField, address.TextField,phoneNumber.TextField,emailAddress.TextField]
         
         if !checkFieldsChanges(fields: fields) {
             if !bdayCheck {
@@ -725,7 +746,8 @@ extension ProfileViewController {
         self.gender.TextField.isEnabled = editing
         self.nationality.TextField.isEnabled = editing
         self.address.TextField.isEnabled = editing
-        self.phoneNumber.FieldView.TextField.isEnabled = editing
+//        self.phoneNumber.FieldView.TextField.isEnabled = editing
+//        self.phoneNumber.FieldView.phoneViewLabel.isUserInteractionEnabled = editing
         self.emailAddress.TextField.isEnabled = editing
         self.validIdPreview.isUserInteractionEnabled = editing
         self.selfieIdPreview.isUserInteractionEnabled = editing
@@ -778,9 +800,60 @@ extension ProfileViewController {
         let tapNationality = UITapGestureRecognizer(target: self, action: #selector(showNationality))
         self.nationality.TextField.addGestureRecognizer(tapNationality)
         
+//        let tapCountryPicker = UITapGestureRecognizer(target: self, action: #selector(openPickerAction))
+        
+//        self.phoneNumber.FieldView.phoneViewLabel.addGestureRecognizer(tapCountryPicker)
+        
         setUpDatePicker()
         dateFormat.dateFormat = "MMM dd, yyyy"
     }
 
     
 }
+
+
+
+//extension ProfileViewController {
+//
+//    @objc func openPickerAction() {
+//
+//        let picker = ADCountryPicker(style: .grouped)
+//        // delegate
+//        picker.delegate = self
+//        picker.searchBarBackgroundColor = UIColor.white
+////        picker.defaultCountryCode = "PH"
+////        picker.forceDefaultCountryCode = true
+//
+//        // Display calling codes
+//        picker.showCallingCodes = true
+//
+//        // or closure
+//        picker.didSelectCountryClosure = { name, code in
+//            _ = picker.navigationController?.popToRootViewController(animated: true)
+//            print(code)
+//        }
+//        let pickerNavigationController = UINavigationController(rootViewController: picker)
+//        self.present(pickerNavigationController, animated: true, completion: nil)
+//    }
+//
+//}
+//
+//extension ProfileViewController: ADCountryPickerDelegate {
+//
+//    func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
+//        _ = picker.navigationController?.popToRootViewController(animated: true)
+//        self.dismiss(animated: true, completion: nil)
+////        countryNameLabel.text = name
+////        countryCodeLabel.text = code
+////        countryCallingCodeLabel.text = dialCode
+////        code == "US"
+//        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+//        let xx =  picker.getCountryName(countryCode: code)
+//        let xxx =  picker.getDialCode(countryCode: code)
+//
+//        print("DATA : \(img) == \(xx) == \(xxx)")
+//        self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
+//
+//    }
+//}
+//

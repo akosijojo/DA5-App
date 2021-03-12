@@ -106,7 +106,8 @@ class ForgotPinViewController: BaseViewControler {
         }
         
         self.viewModel?.generateAPIToken()
-        self.viewModel?.getOtp(number: self.mobileNumber, email: self.emailAddress, isResend: 1, type: 2, customerId: UserLoginData.shared.id)
+        
+        self.viewModel?.getOtp(number: self.mobileNumber, email: self.emailAddress, isResend: 0, type: type == .phone ? 2 : 5, customerId: UserLoginData.shared.id)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -216,7 +217,7 @@ extension ForgotPinViewController : UICollectionViewDelegateFlowLayout, UICollec
 extension ForgotPinViewController : AuthenticationCollectionViewCellDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     func resendCode(cell: AuthenticationCollectionViewCell) {
         self.setAnimate(msg: "Please wait..")
-        self.viewModel?.getOtp(number: self.mobileNumber , email: self.emailAddress, isResend: 1, type: 2 ,customerId: UserLoginData.shared.id)
+        self.viewModel?.getOtp(number: self.mobileNumber , email: self.emailAddress, isResend: 1, type: type == .phone ? 2 : 5 ,customerId: UserLoginData.shared.id)
 
     }
     

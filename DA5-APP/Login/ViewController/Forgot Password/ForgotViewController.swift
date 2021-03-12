@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ADCountryPicker
 
 class ForgotViewController: BaseViewControler {
     
@@ -15,8 +16,16 @@ class ForgotViewController: BaseViewControler {
     var viewModel : LoginViewModel?
     
     var mobileNumber : String? = ""
+    var emailAddress : String? = ""
+    
     
     var pagerIndex : Int = 0
+    
+    var phoneNumberCode : PhoneNumberCountryCode? {
+        didSet {
+          self.collectionView.reloadData()
+        }
+    }
     
     lazy var pager : PagerView = {
        let v = PagerView()
@@ -89,6 +98,8 @@ class ForgotViewController: BaseViewControler {
         collectionView.register(VerifyCollectionViewCell.self, forCellWithReuseIdentifier: form2)
         collectionView.register(ChangePassFormCell.self, forCellWithReuseIdentifier: form3)
         
+        //MARK: - DEFAULT PHONE NUMBER FORMAT ADDED FOR CHECKING IF HAS LIMIT ON INPUT FOR PHONE NUMBER AND TO BE USED TO DISPLAY DEFAULT COUNTRY CODE
+        phoneNumberCode = PhoneNumberCountryCode(image: ADCountryPicker().getFlag(countryCode: "PH"), code: "PH", name: "Philippines", dialCode: "+63")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -118,7 +129,11 @@ class ForgotViewController: BaseViewControler {
                 }else if res?.tag == 2 || res?.tag == 3 {
                     self?.gotoPage3()
                 }else {
-                    
+                    // scroll to second item
+                    self?.collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .right, animated: true)
+                    self?.pager.itemIndex = 1
+                    self?.pager.collectionView.reloadData()
+                    self?.pagerIndex = 1
                 }
             }
         }
@@ -168,13 +183,14 @@ extension ForgotViewController : UICollectionViewDelegateFlowLayout, UICollectio
             cell.vc = self
             cell.phoneNumber.FieldView.TextField.text = self.mobileNumber
             cell.delegate = self
+            cell.phoneNumberCode = self.phoneNumberCode
             return cell
         }else if indexPath.item == 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: form2, for: indexPath) as? VerifyCollectionViewCell else {
                 return UICollectionViewCell()
             }
             cell.delegate = self
-            cell.data = self.mobileNumber
+            cell.data = AuthData(phone: self.phoneNumberCode?.code == "PH" ? self.mobileNumber : nil , email: self.emailAddress)
             return cell
         }else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: form3, for: indexPath) as? ChangePassFormCell else {
@@ -228,16 +244,26 @@ extension ForgotViewController : UICollectionViewDelegateFlowLayout, UICollectio
 
 
 extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCellDelegate,ChangePassFormCellDelegate {
+
     func submitAction(cell: PhoneNumberCell, index: Int, fields: [UITextField]) {
-        self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .right, animated: true)
-        self.mobileNumber = fields[0].text
-        self.pager.itemIndex = 1
-        self.pager.collectionView.reloadData()
-        self.pagerIndex = 1
-        self.setAnimate(msg: "Please wait..")
-        self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: nil, isResend: 0, type: 3)
+        if showFormError(fields: fields){
+            self.mobileNumber = fields[0].text
+           
+            self.setAnimate(msg: "Please wait..")
+            if phoneNumberCode?.code == "PH" {
+               self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: nil, isResend: 0, type: 3)
+            }else {
+                //MARK: - must have email textfield to verified FOR FOREIGN
+                self.emailAddress = fields[1].text
+                self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: self.emailAddress, isResend: 0, type: 5)
+            }
+        }
     }
     
+    func onClick(cell: PhoneNumberCell, index: Int) {
+        self.openPickerAction()
+    }
+       
     func submitAction(cell: VerifyCollectionViewCell, index: Int) {
         if cell.verificationCode.text == "" {
            self.showAlert(buttonOK: "Ok", message: "Verification code is required", actionOk: { (action) in
@@ -259,7 +285,12 @@ extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCel
     func resendCode(cell: VerifyCollectionViewCell) {
          print("Resend code")
         self.setAnimate(msg: "Please wait..")
-        self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: nil, isResend: 1, type: 3)
+        if phoneNumberCode?.code == "PH" {
+           self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: nil, isResend: 1, type: 3)
+        }else {
+           //MARK: - must have email textfield to verified FOR FOREIGN
+            self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: self.emailAddress ?? "", isResend: 1, type: 5)
+        }
     }
     
     func submitAction(cell: ChangePassFormCell, index: Int, fields: [UITextField], passChecker: Bool) {
@@ -273,7 +304,47 @@ extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCel
            }
         }
     }
-       
     
-    
+    //MARK: - COUNTRY CODE PICKER
+    @objc func openPickerAction() {
+            
+        let picker = ADCountryPicker(style: .grouped)
+        // delegate
+        picker.delegate = self
+        picker.searchBarBackgroundColor = UIColor.white
+//        picker.defaultCountryCode = "PH"
+//        picker.forceDefaultCountryCode = true
+        
+        // Display calling codes
+        picker.showCallingCodes = true
+
+        // or closure
+        picker.didSelectCountryClosure = { name, code in
+            _ = picker.navigationController?.popToRootViewController(animated: true)
+            print(code)
+        }
+        let pickerNavigationController = UINavigationController(rootViewController: picker)
+        self.present(pickerNavigationController, animated: true, completion: nil)
+    }
+
 }
+
+extension ForgotViewController: ADCountryPickerDelegate {
+    
+    func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
+        _ = picker.navigationController?.popToRootViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+//        countryNameLabel.text = name
+//        countryCodeLabel.text = code
+//        countryCallingCodeLabel.text = dialCode
+//        code == "US"
+        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+        let xx =  picker.getCountryName(countryCode: code)
+        let xxx =  picker.getDialCode(countryCode: code)
+        
+        print("DATA : \(img) == \(xx) == \(xxx)")
+        self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
+       
+    }
+}
+

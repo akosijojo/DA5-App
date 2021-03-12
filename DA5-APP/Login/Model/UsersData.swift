@@ -21,6 +21,7 @@ struct RegistrationForm {
     var province : String?
     var zipcode : String?
     var phoneNumber : String?
+    var countryCode : String?
     var email : String?
     var password : String?
     var validId : String?
@@ -49,6 +50,7 @@ struct RegistrationForm {
 
     mutating func setUpIdentification(form: RegistrationForm?) {
         self.phoneNumber = form?.phoneNumber
+        self.countryCode = form?.countryCode
         self.email = form?.email
         self.password = form?.password
         print("SET IDENTIFICATION")
@@ -66,6 +68,7 @@ struct RegistrationForm {
         print("PROVINCE: ",province ?? "")
         print("ZIPCODE: ",zipcode ?? "")
         print("PHONE: ",phoneNumber ?? "")
+        print("COUNTRY CODE: ",countryCode)
         print("EMAIL: ",email ?? "")
         print("PASSWORD ",password ?? "")
         print("VALID ID URL ",validId ?? "")
@@ -259,8 +262,8 @@ class UserLoginData {
 //    var zipCode, nationality: String?
 //    var facebookID, appleID: String?
 //    var phone, email, idPicture, idPicture2: String?
-//    var phoneVerifiedAt: String?
-//    var emailVerifiedAt: String?
+    var phoneVerifiedAt: String?
+    var emailVerifiedAt: String?
 //    var referenceNo: String?
 //    var kycStatus: Int?
 //    var kycNotice, kycUpdatedAt: String?
@@ -280,6 +283,8 @@ class UserLoginData {
 //        user.gender: String?
         user.image = data.image
         user.phoneNumber = data.phone
+        user.phoneVerifiedAt = data.phoneVerifiedAt
+        user.emailVerifiedAt = data.emailVerifiedAt
 //        , address, city, province: String?
 //        var zipCode, nationality: String?
 //        var facebookID, appleID: String?

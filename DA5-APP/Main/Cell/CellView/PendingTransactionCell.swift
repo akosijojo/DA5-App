@@ -18,7 +18,8 @@ class PendingTransactionCell: UICollectionViewCell {
             if let d = data {
                 if let cashInOut = d.cashInOut {
     //                self.imageView.image = UIImage(named: d.cashInOut?.partnerImage)
-                    self.imageView.downloaded(from: cashInOut.partnerImage ?? "",contentMode: .scaleAspectFill)
+//                    self.imageView.downloaded(from: cashInOut.partnerImage ?? "",contentMode: .scaleAspectFill)
+                    self.imageView.image = cashInOut.type == 0 ? UIImage(named: "cashIn") : UIImage(named: "cashOut")
                     self.titleLbl.text = cashInOut.type == 0 ? "CASH IN" : "CASH OUT"
                     self.priceLbl.text = "PHP \(cashInOut.amount ?? "")"
                     self.dateLbl.text = cashInOut.transactionDate?.formatDate()

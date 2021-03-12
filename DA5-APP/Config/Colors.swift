@@ -21,6 +21,7 @@ struct ColorConfig {
     let txtSecondaryColor : UIColor? = UIColor(hex: "000000")
     let gray : UIColor? = UIColor(hex: "808080")
     let lightGray : UIColor? = UIColor(hex: "B8B8B8")
+    let whiteGray : UIColor? = UIColor(hex: "fafafa")
     let darkGray : UIColor? = UIColor(hex: "707070")
     let red : UIColor? = UIColor(hex: "ff6666")
     let darkRed : UIColor? = UIColor(hex: "cc0000")

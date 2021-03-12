@@ -46,7 +46,8 @@ class PendingListCell: UICollectionViewCell {
             if let d = data {
                 if let cashInOut = d.cashInOut {
     //                self.imageView.image = UIImage(named: d.cashInOut?.partnerImage)
-                    self.imageView.downloaded(from: cashInOut.partnerImage ?? "",contentMode: .scaleAspectFit)
+//                    self.imageView.downloaded(from: cashInOut.partnerImage ?? "",contentMode: .scaleAspectFit)
+                    self.imageView.image = cashInOut.type == 0 ? UIImage(named: "cashIn") : UIImage(named: "cashOut")
                     self.title.text = cashInOut.type == 0 ? "CASH IN" : "CASH OUT"
                     self.name.text = cashInOut.partnerName
                     self.price.text = "PHP \(cashInOut.amount ?? "")"
@@ -96,6 +97,8 @@ class PendingListCell: UICollectionViewCell {
         v.contentMode = .scaleAspectFit
         v.layer.masksToBounds = true
         v.clipsToBounds = true
+        v.layer.borderWidth = 1
+        v.layer.borderColor = ColorConfig().whiteGray?.cgColor
         return v
     }()
     
@@ -143,6 +146,16 @@ class PendingListCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//        self.layer.cornerRadius = 10
+//        let rect = CGRect(x: 0, y: 5, width: self.frame.width, height: self.frame.height - 5)
+//        self.layer.shadowPath = UIBezierPath(rect:rect).cgPath
+//        self.layer.shadowRadius = 4
+//        self.layer.shadowOffset = .zero
+//        self.layer.shadowOpacity = 0.2
+//    }
+       
     func setUpView() {
         addSubview(imageView)
         imageView.snp.makeConstraints { (make) in
