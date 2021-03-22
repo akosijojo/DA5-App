@@ -11,8 +11,6 @@ import UIKit
 extension String {
     func trimValuesFromEnum() -> String {
         let word = self.components(separatedBy: .decimalDigits)
-//        print("WORD : \(word)")
-    
         return word[0].replacingOccurrences(of: ".string(\"\")", with: "")
     }
     
@@ -130,7 +128,7 @@ extension String {
         return formatter.string(from: NSNumber(value: double))!
     }
     
-    // formatting text for currency textField
+    
     func currencyInputFormatting(wDecimal: Bool? = nil) -> String {
 
         var number: NSNumber!
@@ -142,18 +140,11 @@ extension String {
 
         var amountWithPrefix = self
 
-        // remove from String: "$", ".", ","
         let regex = try! NSRegularExpression(pattern: "[^0-9]", options: .caseInsensitive)
         amountWithPrefix = regex.stringByReplacingMatches(in: amountWithPrefix, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count), withTemplate: "")
 
         let double = (amountWithPrefix as NSString).doubleValue
-//        if double > 100 {
-//            number = NSNumber(value: (double / 100))
-//        }else {
             number = NSNumber(value: double)
-//        }
-
-        // if first number is 0 or all numbers were deleted
         guard number != 0 as NSNumber else {
             return wDecimal == true ? "PHP 0.00" : "PHP 0"
         }
@@ -185,8 +176,7 @@ extension String {
         guard number != 0 as NSNumber else {
             return 0
         }
-        
-//        print("amountWithPrefix : \(amountWithPrefix)")
+
         return Double(amountWithPrefix) ?? 0
     }
     
@@ -205,16 +195,12 @@ extension String {
         amountWithPrefix = regex.stringByReplacingMatches(in: amountWithPrefix, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, self.count), withTemplate: "")
         
         let double = (amountWithPrefix as NSString).doubleValue
-//        if double > 100 {
-//            number = NSNumber(value: (double / 100))
-//        }else {
         number = NSNumber(value: double)
 
         guard number != 0 as NSNumber else {
             return wDecimal ? "0.00": "0"
         }
         
-//        print("amountWithPrefix : \(amountWithPrefix)")
         return formatter.string(from: number) ?? "0"
     }
     

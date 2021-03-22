@@ -371,7 +371,7 @@ extension LoginViewModel : URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64)
     {
         let uploadProgress:Float = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
-        print("Progress : \(uploadProgress)")
+//        print("Upload Progress : \(uploadProgress)")
         self.uploadProgress?(uploadProgress)
     }
 }

@@ -69,10 +69,8 @@ class LoginModel {
     func getNationality(param: [String:Any],completionHandler: @escaping (Nationality?,StatusList?) -> ()) {
          NetworkService<Nationality>().networkRequest(param,jsonUrlString: jsonUrlString + nationality) { (data,status) in
              if let dataReceived = data {
-//                 if let dataList = dataReceived.data {
-                     completionHandler(dataReceived,nil)
-                     return
-//                 }
+                 completionHandler(dataReceived,nil)
+                 return
              }
             completionHandler(nil,StatusList(status: 0, title: "",message: status?.message ?? "Something went wrong",tag: nil))
      

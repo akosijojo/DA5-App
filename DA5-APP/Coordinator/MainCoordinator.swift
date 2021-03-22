@@ -41,12 +41,10 @@ class MainCoordinator :  NSObject, Coordinator {
          NSAttributedString.Key.font: UIFont(name: Fonts.bold, size: 16)!]
         
         if let customerLocalData = usersDataLocal{
-            pinCodeCoordinator(customerData: customerLocalData.convertData()) // have account not logged in
+            pinCodeCoordinator(customerData: customerLocalData.convertData())
         }else {
              logInCoordinator()
         }
-//        let vc = ViewController()
-//        navigationController.pushViewController(vc, animated: true)
     }
     
     func setUpUserLogin(user: Customer?) {
@@ -68,8 +66,7 @@ class MainCoordinator :  NSObject, Coordinator {
             if let d = data {
                let getData =  d.convertToLocalData()
                getData.saveCustomerToLocal()
-//                print("USER SAVE TO COORDINATOR LOCAL")
-                self.usersDataLocal = getData // SAVE TO coordinator local data for checking
+                self.usersDataLocal = getData
            }
         }
        
@@ -137,7 +134,6 @@ class MainCoordinator :  NSObject, Coordinator {
        vc.viewModel = LoginViewModel()
        vc.viewModel?.model = LoginModel()
         if let data = UserData {
-//            print("FBID : \(data.fbId)")
             vc.viewModel?.registrationForm = data
         }
        vc.coordinator = self
@@ -147,13 +143,11 @@ class MainCoordinator :  NSObject, Coordinator {
 
     func pinCodeCoordinator(isChecking: Bool? = false,customerData: Customer? = nil,fromBackground: Bool = false, forgotMpin: Bool? = nil,refreshToken : String? = nil) {
         if !fromBackground {
-//            print("!FROM BACKGROUND ")
             self.setUpUserLogin(user: customerData)
         }
         
         //MARK: - Save Refresh token used in logout
         if let refToken = refreshToken {
-//            print("SAVING REFRESH TOKEN ")
             let rToken = RefreshTokenLocal(refreshToken: refToken)
             rToken.saveRefreshTokenLocal()
         }
@@ -240,15 +234,7 @@ class MainCoordinator :  NSObject, Coordinator {
          navigationController.pushViewController(vc, animated: false)
     }
     
-//    func showTermsViewController() {
-//         let vc = TermsAndConditionsViewController()
-//         vc.coordinator = self
-//         navigationController.setNavigationBarHidden(false, animated: false)
-//         navigationController.pushViewController(vc, animated: false)
-//    }
-//
     func dismissViewController() {
-//        navigationController.navigationBar.isHidden = true
         if let _ = navigationController.presentedViewController as? LoginViewController {
             self.navigationController.setNavigationBarHidden(true, animated: true)
         }
@@ -289,7 +275,7 @@ class MainCoordinator :  NSObject, Coordinator {
             }
         }
     }
-    //MARK: -COMMENT OUT TO HIDE PIN VIEW
+    //MARK: -COMMENT OUT TO HIDE PIN VIEW 
     func becomeInActiveState() {
 //        if let _ =  self.navigationController.viewControllers.first as? HomeViewController {
 //            self.showPinOnChangeAppState = true

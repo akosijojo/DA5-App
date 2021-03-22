@@ -37,7 +37,6 @@ class SignUpViewController: BaseViewControler {
         didSet {
             self.collectionView.reloadData()
             if self.viewModel?.registrationForm?.validId != nil {
-//                print("NOT NILL VALID ID")
                 self.viewModel?.registrationForm?.validId = nil
             }
         }
@@ -47,7 +46,6 @@ class SignUpViewController: BaseViewControler {
         didSet {
           self.collectionView.reloadData()
           if self.viewModel?.registrationForm?.selfieId != nil {
-//              print("NOT NILL SELFIE ID")
                self.viewModel?.registrationForm?.selfieId = nil
           }
         }
@@ -429,10 +427,6 @@ extension SignUpViewController : UICollectionViewDelegateFlowLayout, UICollectio
             }
             cell.delegate = self
             cell.data = AuthData(phone: self.phoneNumberCode?.code == "PH" ? self.mobileNumber : nil , email: self.viewModel?.registrationForm?.email)
-//            print("CELLPHONE NUMBER :",self.viewModel?.registrationForm?.phoneNumber ?? "")
-//            if let mobileNum = self.viewModel?.registrationForm?.phoneNumber {
-//                cell.headerView.desc.text = "+63"+mobileNum
-//            }
             return cell
         }
     }
@@ -654,15 +648,10 @@ extension SignUpViewController: ADCountryPickerDelegate {
     func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
         _ = picker.navigationController?.popToRootViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
-//        countryNameLabel.text = name
-//        countryCodeLabel.text = code
-//        countryCallingCodeLabel.text = dialCode
-//        code == "US"
-        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+        let img =  picker.getFlag(countryCode: code) 
         let xx =  picker.getCountryName(countryCode: code)
         let xxx =  picker.getDialCode(countryCode: code)
         
-        print("DATA : \(img) == \(xx) == \(xxx)")
         self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
        
     }

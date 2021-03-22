@@ -19,14 +19,7 @@ class BaseViewControler : UIViewController {
     }
     
     func getData() {
-//         self.viewModel?.onErrorHandling = { [weak self] error in
-//            print("ERROR : \(error?.message)")
-//
-//            if let stat = error {
-//                self?.showErrorAlert(status: stat)
-//            }
-////            self?.stopLoading()
-//        }
+        
     }
     
     func setUpView() {

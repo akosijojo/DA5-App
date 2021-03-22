@@ -1594,7 +1594,7 @@
 				CODE_SIGN_ENTITLEMENTS = "DA5-APP/DA5Debug.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 2.1;
 				DEVELOPMENT_TEAM = 3RDF37LU5D;
 				INFOPLIST_FILE = "DA5-APP/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1602,6 +1602,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.da5.da5App;
 				PRODUCT_NAME = DA5;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1618,7 +1619,7 @@
 				CODE_SIGN_ENTITLEMENTS = "DA5-APP/DA5Release.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 2.1;
 				DEVELOPMENT_TEAM = 3RDF37LU5D;
 				INFOPLIST_FILE = "DA5-APP/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1626,6 +1627,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.da5.da5App;
 				PRODUCT_NAME = DA5;
 				PROVISIONING_PROFILE_SPECIFIER = "";

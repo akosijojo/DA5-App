@@ -29,31 +29,12 @@ struct RegistrationForm {
     var code : String?
     var fbId : String?
     var appleId : String?
-//     'first_name'        => $request->first_name,
-//     'middle_name'       => $request->middle_name,
-//     'last_name'         => $request->last_name,
-//     'birth_date'        => $request->birth_date,
-//     'password'          => Hash::make($request->password),
-//     'gender'            => $request->gender,
-//     'address'           => $request->address,
-//     'city'              => $request->city,
-//     'province'          => $request->province,
-//     'zip_code'          => $request->zip_code,
-//     'nationality'       => $request->nationality,
-//     'facebook_id'       => $request->facebook_id,
-//     'apple_id'          => $request->apple_id,
-//     'phone'             => $request->phone,
-//     'email'             => $request->email,
-//     'id_picture'        => $request->id_picture,
-//     'id_picture2'       => $request->id_picture2,
-//     'platform'          => $request->platform
-
+    
     mutating func setUpIdentification(form: RegistrationForm?) {
         self.phoneNumber = form?.phoneNumber
         self.countryCode = form?.countryCode
         self.email = form?.email
         self.password = form?.password
-        print("SET IDENTIFICATION")
     }
     
     func showValues() {
@@ -120,7 +101,6 @@ struct RefreshTokenLocal: Codable {
      func saveRefreshTokenLocal() {
        let encoder = JSONEncoder()
        if let encoded = try? encoder.encode(self) {
-            print("Saving REFRESH TOKEN to local")
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: AppConfig().refreshTokenLocalKey)
        }
@@ -131,7 +111,6 @@ struct RefreshTokenLocal: Codable {
        if let saveToken = defaults.object(forKey: AppConfig().refreshTokenLocalKey) as? Data {
            let decoder = JSONDecoder()
            if let customerData = try? decoder.decode(RefreshTokenLocal.self, from: saveToken) {
-              print("Get Token from local")
               return customerData
            }
        }
@@ -218,7 +197,6 @@ struct CustomerLocal: Codable {
     func saveCustomerToLocal() {
        let encoder = JSONEncoder()
        if let encoded = try? encoder.encode(self) {
-            print("Saving Customer to local")
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: AppConfig().customerLocalKey)
        }
@@ -229,8 +207,6 @@ struct CustomerLocal: Codable {
        if let savedCustomer = defaults.object(forKey: AppConfig().customerLocalKey) as? Data {
            let decoder = JSONDecoder()
            if let customerData = try? decoder.decode(CustomerLocal.self, from: savedCustomer) {
-              print("Get Customer from local")
-//              print(customerData)
               return customerData
            }
        }

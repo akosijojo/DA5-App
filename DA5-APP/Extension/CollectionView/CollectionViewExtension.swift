@@ -15,7 +15,6 @@ enum emptyViewType {
 extension UICollectionView {
     
     func emptyView(image: String,text: String,dataCount: Int,emptyViewType: emptyViewType) {
-//        print("Set Up Empty View")
         if dataCount == 0 {
             self.backgroundView = setEmptyViewUI(image: image, text: text, type: emptyViewType)
         }else {

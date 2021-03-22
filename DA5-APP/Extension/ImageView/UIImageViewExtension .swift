@@ -9,7 +9,6 @@
 import UIKit
 extension UIView {
     func showLoading(style: UIActivityIndicatorView.Style = .gray,tag: Int) {
-//        print("TAG TO BE DOWNLOADED : with tag = \(self.tag) : load tag = \(tag)")
         var loading = viewWithTag(self.tag) as? UIActivityIndicatorView
         if loading == nil {
            loading = UIActivityIndicatorView(style: style)
@@ -58,11 +57,6 @@ extension UIImageView {
         }.resume()
     }
     func downloaded(from link: String, tag: Int? = nil,contentMode mode: UIView.ContentMode = .scaleAspectFit) {
-        //show this for reuse cell but same view bug infinite loading add to tag if which section
-//        print("DOWNLOADING : with tag = \(self.tag) : loadingTag = \(tag)")
-//        if let tagging = tag {
-//            self.showLoading(tag: tagging)
-//        }
         if let tagging = tag { self.tag = tagging } // save tag to itself
         guard let url = URL(string: link) else { return }
         downloaded(from: url, tag: tag, contentMode: mode)

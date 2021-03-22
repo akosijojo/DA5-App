@@ -60,7 +60,6 @@ class HeaderCollectionViewCell: UICollectionReusableView {
         rightBtn.isHidden = false
     }
     @objc func viewAll() {
-        print("TAPPING HEADER")
         self.delegate?.onClickViewAll(cell: self, index: index)
     }
 }

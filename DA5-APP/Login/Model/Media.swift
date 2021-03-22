@@ -17,18 +17,8 @@ struct Media {
     let mimeType: String
     
     init?(withImage image: UIImage, forKey key: String) {
-//        self.key = key
-//        self.mimeType = "image/png"
-//        self.filename = ""
-//
-////        guard let data = image.jpegData(compressionQuality: 0.7) else { return nil }
-//        guard let data = image.pngData() else {
-//            return nil
-//        }
-//        self.data = data
         self.key = key
         self.mimeType = "image/jpeg"
-//        print("DATA IMAGE : \(image.jpegData(compressionQuality: 0.7))")
         guard let data = image.jpegData(compressionQuality: 0.7) else { return nil }
         self.data = data
     }

@@ -57,34 +57,7 @@ class ForgotViewController: BaseViewControler {
     let form1 = "form1"
     let form2 = "form2"
     let form3 = "form3"
-    
-//    lazy var headerView : CustomHeaderView = {
-//       let v = CustomHeaderView()
-//       v.title.text = "Forgot password"
-//       v.desc.text = "Enter your mobile number for the verification process we will send a 6 digit code to your phone."
-//       v.desc.numberOfLines = 0
-//       return v
-//    }()
-//    
-//    lazy var phoneNumber: CustomBasicFormInputNumber = {
-//        let v = CustomBasicFormInputNumber()
-//        v.FieldView.TextField.keyboardType = .numberPad
-//        v.FieldView.TextField.tag = 1
-//        v.FieldView.TextField.delegate = self
-//        v.FieldView.TextField.placeholder = "Phone number"
-//        return v
-//    }()
-//
-//    lazy var submitBtn : UIButton = {
-//        let v = UIButton()
-//         v.layer.cornerRadius = 5
-//         v.backgroundColor = ColorConfig().black
-//         v.setTitle("Proceed", for: .normal)
-//         v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)
-//         v.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
-//        return v
-//    }()
-//      
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.interactivePopGestureRecognizer?.delegate = self as? UIGestureRecognizerDelegate
@@ -283,12 +256,10 @@ extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCel
     }
     
     func resendCode(cell: VerifyCollectionViewCell) {
-         print("Resend code")
         self.setAnimate(msg: "Please wait..")
         if phoneNumberCode?.code == "PH" {
            self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: nil, isResend: 1, type: 3)
         }else {
-           //MARK: - must have email textfield to verified FOR FOREIGN
             self.viewModel?.getOtp(number: self.mobileNumber ?? "", email: self.emailAddress ?? "", isResend: 1, type: 5)
         }
     }
@@ -299,7 +270,6 @@ extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCel
         }else {
             if fields[0].text != "" && self.mobileNumber != "" {
                 self.setAnimate(msg: "Please wait..")
-                print("SUBMITING")
                 self.viewModel?.changePassword(password: fields[0].text ?? "", phone: self.mobileNumber ?? "",token: self.tokenData)
            }
         }
@@ -312,8 +282,6 @@ extension ForgotViewController: PhoneNumberCellDelegate, VerifyCollectionViewCel
         // delegate
         picker.delegate = self
         picker.searchBarBackgroundColor = UIColor.white
-//        picker.defaultCountryCode = "PH"
-//        picker.forceDefaultCountryCode = true
         
         // Display calling codes
         picker.showCallingCodes = true
@@ -334,15 +302,10 @@ extension ForgotViewController: ADCountryPickerDelegate {
     func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
         _ = picker.navigationController?.popToRootViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
-//        countryNameLabel.text = name
-//        countryCodeLabel.text = code
-//        countryCallingCodeLabel.text = dialCode
-//        code == "US"
-        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+        let img =  picker.getFlag(countryCode: code)
         let xx =  picker.getCountryName(countryCode: code)
         let xxx =  picker.getDialCode(countryCode: code)
         
-        print("DATA : \(img) == \(xx) == \(xxx)")
         self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
        
     }

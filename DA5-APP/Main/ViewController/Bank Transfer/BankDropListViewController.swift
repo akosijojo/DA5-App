@@ -58,13 +58,11 @@ class BankDropListViewController<T:Decodable>: BaseViewControler, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let vc = self.parentView as? BankTransferViewController {
-//            vc.nationalitySelected = self.data.
             if let item = self.data?[indexPath.item] as? BankListData {
                 vc.bankSelected = item
             }
             
             if let item = self.data?[indexPath.item] as? BankAccountLocalData {
-//                 vc.bankSelected = item?[indexPath.item].bank
                 vc.accountSelected = item
             }
         }
@@ -77,7 +75,6 @@ class BankDropListViewController<T:Decodable>: BaseViewControler, UICollectionVi
     let cellId2 = "Cell ID2"
     var data : [T]? {
         didSet {
-//            print("DATA RECEIVED :",self.data?.count )
             self.collectionView.emptyView(image: "", text: "No available list.", dataCount: self.data?.count ?? 0, emptyViewType: .secondary)
         }
     }

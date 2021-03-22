@@ -94,7 +94,7 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
     
     var data : [T]? {
         didSet {
-//            print("DATA RECEIVED :",self.data?.count )
+            
         }
     }
     
@@ -191,7 +191,6 @@ class DropDownViewController<T:Decodable>: BaseViewControler, UICollectionViewDe
     }
     
     @objc func hideModalOnClick() {
-//        print("Dismiss Drop")
         self.dismiss(animated: false) {
            self.hideModal()
         }

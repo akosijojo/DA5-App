@@ -97,12 +97,6 @@ class pagerViewCell : UICollectionViewCell {
     
     func setUpView() {
         addSubview(pagerItem)
-//        pagerItem.snp.makeConstraints { (make) in
-//            make.top.equalTo(self).offset(10)
-//            make.leading.equalTo(self).offset(10)
-//            make.width.equalTo(self)
-//            make.bottom.equalTo(self).offset(-10)
-//        }
     }
 }
 

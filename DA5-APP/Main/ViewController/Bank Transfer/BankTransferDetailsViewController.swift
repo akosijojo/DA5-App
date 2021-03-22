@@ -85,9 +85,7 @@ class BankTransferDetailsViewController : BaseHomeViewControler {
        v.addBorders(edges: .bottom, color: ColorConfig().darkGray!)
        v.textAlignment = .center
        v.text = "PHP 0.00"
-    //       v.addTarget(self, action: #selector(didEndEnteredAmounxt(_:)), for: .editingDidBegin)
        v.addTarget(self, action: #selector(amountEntered(_:)), for: .editingChanged)
-    //       v.addTarget(self, action: #selector(didEndEnteredAmount(_:)), for: .editingDidEnd)
        v.keyboardType = .numberPad
        return v
     }()

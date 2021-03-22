@@ -211,15 +211,6 @@ class HomeViewController: BaseCollectionViewControler , UICollectionViewDelegate
         sideMenuView.frame = self.view.bounds
     }
     
-//    func onClickShowView(type: Int) {
-//        switch type {
-//        case 1:
-//            coordinator?.showBase2ndViewController(title: <#String#>)
-//        default: break
-//            
-//        }
-//    }
-    
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let section = indexPath.section
         if section  == 0 {
@@ -337,7 +328,6 @@ extension HomeViewController : HomeHeaderCollectionViewCellDelegate, HeaderColle
     }
     
     func onClickMenu(cell: HomeHeaderCollectionViewCell) {
-        print("DATA : \(self.homeData?.customer)")
         sideMenuView.userData = self.homeData?.customer
         sideMenuView.updateSideMenu(width: sideMenuView.isShowMenu ? 0 : 250)
     }
@@ -353,9 +343,6 @@ extension HomeViewController : CollectionViewCellDelegate {
                 self.referenceNo = ref
                 let type = self.homeData?.pendingTransaction?[index].cashInOut != nil ? self.homeData?.pendingTransaction?[index].type : 4
                 self.declineTransaction(refNo: ref,type: "\(type ?? 0)")
-//                if let cc = cell as? CollectionViewCell {
-//                    cc.collectionView.deleteItems(at: [IndexPath(item: 0, section: 0)])
-//                }
             }
            
         }, actionCancel: nil, completionHandler: nil)
@@ -375,7 +362,6 @@ extension HomeViewController : CollectionViewCellDelegate {
             case 5:
                 self.coordinator?.showFxViewController(balance: self.homeData?.balance)
             case 6:
-//                self.coordinator?.showBase2ndViewController(title: "Paybills")
                 self.coordinator?.showPaybillsViewController()
             case 7:
                 self.coordinator?.ShowELoadViewController()
@@ -388,14 +374,11 @@ extension HomeViewController : CollectionViewCellDelegate {
             }
             
         }else if let itemCell = cell as? NewsCell {
-//            print("NEWS : \(self.homeData?.news?[index])")
             self.coordinator?.showNewsItem(data: self.homeData?.news?[index])
         }else if let itemCell = cell as? PendingTransactionCell {
-//            print("PENDING TRANSACTIONS : \(self.homeData?.pendingTransaction?[index])")
-//            self.coordinator?.showBase2ndViewController()
+            
         }else {
-//            print("TRANSACTION HISTORY : \(self.homeData?.transactionHistory?[index])")
-//            self.coordinator?.showBase2ndViewController()
+            
         }
     }
     

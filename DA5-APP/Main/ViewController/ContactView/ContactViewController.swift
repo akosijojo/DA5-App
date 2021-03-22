@@ -49,7 +49,6 @@ class ContactViewController: BaseTableViewControler {
     }
     
     private func fetchContacts() {
-        print("Attempting to fetch contacts today..")
         let store = CNContactStore()
         store.requestAccess(for: .contacts) { (granted, err) in
             if let err = err {
@@ -58,8 +57,6 @@ class ContactViewController: BaseTableViewControler {
             }
             
             if granted {
-                print("Access granted")
-                
                 let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
                 let request = CNContactFetchRequest(keysToFetch: keys as [CNKeyDescriptor])
                 
@@ -75,7 +72,7 @@ class ContactViewController: BaseTableViewControler {
                         
                         favoritableContacts.append(FavoritableContact(contact: contact, hasFavorited: false))
                     })
-//                    .sorted(by: { $0.contact.givenName < $1.contact.givenName })
+                    
                     let names = ExpandableNames(isExpanded: true, names: favoritableContacts)
                     self.ContactListData = [names]
                     
@@ -95,9 +92,7 @@ class ContactViewController: BaseTableViewControler {
         super.viewDidLoad()
         
         fetchContacts()
-//        navigationController?.navigationBar.backgroundColor = .white
         navigationController?.navigationBar.isTranslucent = true
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Show IndexPath", style: .plain, target: self, action: #selector(handleShowIndexPath))
         
         navigationItem.title = "Contacts"
 
@@ -202,8 +197,6 @@ class ContactViewController: BaseTableViewControler {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("SELECTING : \(ContactListData[indexPath.section].names[indexPath.row].contact.phoneNumbers.first?.value.stringValue)")
-        print("PARENT VIEW :\(self.parentView)")
         if let vc = self.parentView as? ELoadViewController {
             let phoneNumber = ContactListData[indexPath.section].names[indexPath.row].contact.phoneNumbers.first?.value.stringValue
             vc.phoneNumber.FieldView.TextField.text = String(describing: phoneNumber?.convertPhoneNumber() ?? "")
@@ -236,7 +229,6 @@ class ContactCell: UITableViewCell {
     }
     
     @objc private func handleMarkAsFavorite() {
-//        print("Marking as favorite")
         link?.someMethodIWantToCall(cell: self)
     }
     

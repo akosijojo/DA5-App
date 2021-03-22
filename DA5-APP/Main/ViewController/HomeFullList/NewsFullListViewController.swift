@@ -79,49 +79,6 @@ class NewsFullListViewController: BaseHomeViewControler {
     
     func getData() {
         
-//        self.viewModel?.onSuccessPendingList = { [weak self] data in
-//          print("DATA RECEIVED")
-//            DispatchQueue.main.async {
-//                if self?.isAppend == true {
-//                    if let response = data {
-//                        self?.data?.append(contentsOf: response)
-//                    }
-//                }else {
-//                    self?.data = data
-//                }
-//
-//                //MARK: - stop animation
-//                self?.stopAnimating()
-//                // MARK: - to restrict request when the data didnt reach the max limit
-//                if data?.count != 10 {
-//                    self?.isRefreshing = true // to restrict request
-//                }else {
-//                    self?.isRefreshing = false // to trigger bottom refresh
-//                }
-//            }
-//        }
-//
-//        self.viewModel?.onSuccessRequest = { [weak self] data in
-//           print("DATA RECEIVED")
-//            DispatchQueue.main.async {
-//                //MARK: - stop animation
-//                self?.stopAnimating()
-//                self?.isRefreshing = false // to trigger bottom refresh
-//            }
-//        }
-//
-//        self.viewModel?.onErrorHandling = { [weak self] data in
-//           print("ERROR DATA RECEIVED")
-//             DispatchQueue.main.async {
-//                //MARK: - stop animation
-//                self?.stopAnimating()
-//                self?.isRefreshing = false // to trigger bottom refresh
-//            }
-//        }
-        
-//        self.setAnimate(msg: "Please wait...")
-        
-//        self.viewModel?.getAllNews(token: self.coordinator?.token)
     }
     
     override func setUpView() {
@@ -174,15 +131,11 @@ extension NewsFullListViewController: UICollectionViewDelegateFlowLayout, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        // if data.count > 9 {
-        if indexPath.item == ((self.data?.count ?? 0) - 1) { //(data?.count - 1)
-           
-              // loadMoreData()
+        if indexPath.item == ((self.data?.count ?? 0) - 1) {
               if !isRefreshing {
                  isRefreshing = true
                  self.requestNewData()
               }
           }
-        //}
     }
 }

@@ -100,12 +100,10 @@ struct BankLocalData: Codable {
     }
     
     func getLocal() -> BankLocalData? {
-        print("DATA GETTING")
        let defaults = UserDefaults.standard
        if let savedData = defaults.object(forKey: AppConfig().bankAccountLocalKey) as? Data {
            let decoder = JSONDecoder()
            if let data = try? decoder.decode(BankLocalData.self, from: savedData) {
-            print("BANKS LOCAL \(data)")
               return data
            }
        }

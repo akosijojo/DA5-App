@@ -43,7 +43,6 @@ struct APITokenLocal: Codable {
        if let savedCustomer = defaults.object(forKey: AppConfig().tokenLocalKey) as? Data {
            let decoder = JSONDecoder()
            if let customerData = try? decoder.decode(CustomerLocal.self, from: savedCustomer) {
-              print(customerData)
               return customerData
            }
        }

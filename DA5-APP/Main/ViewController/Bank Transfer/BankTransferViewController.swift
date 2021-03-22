@@ -86,7 +86,7 @@ class BankTransferViewController: BaseHomeViewControler {
     
     var bankListLocal : BankLocalData? {
         didSet {
-            print("DATA BANKS : \(bankListLocal)")
+            
         }
     }
     

@@ -98,13 +98,7 @@ class HomeFullListViewModel: NSObject {
          guard let dataModel = model else { return }
                         
          let completionHandler = { (data: StatusList?,status : StatusList?) in
-//              if let result = data {
-//                  self.onSuccessRequest?(result)
-//                  self.vPage += 1
-//                  print("add page for getting new")
-//              }else {
-//                  self.onErrorHandling?(status)
-//              }
+            
          }
             
         if let pager = page {

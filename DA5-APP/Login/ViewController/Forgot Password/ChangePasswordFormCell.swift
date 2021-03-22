@@ -63,11 +63,7 @@ class ChangePassFormCell: BaseCollectionViewCell, UITextFieldDelegate {
     }()
     
     override func setUpView() {
-//        addSubview(scrollView)
-//        scrollView.snp.makeConstraints { (make) in
-//            make.top.leading.trailing.equalTo(self)
-//            make.bottom.equalTo(self).offset(0)
-//        }
+        
         addSubview(headerView)
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(25)

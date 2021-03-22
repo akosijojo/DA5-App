@@ -23,20 +23,10 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
         v.backgroundColor = ColorConfig().white
         return v
     }()
-
-//    lazy var submitBtn : UIButton = {
-//      let v = UIButton()
-//       v.layer.cornerRadius = 5
-//       v.backgroundColor = ColorConfig().black
-//       v.setTitle("Proceed", for: .normal)
-//       v.titleLabel?.font = UIFont(name: Fonts.medium, size: 12)
-//       v.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
-//      return v
-//    }()
     
     var cellDropSelected : Int? {
         didSet {
-//            print("SELECTED ITEM : \(cellDropSelected)")
+            
         }
     }
     
@@ -48,15 +38,13 @@ class PaybillsSelectedItemViewController: BaseHomeViewControler {
                     
                 }
                 self.collectionView.reloadItems(at: [IndexPath(item: self.cellDropSelected!, section: 0)])
-//                self.collectionView.reloadData()
             }
         }
     }
     
     var data : BillerData? {
         didSet {
-//            self.collectionView.reloadData()
-//            print("GET DATA : \(data)")
+            
         }
     }
     var viewModel : PaybillsViewModel?

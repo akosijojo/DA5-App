@@ -44,7 +44,7 @@ class NationalityViewController: BaseViewControler, UICollectionViewDelegateFlow
     let cellId = "Cell ID"
     var data : Nationality? {
         didSet {
-//            print("DATA RECEIVED :",self.data?.nationals.count )
+            
         }
     }
     var parentView : UIViewController?

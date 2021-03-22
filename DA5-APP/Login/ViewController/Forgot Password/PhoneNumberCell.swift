@@ -31,13 +31,7 @@ class PhoneNumberCell: BaseCollectionViewCell, UITextFieldDelegate {
             }
         }
     }
-    
-    
-//    lazy var scrollView : UIScrollView = {
-//        let v = UIScrollView()
-//        return v
-//    }()
-//
+
     lazy var headerView : CustomHeaderView = {
         let v = CustomHeaderView()
         v.title.text = "Forgot password"
@@ -77,11 +71,6 @@ class PhoneNumberCell: BaseCollectionViewCell, UITextFieldDelegate {
     }()
     
     override func setUpView() {
-//        addSubview(scrollView)
-//        scrollView.snp.makeConstraints { (make) in
-//            make.top.leading.trailing.equalTo(self)
-//            make.bottom.equalTo(self).offset(0)
-//        }
         addSubview(headerView)
         headerView.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(25)

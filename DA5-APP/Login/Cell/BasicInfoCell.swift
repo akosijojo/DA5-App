@@ -279,15 +279,13 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         
         
         self.submitBtn.addTarget(self, action: #selector(submitAction), for: .touchUpInside)
-//        self.gender.TextField.addTarget(self, action: #selector(showGenderPicker), for: .editingDidBegin)
         let gTap = UITapGestureRecognizer(target: self, action: #selector(showGenderPicker))
         self.gender.isUserInteractionEnabled = true
         self.gender.addGestureRecognizer(gTap)
         
         let tapNationality = UITapGestureRecognizer(target: self, action: #selector(showNationality))
         self.nationality.TextField.addGestureRecognizer(tapNationality)
-        
-    // for checking empty value
+
         textFields = [
                   fname.TextField,
                   lname.TextField,
@@ -364,7 +362,6 @@ class BasicInfoCell: BaseCollectionViewCell, UITextFieldDelegate {
         if let popoverController = alert.popoverPresentationController {
             popoverController.sourceView = gender
             popoverController.sourceRect = CGRect(x: gender.bounds.midX, y: 0, width: 120, height: 100)
-//            popoverController.permittedArrowDirections = [] //to hide the arrow of any particular direction
         }
         vc?.present(alert, animated: true, completion: nil)
     }

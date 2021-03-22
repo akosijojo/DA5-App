@@ -27,16 +27,6 @@ class VerifyCollectionViewCell: BaseCollectionViewCell, UITextFieldDelegate {
                 self.headerView.desc.text = self.data?.email
             }
         }
-        
-//        didSet {
-//                   if let phone = data?.phone {
-//                       self.headerView.desc.text = "+63\(phone)"
-//                       self.headerView.title.text = "Please enter the 6 digit code sent to"
-//                   }else {
-//                       self.headerView.desc.text = String(describing: self.data?.email?.hideMidChars(type: .email) ?? "")
-//                       self.headerView.title.text = "Please enter the 6 digit code sent to email"
-//                   }
-//               }
     }
     
     lazy var scrollView : UIScrollView = {

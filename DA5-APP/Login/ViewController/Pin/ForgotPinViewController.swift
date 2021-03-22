@@ -122,7 +122,6 @@ class ForgotPinViewController: BaseViewControler {
     }
     
     func hidesKeyboard() {
-        print("HEY CLOSING")
         view.endEditing(true)
     }
     
@@ -231,12 +230,5 @@ extension ForgotPinViewController : AuthenticationCollectionViewCellDelegate,UIN
             guard let code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "") else { return }
             self.viewModel?.checkMpinOtp(code: Int(code) ?? 0, phone: self.mobileNumber, email: self.emailAddress, token: self.coordinator?.token, type: 2)
          }
-             
-        
-        //MARK: - SUBMITING FORGOT MPIN
-     // show terms and condition
-//        coordinator?.termsCoordinator(parentView: self)
-//        self.viewModel?.registrationForm?.code = cell.verificationCode.text?.replacingOccurrences(of: " ", with: "")
-//        print(" VERIFICATION CODE ",self.viewModel?.registrationForm?.code)
     }
 }

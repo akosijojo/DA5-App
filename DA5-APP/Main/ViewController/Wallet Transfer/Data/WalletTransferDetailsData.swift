@@ -100,12 +100,10 @@ struct WalletContactsLocal : Codable {
     }
     
     func getLocal() -> WalletContactsLocal? {
-        print("DATA GETTING")
        let defaults = UserDefaults.standard
        if let savedData = defaults.object(forKey: AppConfig().walletTransferContactLocalKey) as? Data {
            let decoder = JSONDecoder()
            if let data = try? decoder.decode(WalletContactsLocal.self, from: savedData) {
-            print("CONTACT LOCAL \(data)")
               return data
            }
        }

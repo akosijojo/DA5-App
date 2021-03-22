@@ -21,9 +21,6 @@ class WalletTransferViewController: BaseHomeViewControler{
                   self.phoneNumber.FieldView.phoneViewLabel.flag.image = phoneNumberCode?.image
                   self.phoneNumber.FieldView.phoneViewLabel.country.text = phoneNumberCode?.code
                   self.phoneNumber.FieldView.phoneViewLabel.Label.text = phoneNumberCode?.dialCode
-                
-                 
-                 
               }
           }
     }
@@ -94,7 +91,7 @@ class WalletTransferViewController: BaseHomeViewControler{
     
     var contacts : WalletContactsLocal? {
         didSet {
-            print("DATA GET :\(contacts)")
+            
         }
     }
     
@@ -138,8 +135,8 @@ class WalletTransferViewController: BaseHomeViewControler{
             }
         }
         
-//        var dataLocal = WalletContactsLocal(number: ["912361782637812"])
-//        dataLocal.saveToLocal()
+        var dataLocal = WalletContactsLocal(number: ["9123456789"])
+        dataLocal.saveToLocal()
         // get saved contacts
         contacts = WalletContactsLocal.shared.getLocal()
         
@@ -261,14 +258,11 @@ class WalletTransferViewController: BaseHomeViewControler{
     func filterContact(text: String) {
         if self.contacts?.number?.count ?? 0 > 0 {
            var data : [String] = []
-           print("SEARCHING TEXT : \(text)")
            if text == "" {
                data = self.contacts?.number ?? []
            }else {
                var dataFiltered : [String] = []
                for item in contacts?.number ?? [] {
-                   print("SEARCHING TEXT FILTERING: \(item.hasPrefix(text)) - \(item.hasSuffix(text))")
-               
                    if item.hasPrefix(text) == true || item.hasSuffix(text) == true {
                        dataFiltered.append(item)
                    }
@@ -403,23 +397,13 @@ class ContactTableViewCell : UITableViewCell {
     
 }
 
-
-// MARK: - ADD COUNTRY PICKER FOR PHONE NUMBER and ADJUST DROPDOWN VIEW , ADD DIAL CODE ON THE NUMBERS FOR DROP DOWN
-
 extension WalletTransferViewController {
     @objc func openPickerAction() {
             
         let picker = ADCountryPicker(style: .grouped)
-        // delegate
         picker.delegate = self
         picker.searchBarBackgroundColor = UIColor.white
-//        picker.defaultCountryCode = "PH"
-//        picker.forceDefaultCountryCode = true
-        
-        // Display calling codes
         picker.showCallingCodes = true
-
-        // or closure
         picker.didSelectCountryClosure = { name, code in
             _ = picker.navigationController?.popToRootViewController(animated: true)
             print(code)
@@ -435,15 +419,9 @@ extension WalletTransferViewController: ADCountryPickerDelegate {
     func countryPicker(_ picker: ADCountryPicker, didSelectCountryWithName name: String, code: String, dialCode: String) {
         _ = picker.navigationController?.popToRootViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
-//        countryNameLabel.text = name
-//        countryCodeLabel.text = code
-//        countryCallingCodeLabel.text = dialCode
-//        code == "US"
-        let img =  picker.getFlag(countryCode: code) //code == "PH" ? UIImage(named: "PH") :
+        let img =  picker.getFlag(countryCode: code)
         let xx =  picker.getCountryName(countryCode: code)
         let xxx =  picker.getDialCode(countryCode: code)
-        
-//        print("DATA : \(img) == \(xx) == \(xxx)")
         self.phoneNumberCode = PhoneNumberCountryCode(image: img, code: code, name: name, dialCode: dialCode)
        
     }

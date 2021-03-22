@@ -81,10 +81,6 @@ class CustomPinTextField: UITextField {
             label.text = defaultText
             label.textAlignment = .center
             label.tag = lbl
-            //MARK: - show line if you can hahah
-//            if showBottomLine {
-//                label.addBorders(edges: .bottom, color: ColorConfig().lightGray!)
-//            }
             stackView.addArrangedSubview(label)
             digitsLabel.append(label)
         }
@@ -116,7 +112,6 @@ class CustomPinTextField: UITextField {
            for i in 1 ..< digitsLabel.count {
                let currentLabel = digitsLabel[i]
                if i < text.count + 1 {
-//                   let index = text.index(text.startIndex, offsetBy: i)
                    currentLabel.font = UIFont(name: Fonts.bold, size: 60)
                    currentLabel.textColor = ColorConfig().black
                }else {

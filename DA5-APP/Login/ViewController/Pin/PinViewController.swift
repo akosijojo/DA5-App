@@ -24,7 +24,7 @@ class PinViewController: BaseViewControler {
     
     var customerData : Customer? {
         didSet {
-//            print("ALREADY SAVE TO LOCAL FROM COORDINATOR")
+            
         }
     }
     
@@ -106,9 +106,6 @@ class PinViewController: BaseViewControler {
         
        pinTextField.didEnterLastDigit = { [weak self] code in
             self?.checkMPIN(pin: code)
-//           self?.MPIN = code
-           //  checking of pin then goto home
-//           self?.coordinator?.homeCoordinator()
        }
         
        numPadView.numPadReturnOutput = { [weak self] output in
@@ -152,11 +149,7 @@ class PinViewController: BaseViewControler {
     
         //MARK:- Get API TOKEN
         if let noMPIN = isChecking , noMPIN == true {
-            //REMOVE FORGOT MPIN BUTTON 
             self.forgotMpin.isHidden = true
-            //MARK: - INFO : CHECKING IF HAVE TOKEN = && self.coordinator?.token == nil
-            // also add saving token in coordinator : self.coordinator.token = token get prome request
-            // and change token send to : self.coordinator.token
             self.viewModel?.generateAPIToken()
         }
     }
@@ -257,10 +250,8 @@ class PinViewController: BaseViewControler {
             }
         }else {
             if pin == customerData?.mpin {
-                
                 //MARK: -FROM INACTIVE STATE
                 if fromBackground {
-//                    self.navigationController?.popViewController(animated: true)
                     self.coordinator?.gotoPreviousViewControllers()
                 }else {
                     self.coordinator?.homeCoordinator()
@@ -295,15 +286,4 @@ class PinViewController: BaseViewControler {
         self.numPadView.btnBack.isHidden = true
         self.secondaryLabel.text = "Please enter your MPIN."
     }
-    
-//    func runTimer() {
-//       timer = Timer.scheduledTimer(timeInterval: 10, target: self,   selector: (#selector(updateTimer)), userInfo: nil, repeats: true)
-//    }
-//
-//    @objc func updateTimer(){
-//        seconds += 1
-//        if tokenData?.expiresIn == seconds {
-//MARK:-CHECKING EXPIRATION NG TOKEN
-//        }
-//    }
 }

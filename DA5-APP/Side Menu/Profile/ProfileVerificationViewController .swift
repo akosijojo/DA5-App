@@ -124,9 +124,7 @@ class ProfileVerificationViewController: BaseViewControler {
         //MARK: - UPLOAD PROGRESS
          self.viewModel?.uploadProgress = { [weak self] progress in
              DispatchQueue.main.async {
-               print("PROGRESS ",progress)
                  self?.beginAnimation(title:"Uploading \(self?.uploadingType == 1 ? "Valid Id picture" : "Selfie with Id picture")", msg: String(format: "%.0f",progress * 100)+"%")
-                 //MARK: -UX SHOW SAVING if 100%
                  if progress == 1 {
                      if self?.uploadingType != 0 {
                          self?.beginAnimation(title:self?.uploadingType == 1 ? "Saving Valid Id picture" :  "Saving Selfie and Id picture", msg: "Please wait...")

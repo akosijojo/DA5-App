@@ -14,13 +14,12 @@ class LoginViewController: BaseViewControler {
 
     var customerData : Customer? {
         didSet{
-//            print("Customer ", customerData?.firstName ?? "")
+            
         }
     }
     
     var viewModel : LoginViewModel?
     
-    // add this
     lazy var scrollView : UIScrollView = {
        let v = UIScrollView()
        return v
@@ -276,36 +275,6 @@ class LoginViewController: BaseViewControler {
         lblForgot.isUserInteractionEnabled = true
         lblForgot.addGestureRecognizer(tap)
     }
-    
-//    func setUpSignInAppleButton() {
-//        if #available(iOS 13.0, *) {
-//            let authorizationButton = ASAuthorizationAppleIDButton()
-//            authorizationButton.addTarget(self, action: #selector(handleAppleIdRequest), for: .touchUpInside)
-//             authorizationButton.cornerRadius = 5
-//             //Add button on some view or stack
-//
-//
-//            view.addSubview(authorizationButton)
-//            authorizationButton.snp.makeConstraints { (make) in
-//                make.top.equalTo(loginBtn.snp.bottom).offset(10)
-//                make.height.equalTo(40)
-//                make.leading.equalTo(view).offset(20)
-//                make.trailing.equalTo(view).offset(-20)
-//            }
-//
-//            view.addSubview(fbButton)
-//            fbButton.snp.makeConstraints { (make) in
-//                make.top.equalTo(authorizationButton.snp.bottom).offset(10)
-//                make.height.equalTo(40)
-//                make.leading.equalTo(view).offset(20)
-//                make.trailing.equalTo(view).offset(-20)
-//            }
-//
-//        } else {
-//            // Fallback on earlier versions
-//        }
-//
-//    }
  
     deinit {
         print("deinit : \(self)")
@@ -397,33 +366,11 @@ extension LoginViewController : ASAuthorizationControllerDelegate {
             let fullName = appleIDCredential.fullName
         let email = appleIDCredential.email
             
-//        print("User id is \(userIdentifier) \n Full Name is \(String(describing: fullName)) \n Email id is \(String(describing: email))”) ")
-            
-            self.setAnimate(msg: "Please wait")
-            self.viewModel?.loginByApple(id: userIdentifier)
-            let regForm = RegistrationForm(fname: fullName?.givenName,  lname:
-                fullName?.familyName, email: email, appleId: userIdentifier)
-            self.viewModel?.registrationForm = regForm
-//
-//        let appleIDProvider = ASAuthorizationAppleIDProvider()
-//        appleIDProvider.getCredentialState(forUserID: userIdentifier) {  (credentialState, error) in
-//             switch credentialState {
-//                case .authorized:
-//                    // The Apple ID credential is valid.
-//                    print("// The Apple ID credential is valid.")
-//                    break
-//                case .revoked:
-//                    // The Apple ID credential is revoked.
-//                     print("// The Apple ID credential is revoked.")
-//                    break
-//                case .notFound:
-//                    break
-//                    // No credential was found, so show the sign-in UI.
-//                    print(" // No credential was found, so show the sign-in UI.")
-//                default:
-//                    break
-//             }
-//        }
+        self.setAnimate(msg: "Please wait")
+        self.viewModel?.loginByApple(id: userIdentifier)
+        let regForm = RegistrationForm(fname: fullName?.givenName,  lname:
+            fullName?.familyName, email: email, appleId: userIdentifier)
+        self.viewModel?.registrationForm = regForm
     }
   }
         

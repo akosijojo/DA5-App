@@ -209,12 +209,3 @@ extension PendingTransactionFullViewController : PendingListCellDelegate {
           }, actionCancel: nil, completionHandler: nil)
     }
 }
-
-
-//extension PendingTransactionFullViewController : LoadWalletCellDelegate {
-//    func onClickItem(cell: LoadWalletCell, index: Int) {
-//        print("CLICKING")
-//        self.coordinator?.showCashInViewController(data: self.data?[index],type: type)
-//    }
-//
-//}

@@ -144,7 +144,6 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        print("SECTION : \(indexPath.section)")
         if indexPath.section == 0 {
             return CGSize(width: collectionView.frame.width, height: 35) 
         }
@@ -162,8 +161,6 @@ extension PaybillsViewController: UICollectionViewDelegateFlowLayout, UICollecti
 //
 extension PaybillsViewController : PaybillsHorizontalCollectionCellDelegate, PaybillsCellDelegate {
     func onClickShowView(cell: PaybillsHorizontalCollectionCell, data: CategoryData) {
-        //MARK: change the data to reload collection
-//        self.data = self.categories[index].data
         self.activeCategory = data
         self.dataFiltered = self.filterData(from: data, data: self.data?.billers)
         

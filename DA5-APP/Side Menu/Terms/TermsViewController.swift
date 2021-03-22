@@ -62,14 +62,6 @@ class TermsViewController: BaseViewControler {
         return v
     }()
 
-//    lazy var btnView : TermsButtonView = {
-//        let v = TermsButtonView()
-//        v.cancel.text = "Cancel"
-//        v.agree.text = "Agree"
-//        v.agree.backgroundColor = ColorConfig().black
-//        return v
-//    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         termsLabel.text = terms
@@ -112,8 +104,6 @@ class TermsViewController: BaseViewControler {
     }
     
     @objc func agreeButton() {
-        // vc agree terms then action to save data collected
-        // after uploading and saving data show success then show mpin creation and saving
         if let vc = parentView as? SignUpViewController {
             self.navigationController?.popViewController(animated: true)
             vc.agreeOnTermsAndCondition()
@@ -133,7 +123,7 @@ class TermsViewController: BaseViewControler {
         
         let txtHeight = terms.heightForView(font:UIFont(name: Fonts.regular, size: 14)!, width: view.frame.width - 40)
         let vHeight =  view.layoutMarginsGuide.layoutFrame.height - 200
-        let txtComputedHeight = txtHeight + 140//txtHeight > vHeight ? txtHeight + 140 : vHeight
+        let txtComputedHeight = txtHeight + 140
         
         scrollView.addSubview(termsLabel)
         termsLabel.snp.makeConstraints { (make) in
